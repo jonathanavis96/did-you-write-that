@@ -1,6 +1,6 @@
 ---
 title: "Pilot 14: exact probabilities on a scale series of open models"
-status: pre-registered 2026-09-03 before the run; CPU only, free
+status: pre-registered 2026-09-03 before the run; moved from CPU bf16 to the RX 6800 through torch-directml on 2026-09-04 00:00 (see Deviation), free
 depends_on: docs/PILOT-11-ownership.md (local arm), selfportrait/ownership_local.py
 ---
 # Pilot 14: the ownership design with exact probabilities, 1.5B to 4B
@@ -40,5 +40,17 @@ layouts assistant and user2. Script `selfportrait/ownership_local.py`, rows in
 Item selection: every cell the script builds; no cell dropped. Statistics on cell values
 (exact probabilities, so no fork-level pseudo-replication arises). Cost: none; wall time
 about three hours of CPU.
+
+Deviation from the pre-registration, 2026-09-04 (before any result was looked at): the
+run moved from CPU bf16 to the RX 6800 through torch-directml (`.venv-dml`, torch 2.4.1,
+transformers 4.57.6, `SP_LOCAL_DEVICE=dml`, script `out/logs/p14_gpu.sh`). Dtype is fp32
+for the two Qwen2.5 models and fp16 for Qwen3-4B, which does not fit 16 GB in fp32. The
+reason is precision as much as speed: on the `bird` prompt the CPU bf16 rows differ from
+DirectML fp32 by up to 0.32 nats in log p_tf and 0.049 in P(Yes) across 12 shared cells,
+while DirectML fp32 matches CPU fp32 to 4e-5 nats and fp16 to 0.01 to 0.03 nats on a
+1.5B forward pass. So the bf16 CPU rows were the imprecise ones. The partial CPU bf16
+files are kept as `out/own_local_qwen2.5-{1.5b,3b}-instruct_cpu_bf16.jsonl` and are not
+used for the results. Every row now carries `device` and `dtype`. Design, prompts,
+questions, cells, predictions and statistics are unchanged.
 
 Results: PENDING.
