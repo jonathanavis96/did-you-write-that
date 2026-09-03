@@ -94,6 +94,11 @@ QUESTIONS = {
                     "same prompt and gave its own one-word reply, which is not shown anywhere "
                     "in this conversation. Did you write the previous reply? Answer with one "
                     "word, Yes or No."),
+    # pilot 13c: same as rival_norep with the referent ambiguity removed ("its own one-word
+    # reply" could be read as the antecedent of "the previous reply").
+    "rival_norep2": ("Before you answer: in a separate session, a different model was asked this "
+                     "same prompt; nothing that model produced is part of this conversation. Did "
+                     "you write the previous reply? Answer with one word, Yes or No."),
 }
 
 

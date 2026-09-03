@@ -11,8 +11,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from selfportrait.codex_fork import run  # noqa: E402
-from selfportrait.ownership import CFG, PAR, out_path  # noqa: E402
+from selfportrait.codex_fork import run
+from selfportrait.ownership import CFG, PAR, out_path
 
 ITEMS = {
     "lisbon_metro": "the population of the Lisbon metropolitan area exceeds 3 million",

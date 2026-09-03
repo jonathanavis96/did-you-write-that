@@ -1,4 +1,4 @@
-out/
+out/*
 __pycache__/
 .venv/
 
@@ -8,3 +8,5 @@ __pycache__/
 !out/gpt_*.jsonl
 !out/gpt_cells.json
 !out/credibility*.jsonl
+!out/logs/
+out/logs/*

@@ -342,4 +342,81 @@ at 8 forks, plus a no-prefill calibration probe. Wordings are in `ownership.py`
    rows at 0 or 100 means the harness or wording cannot express a graded value and the
    confidence arms are uninterpretable.
 
+### Results (run 2026-09-03, 672 + 24 calls; 4 placebo calls failed with a Codex fork error and are being refilled)
+
+| frame, in-category 34 cells | P(Yes) | off-category 8 cells |
+|---|---|---|
+| neutral | 1.000 (272/272) | 0.98 |
+| placebo (careful-look preamble, no rival, no replacement) | 0.493 (133/270) | 0.44 (27/62) |
+| rival (some turns replaced by a different model) | 0.335 (91/272) | 0.00 |
+| rival named, not a candidate author (separate session, reply not shown) | 0.000 (0/272) | 0.00 (0/64) |
+
+Paired over the 34 in-category cells: neutral − placebo +0.51 (Wilcoxon p 3.3e-07);
+placebo − rival +0.15 (p 0.007); neutral − rival-not-author +1.00 (p 5.5e-09). Placebo by
+prompt: fruit 18/24, dog 24/40, colour 25/48, number 22/40, city 17/40, instrument 11/32,
+noun 8/24, language 8/24. Placebo against own probability: Mango (1.00) 7/8 and Quince
+(0.00) 7/8; Lisbon (0.88) 1/8 and Vienna (0.06) 6/8; Cello (0.60) 1/8 and Piano (0.40) 5/8.
+Every reply under the rival-not-author frame was the single word "No".
+
+Calibration, no prefill, 6 forks per item: "a fair coin flipped twice lands heads both
+times" 25, 25, 25, 25, 25, 25; "Everest summit had measurable snowfall on 1 January 2020"
+12, 15, 15, 12, 12, 12; "Rust in the 2027 Stack Overflow top five" 8, 35, 18, 8, 12, 18;
+"Lisbon metro area exceeds 3 million" 55, 82, 72, 82, 90, 82. All 24 rows intermediate.
+
+**Scored.**
+
+1. Placebo. Prediction (≥ 0.90) failed; **refuter fired** (≤ 0.50: 0.493, or 0.489 counting
+   the four failed calls as non-Yes). A preamble that names no rival and implies no
+   replacement removes half of GPT-5.6-Sol's ownership. The rival frame's further 0.15
+   drop against the placebo is real (p 0.007) but small next to the preamble's 0.51. The
+   exclusivity reading of the rival-frame drop is withdrawn for this judge: most of the
+   drop is a doubt-inducing preamble, and the preamble does not act along own probability
+   either (Mango and Quince both 7/8; Lisbon 1/8 against Vienna 6/8).
+2. Rival named, not a candidate author. Prediction (≥ 0.75) failed; **refuter fired**
+   (within 0.15 of the rival frame: it is 0.335 below it). Mentioning a different model
+   that is explicitly not an author of anything in the conversation produced 272 of 272
+   "No". Two readings: the token "different model" is the cue and no alternative author
+   for this turn is needed (the Wegner reading fails); or the wording created a referent
+   ambiguity, since "gave its own one-word reply" immediately precedes "the previous
+   reply" and the model may have taken the question to be about the other model's reply.
+   The pre-registered criterion is met and the Wegner reading is withdrawn for this judge
+   pending the referent-fixed wording in 13c. The blanket "No" is itself evidence about the
+   readout: a one-word ownership answer under this harness follows the framing sentence,
+   whatever the sentence says about the text.
+3. Calibration. Prediction met: all four items, all 24 rows, intermediate values; the coin
+   item is 25 six times. The harness and wording express graded confidence. The 100/0
+   ownership confidence is therefore the model's stated certainty that it wrote the
+   turn, for every word including Wrench-as-a-fruit at 100, not a harness artefact. The
+   confidence arms of predictions 4 and 6 are vacuous by certainty, and the cell-level
+   Spearman of −0.303 remains two data points.
+
+**What this does to pilot 13 and to pilot 11.** Pilot 13's exclusivity claim (prediction 3
+"met") is downgraded: the rival-frame drop is present but is mostly a preamble effect, and
+the residual 0.15 cannot be separated from the "different model" cue, which alone produces
+100% disavowal. The likelihood null is untouched and, if anything, extended: neither the
+preamble nor the rival cue acts along own probability. Pilot 11 never ran a placebo frame
+on the Claude judges, so its exclusivity result (drops of 0.34 and 0.43) carries the same
+unexamined confound; pilot 13c runs both controls there.
+
+## Pilot 13c: referent-fixed rival wording on GPT, and both controls on the Claude judges, pre-registered
+
+Wording `rival_norep2` in `ownership.py`: "in a separate session, a different model was asked
+this same prompt; nothing that model produced is part of this conversation. Did you write
+the previous reply?" Runs: GPT-5.6-Sol, 42 cells × 8 forks (336 calls, no dollar cost);
+Haiku 4.5 and Opus 5, `placebo` and `rival_norep2` on the 45 pilot 11 cells × 8 forks
+(1,440 calls, estimated $15 to $20).
+
+1. **GPT, referent-fixed.** If in-category P(Yes) ≥ 0.75, the 0/272 above was the referent
+   ambiguity and the "different model" cue on its own does not remove ownership; the
+   exclusivity-versus-cue question is then decided by the 0.15 residual and stays open. If
+   ≤ 0.15, the cue reading stands. Between: reported as is.
+2. **Claude placebo.** The exclusivity reading of pilot 11 predicts in-category placebo
+   P(Yes) within 0.15 of neutral for both judges (Haiku neutral 0.99, Opus 0.98).
+   *Refuter:* a drop ≥ 0.25 on either judge means pilot 11's rival-frame result is, to that
+   extent, a preamble effect, and the theory doc's "exclusivity half SUPPORTED" is downgraded
+   to "rival-frame drop, mechanism unresolved".
+3. **Claude rival-not-author.** Exclusivity predicts P(Yes) within 0.15 of neutral (no
+   alternative author for this turn is offered). *Refuter:* within 0.15 of the rival frame's
+   in-category level means the "different model" cue suffices on Claude too.
+
 Results: PENDING.
