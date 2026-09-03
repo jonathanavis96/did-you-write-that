@@ -483,7 +483,39 @@ drop is not.
 
 ### Results, Opus 5
 
-PENDING (Opus returned 529 Overloaded on the first attempt; refill loop running).
+1,440 calls after purging every 529-overload row and refilling (45 pilot 11 cells, 8
+forks, 0 errors in the final set). Recomputed from `out/own_judgements.jsonl`, judge
+`opus`.
+
+| Frame | In-category P(Yes) | Off-category P(Yes) |
+|---|---|---|
+| neutral | 296/296 = 1.000 | 57/64 = 0.89 |
+| placebo (matched preamble, no rival) | 296/296 = 1.000 | 43/64 = 0.67 |
+| rival_norep2 (other model named, wrote nothing here) | 273/296 = 0.922 | 46/64 = 0.72 |
+| rival (other model a candidate author) | 196/296 = 0.662 | 1/64 = 0.02 |
+
+By tag, rival_norep2: haiku_top 56/64, haiku_mid 47/48, haiku_low 48/48, opus_top 36/40,
+opus_mid 24/24, opus_low 7/8, valid_unsampled 55/64. Rival: haiku_top 53/64, haiku_mid
+38/48, haiku_low 37/48, opus_top 25/40, opus_mid 15/24, opus_low 6/8, valid_unsampled
+22/64. Paired Wilcoxon on the 37 in-category cell means: neutral − placebo 0.000 (no cell
+differs); placebo − rival_norep2 +0.078 (p 9.6e-04); rival_norep2 − rival +0.260
+(p 2.3e-04); neutral − rival +0.338 (p 1.7e-05). Spearman against raw own probability:
+rival_norep2 ρ = +0.04 (p 0.81), rival ρ = +0.22 (p 0.20); against log own probability on
+the 13 non-zero cells ρ = −0.22 and +0.35, both n.s. The cells that lose ownership under
+rival_norep2 are spread across prompts (number 17 4/8, number 1 3/8, taupe 5/8, number 7
+6/8, nine cells at 7/8), with no own-probability pattern (17 is Opus's own 26/48 modal
+number; 1 is never produced).
+
+**Scored, Opus.** Item 2 (placebo within 0.15 of neutral): 1.000 vs 1.000, met; the refuter
+(drop ≥ 0.25) did not fire. Item 3 (rival-not-author within 0.15 of neutral): 0.922 vs
+1.000, met; it is 0.26 above the rival frame, so the refuter (within 0.15 of the rival
+level) did not fire. Opus therefore reads like Haiku, more strongly: the matched preamble
+costs nothing, naming a non-author model costs 0.08, and making that model a candidate
+author of this very turn costs a further 0.26. On both Claude judges the drop is specific
+to an offered alternative author, which is what the exclusivity reading requires, and on
+neither does it track the model's own probability of the text. The off-category rows tell
+the same story from the other side: nonsense answers that Opus still owns 0.89 under the
+neutral question are owned 0.02 once a rival author is offered.
 
 ## Pilot 13d: role-label control, pre-registered before running
 
