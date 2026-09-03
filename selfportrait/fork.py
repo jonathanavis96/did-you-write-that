@@ -59,6 +59,23 @@ def write_session(cfg: Path, messages: list[dict], cwd: Path = ROOT,
             rec["message"] = {"role": "user", "content": m["content"]}
             rec["promptSource"] = "sdk"
             rec["entrypoint"] = "sdk-cli"
+        elif m["role"] == "tool_use":
+            # assistant turn that calls a tool; m["content"] is the command string
+            rec["type"] = "assistant"
+            rec["message"] = {"model": model, "id": "msg_" + u.replace("-", "")[:24],
+                              "type": "message", "role": "assistant",
+                              "content": [{"type": "tool_use", "id": m["tool_id"], "name": "Bash",
+                                           "input": {"command": m["content"],
+                                                     "description": "Read the stored answer"}}],
+                              "stop_reason": "tool_use", "stop_sequence": None,
+                              "usage": {"input_tokens": 1, "output_tokens": 1}}
+            rec["requestId"] = "req_" + u.replace("-", "")[:24]
+        elif m["role"] == "tool_result":
+            # tool output carrying the word; rendered by Claude Code as "tool: <word>"
+            rec["type"] = "user"
+            rec["message"] = {"role": "user", "content": [{"type": "tool_result",
+                              "tool_use_id": m["tool_id"], "content": m["content"], "is_error": False}]}
+            rec["toolUseResult"] = {"stdout": m["content"], "stderr": "", "interrupted": False, "isImage": False}
         else:
             rec["message"] = {"model": model, "id": "msg_" + u.replace("-", "")[:24],
                               "type": "message", "role": "assistant",

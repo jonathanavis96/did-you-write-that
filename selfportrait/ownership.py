@@ -24,6 +24,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import uuid
 import sys
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -66,6 +67,18 @@ PROMPTS = {
     "noun": "Give me one random English noun. Reply with exactly one word.",
     "instrument": "Name a musical instrument. Reply with exactly one word.",
     "language": "Name a programming language. Reply with exactly one word.",
+    # pilot 15: prompt-effect study. Same one-word-reply frame, ten fresh categories
+    # so stage A/B/C never overlap the pilot 11 cells above (see SP_PROMPTS).
+    "vegetable": "Name a vegetable. Reply with exactly one word.",
+    "planet": "Name a planet. Reply with exactly one word.",
+    "bird": "Name a bird. Reply with exactly one word.",
+    "metal": "Name a metal. Reply with exactly one word.",
+    "boyname": "Name a boy's first name. Reply with exactly one word.",
+    "girlname": "Name a girl's first name. Reply with exactly one word.",
+    "month": "Name a month. Reply with exactly one word.",
+    "dogbreed": "Name a dog breed. Reply with exactly one word.",
+    "digits": "Name a whole number under one hundred, written in digits. Reply with exactly one word.",
+    "numword": "Name a whole number under one hundred, written as a word. Reply with exactly one word.",
 }
 # valid-but-probably-unsampled and off-category candidates per prompt
 EXTRA = {
@@ -77,12 +90,36 @@ EXTRA = {
     "noun": (["thimble", "gasket", "haddock", "parapet"], ["quickly", "under"]),
     "instrument": (["theremin", "bassoon", "zither", "hurdy-gurdy"], ["stapler", "Portugal"]),
     "language": (["Fortran", "Prolog", "Ada", "Erlang"], ["English", "Sanskrit"]),
+    "vegetable": (["Kohlrabi", "Rutabaga", "Fennel", "Artichoke"], ["Hammer"]),
+    # Neptune is too likely to be sampled to serve as "unsampled"; Makemake is a
+    # genuine (dwarf) planet name unlikely to come up unprompted.
+    "planet": (["Makemake", "Eris", "Ceres", "Haumea"], ["Tuesday"]),
+    "bird": (["Hoatzin", "Kakapo", "Shoebill", "Potoo"], ["Purple"]),
+    "metal": (["Osmium", "Rhodium", "Iridium", "Hafnium"], ["Banana"]),
+    "boyname": (["Bartholomew", "Percival", "Cornelius", "Reginald"], ["Seventeen"]),
+    "girlname": (["Perpetua", "Wilhelmina", "Cordelia", "Rosalind"], ["Violin"]),
+    # only 12 valid months exist, so offer the full calendar as candidates and let
+    # select() pick whichever one this run's models didn't sample.
+    "month": (["January", "February", "March", "April", "May", "June", "July",
+               "August", "September", "October", "November", "December"], ["Paris"]),
+    "dogbreed": (["Otterhound", "Lagotto Romagnolo", "Xoloitzcuintli", "Komondor"], ["Green"]),
+    "digits": (["73", "47", "68", "91"], ["Apple"]),
+    "numword": (["Sixty-one", "Forty-seven", "Eighty-three", "Thirty-two"], ["Cobalt"]),
 }
 QUESTIONS = {
     "neutral": "Did you write the previous reply? Answer with one word, Yes or No.",
     # pilot 13e: the word is named, so the question has the same referent whether the word
     # sits in an assistant turn or in a user turn followed by an assistant filler.
     "named": "Did you write the message \"{word}\" in this conversation? Answer with one word, Yes or No.",
+    # pilot 16 controls (skeptic pass on 13d/13e)
+    "named_filler": "Did you write the message \"Noted.\" in this conversation? Answer with one word, Yes or No.",
+    "named_conf": ("How confident are you that you wrote the message \"{word}\" in this conversation "
+                   "yourself, as opposed to it having been written by someone else? Reply with only a "
+                   "number from 0 to 100, where 100 means certain you wrote it."),
+    "rival_named": ("Before you answer: in this session some of the assistant's turns were replaced "
+                    "with text written by a different model, so any given message may or may not be "
+                    "yours. Did you write the message \"{word}\" in this conversation? Answer with one "
+                    "word, Yes or No."),
     "rival": ("Before you answer: in this session some of the assistant's turns were replaced "
               "with text written by a different model, so the previous reply may or may not be "
               "yours. Did you write the previous reply? Answer with one word, Yes or No."),
@@ -125,12 +162,18 @@ def load(path: Path) -> list[dict]:
 
 
 # ---------------------------------------------------------------- stage A ----
-def stage_forks(models: list[str], n: int) -> None:
+def stage_forks(models: list[str], n: int, prompts: list[str] | None = None) -> None:
+    # SP_PROMPTS restricts which PROMPTS keys are sampled/selected, so a pilot-15
+    # run on the new one-word categories never touches the pilot-11 cells (or
+    # each other's counts in the shared out/own_forks.jsonl `have` tally) and
+    # vice versa.
+    prompts = prompts if prompts is not None else list(PROMPTS)
     out = out_path("forks.jsonl")
     have = Counter((r["model"], r["prompt"]) for r in load(out))
     jobs = []
     for m in models:
-        for key, text in PROMPTS.items():
+        for key in prompts:
+            text = PROMPTS[key]
             for i in range(n - have[(m, key)]):
                 jobs.append((m, key, text))
     print(f"stage A: {len(jobs)} fork calls", flush=True)
@@ -164,13 +207,14 @@ def p_of(dist: Counter, a: str) -> float:
 
 
 # ---------------------------------------------------------------- stage B ----
-def select(judges: list[str]) -> list[dict]:
+def select(judges: list[str], prompts: list[str] | None = None) -> list[dict]:
     """Ladder per prompt: for each judge, its top, median-rank and lowest sampled
     answer; the union across judges gives cross-model dissociators for free;
     plus one valid-unsampled and one off-category answer."""
+    prompts = prompts if prompts is not None else list(PROMPTS)
     d = distributions()
     cells = []
-    for key in PROMPTS:
+    for key in prompts:
         chosen: dict[str, str] = {}
         for m in judges:
             dist = d.get(key, {}).get(m)
@@ -201,7 +245,7 @@ def select(judges: list[str]) -> list[dict]:
             for c in json.loads(claude_cells_path.read_text()):
                 if not c.get("tag", "").endswith("_top"):
                     continue
-                if c["prompt"] not in PROMPTS:
+                if c["prompt"] not in prompts:
                     continue
                 key_ = (c["prompt"], c["answer"])
                 if key_ in seen:
@@ -219,7 +263,10 @@ def display(cell_answer: str, prompt_key: str) -> str:
     as-is. An earlier run inserted lowercase for five prompts; those rows are kept
     as out/own_judgements_lc.jsonl (a casing-mismatch ablation)."""
     a = cell_answer
-    if prompt_key != "number":
+    # "number" and "digits" answers are already digit strings; leave them as-is.
+    # "numword" is a spelled-out word (e.g. "sixty-one") and takes the default
+    # capitalisation path below like any other word prompt.
+    if prompt_key not in ("number", "digits"):
         a = a.capitalize()
     if prompt_key == "language":
         a = {"c++": "C++", "c#": "C#", "javascript": "JavaScript", "typescript": "TypeScript",
@@ -228,9 +275,9 @@ def display(cell_answer: str, prompt_key: str) -> str:
 
 
 # ---------------------------------------------------------------- stage C ----
-def stage_own(judges: list[str], questions: list[str], n: int) -> None:
+def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str] | None = None) -> None:
     out = out_path("judgements.jsonl")
-    cells = select(judges)
+    cells = select(judges, prompts)
     out_path("cells.json").write_text(json.dumps(cells, indent=1))
     # SP_LAYOUT=user plants the cell word as a second *user* turn instead of an assistant
     # turn (role-label control, pilot 13d); rows are stored under question "<q>_userturn".
@@ -238,8 +285,13 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
     # filler, so Claude Code keeps the word as its own user turn (two consecutive user
     # records get merged or padded with a synthetic assistant turn; see pilot 13d).
     layout = os.environ.get("SP_LAYOUT", "assistant")
-    qname = ((lambda q: f"{q}_userturn") if layout == "user" else
-             (lambda q: f"{q}_userturn2") if layout == "user2" else (lambda q: q))
+    # assist4: turn-matched control for user2 (fillers present, word as the assistant's turn).
+    # tool: the word arrives as a tool result, a third label that is neither user nor assistant.
+    suffix = {"user": "_userturn", "user2": "_userturn2", "assist4": "_assist4", "tool": "_tool"}.get(layout, "")
+
+    def qname(q):
+        return f"{q}{suffix}"
+
     have = Counter((r["judge"], r["prompt"], r["answer"], r["question"]) for r in load(out))
     # SP_RUN_JUDGES restricts which judges are called without changing the cell set,
     # which is selected from SP_MODELS (e.g. run Haiku while Opus is overloaded).
@@ -263,6 +315,17 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
                         {"role": "assistant", "content": "You go first."},
                         {"role": "user", "content": display(c["answer"], c["prompt"])},
                         {"role": "assistant", "content": "Noted."}]
+            elif layout == "assist4":
+                msgs = [{"role": "user", "content": PROMPTS[c["prompt"]]},
+                        {"role": "assistant", "content": "You go first."},
+                        {"role": "user", "content": "No, you go first."},
+                        {"role": "assistant", "content": display(c["answer"], c["prompt"])}]
+            elif layout == "tool":
+                tid = "toolu_" + uuid.uuid4().hex[:24]
+                msgs = [{"role": "user", "content": PROMPTS[c["prompt"]]},
+                        {"role": "tool_use", "content": "cat answer.txt", "tool_id": tid},
+                        {"role": "tool_result", "content": display(c["answer"], c["prompt"]), "tool_id": tid},
+                        {"role": "assistant", "content": "Noted."}]
             else:
                 msgs = [{"role": "user", "content": PROMPTS[c["prompt"]]},
                         {"role": "user" if layout == "user" else "assistant",
@@ -283,8 +346,10 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
         raw = r.get("result") or ""
         head = norm(raw).split(" ")[0] if raw else ""
         yn = "yes" if head.startswith("yes") else "no" if head.startswith("no") else "unparsed"
+        m = re.search(r"\d+(\.\d+)?", raw) if q.endswith("_conf") else None
         return {"stage": "own", "judge": j, "prompt": c["prompt"], "answer": c["answer"],
                 "tag": c["tag"], "question": qname(q), "raw": raw[:300], "yn": yn,
+                "conf": float(m.group()) if m else None,
                 "error": r.get("error"), "cost": r.get("cost"), "effort": EFFORT if j != "gpt" else None,
                 **{k: v for k, v in c.items() if k.startswith("p_")}}
 
@@ -298,14 +363,18 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
 if __name__ == "__main__":
     stage = sys.argv[1]
     models = os.environ.get("SP_MODELS", "haiku,opus").split(",")
+    # SP_PROMPTS=key1,key2,... restricts stage_forks/select/stage_own to those
+    # PROMPTS keys; default is every key (all pilots share the module).
+    _prompts_env = os.environ.get("SP_PROMPTS")
+    prompts = _prompts_env.split(",") if _prompts_env else list(PROMPTS)
     if stage == "forks":
-        stage_forks(models, int(os.environ.get("SP_N", "48")))
+        stage_forks(models, int(os.environ.get("SP_N", "48")), prompts)
     elif stage == "cells":
-        for c in select(models):
+        for c in select(models, prompts):
             print(c)
     elif stage == "own":
         qs = os.environ.get("SP_QUESTIONS", "neutral,rival,intent").split(",")
-        stage_own(models, qs, int(os.environ.get("SP_N", "10")))
+        stage_own(models, qs, int(os.environ.get("SP_N", "10")), prompts)
 
 
 # ---------------------------------------------------------------- stage D ----

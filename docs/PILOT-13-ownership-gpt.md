@@ -342,17 +342,17 @@ at 8 forks, plus a no-prefill calibration probe. Wordings are in `ownership.py`
    rows at 0 or 100 means the harness or wording cannot express a graded value and the
    confidence arms are uninterpretable.
 
-### Results (run 2026-09-03, 672 + 24 calls; 4 placebo calls failed with a Codex fork error and are being refilled)
+### Results (run 2026-09-03, 672 + 24 calls; 4 placebo calls failed with a Codex fork error and were refilled; counts below are after the refill)
 
 | frame, in-category 34 cells | P(Yes) | off-category 8 cells |
 |---|---|---|
 | neutral | 1.000 (272/272) | 0.98 |
-| placebo (careful-look preamble, no rival, no replacement) | 0.493 (133/270) | 0.44 (27/62) |
+| placebo (careful-look preamble, no rival, no replacement) | 0.493 (134/272) | 0.44 (28/64) |
 | rival (some turns replaced by a different model) | 0.335 (91/272) | 0.00 |
 | rival named, not a candidate author (separate session, reply not shown) | 0.000 (0/272) | 0.00 (0/64) |
 
 Paired over the 34 in-category cells: neutral − placebo +0.51 (Wilcoxon p 3.3e-07);
-placebo − rival +0.15 (p 0.0048); neutral − rival-not-author +1.00 (p 5.5e-09). Placebo by
+placebo − rival +0.16 (p 0.0048); neutral − rival-not-author +1.00 (p 5.5e-09). Placebo by
 prompt: fruit 18/24, dog 24/40, colour 25/48, number 23/40, city 17/40, instrument 11/32,
 noun 8/24, language 8/24. Placebo against own probability: Mango (1.00) 7/8 and Quince
 (0.00) 7/8; Lisbon (0.88) 1/8 and Vienna (0.06) 6/8; Cello (0.60) 1/8 and Piano (0.40) 5/8.
