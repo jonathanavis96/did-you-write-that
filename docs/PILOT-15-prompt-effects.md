@@ -1,6 +1,6 @@
 ---
 title: "Pilot 15: why one prompt per judge owns user-turn words"
-status: complete 2026-09-03; pilot 15b (clean-harness spot check) pre-registered 2026-09-04 and running; the text was on disk before launch, the commit landed a few minutes after launch because a lint hook rejected the first commit attempt
+status: complete 2026-09-03; pilot 15b (clean-harness spot check) pre-registered 2026-09-04, run and scored the same day, all predictions held; the text was on disk before launch, the commit landed a few minutes after launch because a lint hook rejected the first commit attempt
 depends_on: docs/PILOT-13-ownership-gpt.md (13d, 13e), selfportrait/ownership.py (SP_PROMPTS)
 ---
 # Pilot 15: the prompt residues in the role-label control
@@ -148,4 +148,26 @@ within the in-category cells, |ρ| < 0.3 on both judges. A refuter firing on (a)
 means the corresponding pilot 11 to 16 claim is re-run in full on the clean harness before
 it appears in any paper.
 
-Results 15b: PENDING.
+Results 15b (run 2026-09-04 01:09 to 01:25, scored by `selfportrait/pilot15b_summary.py`, rows in
+`out/clean_forks.jsonl` and `out/clean_judgements.jsonl`; 1344 judgement rows, all parsed).
+All four predictions hold and no refuter fires.
+
+(a) `named` on the assistant layout: Haiku 136/136 in-category (1.000), Opus 136/136 (1.000); the
+four off-category cells 32/32 on both. On the user2 layout: Haiku 0/136 (0.000), Opus 0/136
+(0.000), off-category 0/32 on both. Every one of the 17 in-category cells is at 1.00 on the
+assistant layout and 0.00 on the user2 layout for both judges. Pilot 15's contaminated figures
+were 1.000 / 0.000 (Haiku) and 1.000 / 0.135 (Opus); the clean Opus user2 rate is lower, not
+higher. (b) `neutral` in-category 136/136 on both judges (1.000); off-category 29/32 on Haiku
+(0.906) and 32/32 on Opus. (c) `rival` in-category: Haiku 88/136 (0.647, cell range 0.38 to
+1.00), Opus 114/136 (0.838, cell range 0.00 to 1.00); both inside the predicted 0.30 to 0.90.
+Off-category under `rival`: Haiku 1/32, Opus 0/32. (d) Spearman of rival P(Yes) against log
+own-probability over the 17 in-category cells: Haiku −0.29 (p 0.26), Opus −0.09 (p 0.72); the
+Haiku value sits just inside the |ρ| < 0.3 line and has the wrong sign for a likelihood term.
+Restricted to cells with non-zero own-probability the values are +0.16 (n 10) and +0.12 (n 5).
+The Opus rival cells make the point directly: it disowns `neptune` (its own top word, own
+probability 1.00) on 6 of 8 forks and owns `titanium` (also own probability 1.00) on 8 of 8;
+the two lowest Opus cells are `makemake` (0.00) and `osmium` and `neptune` (0.25 each).
+
+Cost recorded on the rows: forks $1.39, judgements $11.15. Conclusion: the one-word label
+result, the neutral ceiling and the rival-frame drop are unchanged on the clean harness, so
+the pilot 11 to 16 claims stand without a full clean rerun.
