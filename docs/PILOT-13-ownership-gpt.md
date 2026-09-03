@@ -634,3 +634,18 @@ against 0.92 under the "previous reply" wording in 13c; asking about the word by
 removes the last trace of content-sensitivity. Together with GPT's 0.118 vs 1.000 in 13d
 this is the theory's positive prediction confirmed on two vendors: ownership tracks the
 transcript's role label, not the model's own likelihood of the text.
+
+### 13e on Opus 5 and Fable 5.1 (pre-registered 2026-09-03, before launch)
+
+Same two layouts and the same `named` question, 45 pilot 11 cells, **4 forks** per cell
+(Haiku's result had no variance, so 4 forks bound each cell at 0/4 or 4/4). Judges: Opus 5
+(default effort) and Fable 5.1 at `--effort low` (`SP_EFFORT=low`, recorded per row). Fable
+has no fork-sampled own distribution, so the tags name Haiku's and Opus's probabilities;
+for Fable the leak test (prediction 3) is not run and only predictions 1, 2, 4 and 5 apply.
+A Fable listing probe returned the four turns intact before the run. Predictions as above:
+assistant layout ≥ 0.90, user layout ≤ 0.10, off-category ≤ 0.10 in the user layout, no
+prompt above 0.25 in the user layout; for Opus, own-top within 0.10 of never-produced.
+Rows `named` and `named_userturn2`, judges `opus` and `fable`, in `out/own_judgements.jsonl`.
+Estimated cost about $90 (Opus ≈ $0.10, Fable ≈ $0.14 per call).
+
+Results: PENDING.

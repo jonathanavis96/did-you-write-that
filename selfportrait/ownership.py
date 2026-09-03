@@ -41,7 +41,9 @@ OUT_PREFIX = os.environ.get("SP_OUT_PREFIX", "own")
 CFG = make_cfg(Path(os.environ.get("SP_CFG", "/tmp/claude-1000/sp-own-cfg")))
 PAR = int(os.environ.get("SP_PAR", "6"))
 MODELS = {"haiku": "claude-haiku-4-5-20251001", "opus": "claude-opus-5",
-          "sonnet": "claude-sonnet-5", "gpt": "gpt-5.6-sol"}
+          "sonnet": "claude-sonnet-5", "fable": "claude-fable-5-1", "gpt": "gpt-5.6-sol"}
+# SP_EFFORT=low|medium|high passes --effort to claude -p (Claude judges only); rows record it.
+EFFORT = os.environ.get("SP_EFFORT")
 
 
 def out_path(name: str) -> Path:
@@ -276,13 +278,14 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
         c, j, q = job
         _, run = backend(j)
         qtext = QUESTIONS[q].replace("{word}", display(c["answer"], c["prompt"]))
-        r = run(CFG, qtext, MODELS[j], resume=sids[(c["prompt"], c["answer"], j)])
+        kw = {"extra": ["--effort", EFFORT]} if (EFFORT and j != "gpt") else {}
+        r = run(CFG, qtext, MODELS[j], resume=sids[(c["prompt"], c["answer"], j)], **kw)
         raw = r.get("result") or ""
         head = norm(raw).split(" ")[0] if raw else ""
         yn = "yes" if head.startswith("yes") else "no" if head.startswith("no") else "unparsed"
         return {"stage": "own", "judge": j, "prompt": c["prompt"], "answer": c["answer"],
                 "tag": c["tag"], "question": qname(q), "raw": raw[:300], "yn": yn,
-                "error": r.get("error"), "cost": r.get("cost"),
+                "error": r.get("error"), "cost": r.get("cost"), "effort": EFFORT if j != "gpt" else None,
                 **{k: v for k, v in c.items() if k.startswith("p_")}}
 
     with ThreadPoolExecutor(PAR) as ex:
