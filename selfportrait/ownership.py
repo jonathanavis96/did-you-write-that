@@ -154,9 +154,12 @@ def select(judges: list[str]) -> list[dict]:
 
 
 def display(cell_answer: str, prompt_key: str) -> str:
-    """Case for the inserted turn: numbers as-is, names capitalised."""
+    """Form of the inserted turn: the modal raw form the models produce is a
+    capitalised word with no trailing period ("Apple", "Teal", "Scout"); numbers
+    as-is. An earlier run inserted lowercase for five prompts; those rows are kept
+    as out/own_judgements_lc.jsonl (a casing-mismatch ablation)."""
     a = cell_answer
-    if prompt_key in ("dog", "city", "language"):
+    if prompt_key != "number":
         a = a.capitalize()
     if prompt_key == "language":
         a = {"c++": "C++", "c#": "C#", "javascript": "JavaScript", "typescript": "TypeScript",
