@@ -39,7 +39,9 @@ Env vars (all optional, defaults preserve the original pilot-11 behaviour):
                     3B/4B runs to roughly halve resident memory on CPU.
   SP_LOCAL_DEVICE  torch device for the model and inputs. Default "cpu". "cuda" runs
                     on the GPU (on Windows, the RX 6800 through ZLUDA presents as a
-                    CUDA device). Recorded on every row as "device", with "dtype".
+                    CUDA device); "dml" uses torch-directml (WSL2, the .venv-dml venv:
+                    torch 2.4.1, no bf16, fp32 matches CPU fp32 to ~1e-5 nats).
+                    Recorded on every row as "device", with "dtype".
 
 Output: one JSON row per (prompt, answer, question, layout) combination, fields
 model, prompt, answer, tag, layout, question, p_yes, p_tf, p_sample, log_p_tf,
@@ -89,7 +91,12 @@ OUT_PATH = Path(os.environ.get("SP_LOCAL_OUT", str(OUT / f"own_local_{slug_of(M)
 DTYPE = {"float32": torch.float32, "fp32": torch.float32,
           "bf16": torch.bfloat16, "bfloat16": torch.bfloat16,
           "float16": torch.float16, "fp16": torch.float16}[os.environ.get("SP_LOCAL_DTYPE", "float32")]
-DEV = os.environ.get("SP_LOCAL_DEVICE", "cpu")
+DEV_NAME = os.environ.get("SP_LOCAL_DEVICE", "cpu")
+if DEV_NAME == "dml":
+    import torch_directml
+    DEV = torch_directml.device()
+else:
+    DEV = DEV_NAME
 DTYPE_NAME = os.environ.get("SP_LOCAL_DTYPE", "float32")
 tok = AutoTokenizer.from_pretrained(M)
 model = AutoModelForCausalLM.from_pretrained(M, dtype=DTYPE).eval().to(DEV)
@@ -195,7 +202,7 @@ def main():
                 rec = {"model": M, "prompt": key, "answer": a, "tag": tag, "layout": LAYOUT,
                        "question": q, "p_yes": p_yes, "p_tf": p_tf, "p_sample": p_sample,
                        "log_p_tf": safe_log(p_tf), "log_p_sample": safe_log(p_sample),
-                       "device": DEV, "dtype": DTYPE_NAME}
+                       "device": DEV_NAME, "dtype": DTYPE_NAME}
                 fh.write(json.dumps(rec) + "\n")
                 fh.flush()
                 have.add(combo)
