@@ -30,13 +30,30 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from selfportrait.fork import make_cfg, run, write_session  # noqa: E402
+from selfportrait import codex_fork
+from selfportrait.fork import make_cfg
+from selfportrait.fork import run as claude_run
+from selfportrait.fork import write_session as claude_write_session
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "out"
+OUT_PREFIX = os.environ.get("SP_OUT_PREFIX", "own")
 CFG = make_cfg(Path(os.environ.get("SP_CFG", "/tmp/claude-1000/sp-own-cfg")))
 PAR = int(os.environ.get("SP_PAR", "6"))
-MODELS = {"haiku": "claude-haiku-4-5-20251001", "opus": "claude-opus-5", "sonnet": "claude-sonnet-5"}
+MODELS = {"haiku": "claude-haiku-4-5-20251001", "opus": "claude-opus-5",
+          "sonnet": "claude-sonnet-5", "gpt": "gpt-5.6-sol"}
+
+
+def out_path(name: str) -> Path:
+    """out/own_forks.jsonl etc, with the `own` prefix swapped for SP_OUT_PREFIX."""
+    return OUT / f"{OUT_PREFIX}_{name}"
+
+
+def backend(judge: str):
+    """Returns (write_session, run) for the given judge's model provider."""
+    if judge == "gpt":
+        return codex_fork.write_session, codex_fork.run
+    return claude_write_session, claude_run
 
 PROMPTS = {
     "fruit": "Name a fruit. Reply with exactly one word.",
@@ -88,7 +105,7 @@ def load(path: Path) -> list[dict]:
 
 # ---------------------------------------------------------------- stage A ----
 def stage_forks(models: list[str], n: int) -> None:
-    out = OUT / "own_forks.jsonl"
+    out = out_path("forks.jsonl")
     have = Counter((r["model"], r["prompt"]) for r in load(out))
     jobs = []
     for m in models:
@@ -99,6 +116,7 @@ def stage_forks(models: list[str], n: int) -> None:
 
     def one(job):
         m, key, text = job
+        _, run = backend(m)
         r = run(CFG, text, MODELS[m])
         return {"stage": "fork", "model": m, "prompt": key, "raw": r.get("result"),
                 "answer": norm(r.get("result")), "error": r.get("error"), "cost": r.get("cost")}
@@ -113,7 +131,7 @@ def stage_forks(models: list[str], n: int) -> None:
 
 def distributions() -> dict:
     d: dict = {}
-    for r in load(OUT / "own_forks.jsonl"):
+    for r in load(out_path("forks.jsonl")):
         if r["answer"]:
             d.setdefault(r["prompt"], {}).setdefault(r["model"], Counter())[r["answer"]] += 1
     return d
@@ -150,6 +168,27 @@ def select(judges: list[str]) -> list[dict]:
         for a, tag in chosen.items():
             cells.append({"prompt": key, "answer": a, "tag": tag,
                           **{f"p_{m}": p_of(d[key][m], a) for m in judges if m in d.get(key, {})}})
+
+    # If this run's judges don't already cover haiku/opus, pull in the existing
+    # Claude modal answers (from a prior own_cells.json) as extra cells so a
+    # gpt-only run still probes the cross-model dissociator answers, with
+    # p_{judge} recomputed against this run's own distributions().
+    if not any(m in judges for m in ("haiku", "opus")):
+        claude_cells_path = OUT / "own_cells.json"
+        if claude_cells_path.exists():
+            seen = {(c["prompt"], c["answer"]) for c in cells}
+            for c in json.loads(claude_cells_path.read_text()):
+                if not c.get("tag", "").endswith("_top"):
+                    continue
+                if c["prompt"] not in PROMPTS:
+                    continue
+                key_ = (c["prompt"], c["answer"])
+                if key_ in seen:
+                    continue
+                seen.add(key_)
+                cells.append({"prompt": c["prompt"], "answer": c["answer"], "tag": c["tag"],
+                              **{f"p_{m}": p_of(d[c["prompt"]][m], c["answer"])
+                                 for m in judges if m in d.get(c["prompt"], {})}})
     return cells
 
 
@@ -169,9 +208,9 @@ def display(cell_answer: str, prompt_key: str) -> str:
 
 # ---------------------------------------------------------------- stage C ----
 def stage_own(judges: list[str], questions: list[str], n: int) -> None:
-    out = OUT / "own_judgements.jsonl"
+    out = out_path("judgements.jsonl")
     cells = select(judges)
-    (OUT / "own_cells.json").write_text(json.dumps(cells, indent=1))
+    out_path("cells.json").write_text(json.dumps(cells, indent=1))
     have = Counter((r["judge"], r["prompt"], r["answer"], r["question"]) for r in load(out))
     jobs = []
     for c in cells:
@@ -186,6 +225,7 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
     def sid_for(c, j):
         k = (c["prompt"], c["answer"], j)
         if k not in sids:
+            write_session, _ = backend(j)
             sids[k] = write_session(CFG, [
                 {"role": "user", "content": PROMPTS[c["prompt"]]},
                 {"role": "assistant", "content": display(c["answer"], c["prompt"])}],
@@ -198,6 +238,7 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
 
     def one(job):
         c, j, q = job
+        _, run = backend(j)
         r = run(CFG, QUESTIONS[q], MODELS[j], resume=sids[(c["prompt"], c["answer"], j)])
         raw = r.get("result") or ""
         head = norm(raw).split(" ")[0] if raw else ""
@@ -235,20 +276,22 @@ CONF_Q = ("How confident are you that you wrote the previous reply yourself, as 
 
 def stage_conf(judges: list[str], n: int) -> None:
     """Graded ownership: 0-100 confidence after the same prefill as stage C."""
-    out = OUT / "own_conf.jsonl"
-    cells = json.loads((OUT / "own_cells.json").read_text())
+    out = out_path("conf.jsonl")
+    cells = json.loads(out_path("cells.json").read_text())
     have = Counter((r["judge"], r["prompt"], r["answer"]) for r in load(out))
     jobs = [(c, j) for c in cells for j in judges for _ in range(n - have[(j, c["prompt"], c["answer"])])]
     print(f"stage D-conf: {len(jobs)} calls", flush=True)
     sids = {}
     for c in cells:
         for j in judges:
+            write_session, _ = backend(j)
             sids[(c["prompt"], c["answer"], j)] = write_session(CFG, [
                 {"role": "user", "content": PROMPTS[c["prompt"]]},
                 {"role": "assistant", "content": display(c["answer"], c["prompt"])}], model=MODELS[j])
 
     def one(job):
         c, j = job
+        _, run = backend(j)
         r = run(CFG, CONF_Q, MODELS[j], resume=sids[(c["prompt"], c["answer"], j)])
         raw = r.get("result") or ""
         m = re.search(r"\d+(\.\d+)?", raw)
@@ -267,8 +310,8 @@ def stage_explicit(judges: list[str], n: int) -> None:
     """Explicit self-prediction, no prefill: 'which of these two would you answer?'
     Pairs: each judge's top answer against every other cell answer for that prompt.
     Order of the two options is alternated across forks."""
-    out = OUT / "own_explicit.jsonl"
-    cells = json.loads((OUT / "own_cells.json").read_text())
+    out = out_path("explicit.jsonl")
+    cells = json.loads(out_path("cells.json").read_text())
     by_prompt: dict = defaultdict(list)
     for c in cells:
         by_prompt[c["prompt"]].append(c)
@@ -294,6 +337,7 @@ def stage_explicit(judges: list[str], n: int) -> None:
         q = (f"Suppose a user sent you exactly this message: \"{PROMPTS[key]}\"\n\n"
              f"Which of these two replies would you actually give? Reply with only the word itself, "
              f"either {first} or {second}.")
+        _, run = backend(j)
         r = run(CFG, q, MODELS[j])
         raw = r.get("result") or ""
         pick = norm(raw)
@@ -323,7 +367,7 @@ def stage_within(judges: list[str], n: int) -> None:
     ever produced in stage A becomes a cell for that judge, so own probability
     varies from 0.02 to 1.0 inside the set of words the model itself produces.
     Two readouts per cell: the rival Yes/No question and the 0-100 confidence."""
-    out = OUT / "own_within.jsonl"
+    out = out_path("within.jsonl")
     d = distributions()
     have = Counter((r["judge"], r["prompt"], r["answer"], r["readout"]) for r in load(out))
     cells = []
@@ -345,6 +389,7 @@ def stage_within(judges: list[str], n: int) -> None:
     sids = {}
     for c in cells:
         k = (c["prompt"], c["answer"], c["judge"])
+        write_session, _ = backend(c["judge"])
         sids[k] = write_session(CFG, [
             {"role": "user", "content": PROMPTS[c["prompt"]]},
             {"role": "assistant", "content": display(c["answer"], c["prompt"])}], model=MODELS[c["judge"]])
@@ -352,6 +397,7 @@ def stage_within(judges: list[str], n: int) -> None:
     def one(job):
         c, readout = job
         q = QUESTIONS["rival"] if readout == "rival" else CONF_Q
+        _, run = backend(c["judge"])
         r = run(CFG, q, MODELS[c["judge"]], resume=sids[(c["prompt"], c["answer"], c["judge"])])
         raw = r.get("result") or ""
         rec = {"stage": "within", "readout": readout, "raw": raw[:200], "error": r.get("error"),
