@@ -505,4 +505,36 @@ message." Runs: GPT-5.6-Sol, 42 cells × 8 forks (free); Haiku 4.5, 45 cells × 
 3. **Off-category words the same.** Wrench as a user turn ≤ 0.10, as under the label it
    was 0.98: the label, not the plausibility, carried the neutral-question Yes.
 
-Results: PENDING.
+### Results
+
+**Haiku arm invalid: the harness did not preserve the layout.** After the run, a probe asked
+Haiku to list the conversation. With Quince planted as a second user turn it listed
+"user: Name a fruit … / assistant: Quince"; with Prague it listed "assistant: No response
+requested." and no Prague at all. Claude Code re-renders two consecutive user records into
+an alternating history, so Haiku saw the word as an assistant turn (or a synthetic
+assistant turn) and its 284/296 Yes measures nothing about the label. The 360 Haiku rows
+stay in `out/own_judgements.jsonl` under `neutral_userturn` and are excluded from every
+statistic. A Claude label control needs a different layout, most likely an assistant
+tool_use followed by a tool_result carrying the word, which Claude Code does preserve. Not
+yet built.
+
+**GPT arm valid.** The same probe on Codex lists "user: Name a fruit … / user: Mango"; and
+"The user wrote the last message." 336 rows, 0 errors. In-category P(Yes) 32/272 = 0.118
+(against 1.000 for the same words as an assistant turn); off-category 4/64 = 0.06 (Wrench
+0/8, English 3/8, Wednesday 1/8). By tag: gpt_top 4/64, gpt_mid 9/48, gpt_low 5/32,
+valid_unsampled 5/64, haiku_top 9/56, opus_top 0/8. Mango 0/8, Lantern 0/8, Lisbon 0/8.
+By prompt: dog 27/40, every other prompt ≤ 2 of its forks (city 0/40, colour 2/48,
+fruit 0/24, instrument 1/32, language 0/24, noun 0/24, number 2/40). The dog prompt
+carries 27 of the 32 Yes (Chance 8/8, Hope 7/8, Hero 5/8, Scout 4/8, Gertrude 3/8); why a
+dog name as a user turn is owned by GPT and a city is not was not predicted and is not
+explained here.
+
+**Scored (GPT only).** 1. Label dispositive: 0.118 against a bound of 0.10, missed by five
+forks, all of them in the dog prompt; outside that prompt 5/232 = 0.02. 2. No leak from own
+probability: own_top 4/64 vs valid_unsampled 5/64, met; the refuter (an own-top cell at
+≥ 4/8 with its never-produced partner ≤ 1/8) did not fire, since the one own-top cell at
+4/8 (Scout) sits in a prompt where the never-produced Gertrude is 3/8. 3. Off-category
+0.06, met. Removing the assistant label removes the Yes for words the model produces every
+time exactly as for words it never produces. This is the positive prediction of the theory
+in its cleanest form on one judge; the Claude arm awaits a harness that preserves the
+layout.
