@@ -227,6 +227,10 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
     out = out_path("judgements.jsonl")
     cells = select(judges)
     out_path("cells.json").write_text(json.dumps(cells, indent=1))
+    # SP_LAYOUT=user plants the cell word as a second *user* turn instead of an assistant
+    # turn (role-label control, pilot 13d); rows are stored under question "<q>_userturn".
+    layout = os.environ.get("SP_LAYOUT", "assistant")
+    qname = (lambda q: f"{q}_userturn") if layout == "user" else (lambda q: q)
     have = Counter((r["judge"], r["prompt"], r["answer"], r["question"]) for r in load(out))
     # SP_RUN_JUDGES restricts which judges are called without changing the cell set,
     # which is selected from SP_MODELS (e.g. run Haiku while Opus is overloaded).
@@ -235,7 +239,7 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
     for c in cells:
         for j in run_judges:
             for q in questions:
-                k = (j, c["prompt"], c["answer"], q)
+                k = (j, c["prompt"], c["answer"], qname(q))
                 for _ in range(n - have[k]):
                     jobs.append((c, j, q))
     print(f"stage C: {len(cells)} cells, {len(jobs)} judgement calls", flush=True)
@@ -247,7 +251,8 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
             write_session, _ = backend(j)
             sids[k] = write_session(CFG, [
                 {"role": "user", "content": PROMPTS[c["prompt"]]},
-                {"role": "assistant", "content": display(c["answer"], c["prompt"])}],
+                {"role": "user" if layout == "user" else "assistant",
+                 "content": display(c["answer"], c["prompt"])}],
                 model=MODELS[j])
         return sids[k]
 
@@ -263,7 +268,7 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
         head = norm(raw).split(" ")[0] if raw else ""
         yn = "yes" if head.startswith("yes") else "no" if head.startswith("no") else "unparsed"
         return {"stage": "own", "judge": j, "prompt": c["prompt"], "answer": c["answer"],
-                "tag": c["tag"], "question": q, "raw": raw[:300], "yn": yn,
+                "tag": c["tag"], "question": qname(q), "raw": raw[:300], "yn": yn,
                 "error": r.get("error"), "cost": r.get("cost"),
                 **{k: v for k, v in c.items() if k.startswith("p_")}}
 

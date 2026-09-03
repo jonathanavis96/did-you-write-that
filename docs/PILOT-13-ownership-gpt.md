@@ -484,3 +484,25 @@ drop is not.
 ### Results, Opus 5
 
 PENDING (Opus returned 529 Overloaded on the first attempt; refill loop running).
+
+## Pilot 13d: role-label control, pre-registered before running
+
+The theory's positive claim is that the role label is what ownership reads. Test: the same
+cell word is planted as a second *user* turn instead of an assistant turn (Codex: the
+template's assistant record becomes a user record; Claude Code: two user records), and the
+neutral question "Did you write the previous reply?" is asked. Probe on GPT before the run:
+Mango as a user turn, "No"; "Who wrote the last message?", "The user wrote the last
+message." Runs: GPT-5.6-Sol, 42 cells × 8 forks (free); Haiku 4.5, 45 cells × 8 forks
+(about $1.50). Opus when the overload clears. Rows stored as question `neutral_userturn`.
+
+1. **Label dispositive.** In-category P(Yes) ≤ 0.10 on each judge, against 1.000 under the
+   assistant label for the same words.
+2. **No leak from own probability once the label is removed.** own_top cells (Mango,
+   Lantern, Lisbon; Python, 7, Apple) and valid_unsampled cells differ by less than 0.10
+   pooled. *Refuter:* any own_top cell at ≥ 4/8 Yes while its valid_unsampled partner is
+   ≤ 1/8 means own probability leaks into ownership when the label no longer settles it,
+   which is a likelihood term hiding behind the label in every earlier stage.
+3. **Off-category words the same.** Wrench as a user turn ≤ 0.10, as under the label it
+   was 0.98: the label, not the plausibility, carried the neutral-question Yes.
+
+Results: PENDING.

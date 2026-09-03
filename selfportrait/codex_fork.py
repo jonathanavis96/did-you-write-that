@@ -46,11 +46,18 @@ def write_session(cfg, messages: list[dict], cwd: Path = ROOT,
     Returns the new session id, planted as a rollout file under
     ~/.codex/sessions/YYYY/MM/DD/."""
     roles = [m["role"] for m in messages]
-    if sorted(roles) != ["assistant", "user"]:
-        raise ValueError(f"codex_fork.write_session needs exactly one user and one "
-                          f"assistant message, got roles={roles!r}")
-    user_text = next(m["content"] for m in messages if m["role"] == "user")
-    asst_text = next(m["content"] for m in messages if m["role"] == "assistant")
+    if sorted(roles) == ["assistant", "user"]:
+        user_text = next(m["content"] for m in messages if m["role"] == "user")
+        asst_text = next(m["content"] for m in messages if m["role"] == "assistant")
+        extra_user = None
+    elif roles == ["user", "user"]:
+        # role-label control: the planted word arrives as a second user turn and the
+        # template's assistant record is dropped.
+        user_text, extra_user = messages[0]["content"], messages[1]["content"]
+        asst_text = None
+    else:
+        raise ValueError(f"codex_fork.write_session needs one user and one assistant "
+                          f"message, or two user messages, got roles={roles!r}")
 
     if not TEMPLATE.exists():
         raise FileNotFoundError(f"codex template rollout not found: {TEMPLATE}")
@@ -77,7 +84,13 @@ def write_session(cfg, messages: list[dict], cwd: Path = ROOT,
             elif payload.get("role") == "assistant" and payload.get("content"):
                 content = payload["content"][0]
                 if content.get("type") == "output_text":
-                    content["text"] = asst_text
+                    if asst_text is None:
+                        # replace the assistant record with a second user record
+                        payload["role"] = "user"
+                        payload["content"] = [{"type": "input_text", "text": extra_user}]
+                        payload.pop("phase", None)
+                    else:
+                        content["text"] = asst_text
                     line = json.dumps(rec)
         elif rec.get("type") == "turn_context":
             payload = rec.get("payload", {})
