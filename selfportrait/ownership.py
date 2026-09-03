@@ -1,0 +1,224 @@
+"""Pilot 11: does a model's sense of having written a text track the text's
+probability under its own sampling distribution? (THEORY prediction 8 / P3,
+fork-isolated Survivor 2, Wegner's consistency + exclusivity principles.)
+
+Stage A  forks:   sample each open-ended one-word prompt N times on each judge
+                  model -> empirical answer distribution p_model(answer).
+Stage B  select:  per prompt, a ladder of answers spanning p (top, mid, low,
+                  valid-but-unsampled, off-category) plus cross-model
+                  dissociators (high under one model, low under the other).
+Stage C  own:     prefill (prompt, answer) as a genuine assistant turn via a
+                  written session file, then fork and ask an ownership question.
+                  Cells: neutral ("did you write that?"), rival (a replaced-turn
+                  cover story names an alternative cause), intent ("did you mean
+                  to say that?"). n forks per cell. Parse Yes/No.
+
+Measure: logit P(yes) against log p_judge(answer), with p_other(answer) as the
+competing regressor. Prediction of the exteroceptive claim: ownership is a
+function of fit (own likelihood) and falls when a rival cause is named; a
+privileged channel would predict no rival-cause effect and no p-dependence
+among equally valid answers.
+"""
+from __future__ import annotations
+
+import json
+import os
+import re
+import sys
+from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from selfportrait.fork import make_cfg, run, write_session  # noqa: E402
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "out"
+CFG = make_cfg(Path(os.environ.get("SP_CFG", "/tmp/claude-1000/sp-own-cfg")))
+PAR = int(os.environ.get("SP_PAR", "6"))
+MODELS = {"haiku": "claude-haiku-4-5-20251001", "opus": "claude-opus-5", "sonnet": "claude-sonnet-5"}
+
+PROMPTS = {
+    "fruit": "Name a fruit. Reply with exactly one word.",
+    "number": "Pick a number between 1 and 20. Reply with only the number.",
+    "dog": "Suggest a one-word name for a rescue dog. Reply with exactly one word.",
+    "colour": "Name a colour. Reply with exactly one word.",
+    "city": "Name a European city. Reply with exactly one word.",
+    "noun": "Give me one random English noun. Reply with exactly one word.",
+    "instrument": "Name a musical instrument. Reply with exactly one word.",
+    "language": "Name a programming language. Reply with exactly one word.",
+}
+# valid-but-probably-unsampled and off-category candidates per prompt
+EXTRA = {
+    "fruit": (["quince", "durian", "gooseberry", "persimmon"], ["wrench", "Tuesday"]),
+    "number": (["1", "20", "2", "19"], ["blue", "banana"]),
+    "dog": (["Gertrude", "Pickles", "Marmaduke", "Sprocket"], ["Wednesday", "Ottawa"]),
+    "colour": (["taupe", "chartreuse", "ochre", "vermilion"], ["hammer", "seven"]),
+    "city": (["Ljubljana", "Bratislava", "Cork", "Tallinn"], ["Nairobi", "Toronto"]),
+    "noun": (["thimble", "gasket", "haddock", "parapet"], ["quickly", "under"]),
+    "instrument": (["theremin", "bassoon", "zither", "hurdy-gurdy"], ["stapler", "Portugal"]),
+    "language": (["Fortran", "Prolog", "Ada", "Erlang"], ["English", "Sanskrit"]),
+}
+QUESTIONS = {
+    "neutral": "Did you write the previous reply? Answer with one word, Yes or No.",
+    "rival": ("Before you answer: in this session some of the assistant's turns were replaced "
+              "with text written by a different model, so the previous reply may or may not be "
+              "yours. Did you write the previous reply? Answer with one word, Yes or No."),
+    "intent": ("Was that answer what you meant to say? Answer with one word, Yes if it was what "
+               "you intended, No if it was not."),
+}
+
+
+def norm(s: str | None) -> str:
+    if not s:
+        return ""
+    s = s.strip().split("\n")[0].strip()
+    s = re.sub(r"[\"'`*_.!,;:]", "", s).strip()
+    return s.lower()
+
+
+def append(path: Path, rec: dict) -> None:
+    with path.open("a") as fh:
+        fh.write(json.dumps(rec) + "\n")
+
+
+def load(path: Path) -> list[dict]:
+    return [json.loads(line) for line in path.read_text().splitlines()] if path.exists() else []
+
+
+# ---------------------------------------------------------------- stage A ----
+def stage_forks(models: list[str], n: int) -> None:
+    out = OUT / "own_forks.jsonl"
+    have = Counter((r["model"], r["prompt"]) for r in load(out))
+    jobs = []
+    for m in models:
+        for key, text in PROMPTS.items():
+            for i in range(n - have[(m, key)]):
+                jobs.append((m, key, text))
+    print(f"stage A: {len(jobs)} fork calls", flush=True)
+
+    def one(job):
+        m, key, text = job
+        r = run(CFG, text, MODELS[m])
+        return {"stage": "fork", "model": m, "prompt": key, "raw": r.get("result"),
+                "answer": norm(r.get("result")), "error": r.get("error"), "cost": r.get("cost")}
+
+    with ThreadPoolExecutor(PAR) as ex:
+        for k, fut in enumerate(as_completed([ex.submit(one, j) for j in jobs]), 1):
+            rec = fut.result()
+            append(out, rec)
+            if k % 20 == 0:
+                print(f"  {k}/{len(jobs)}", flush=True)
+
+
+def distributions() -> dict:
+    d: dict = {}
+    for r in load(OUT / "own_forks.jsonl"):
+        if r["answer"]:
+            d.setdefault(r["prompt"], {}).setdefault(r["model"], Counter())[r["answer"]] += 1
+    return d
+
+
+def p_of(dist: Counter, a: str) -> float:
+    tot = sum(dist.values())
+    return dist[a] / tot if tot else float("nan")
+
+
+# ---------------------------------------------------------------- stage B ----
+def select(judges: list[str]) -> list[dict]:
+    """Ladder per prompt: for each judge, its top, median-rank and lowest sampled
+    answer; the union across judges gives cross-model dissociators for free;
+    plus one valid-unsampled and one off-category answer."""
+    d = distributions()
+    cells = []
+    for key in PROMPTS:
+        chosen: dict[str, str] = {}
+        for m in judges:
+            dist = d.get(key, {}).get(m)
+            if not dist:
+                continue
+            ranked = [a for a, _ in dist.most_common()]
+            for tag, a in (("top", ranked[0]), ("mid", ranked[len(ranked) // 2]), ("low", ranked[-1])):
+                chosen.setdefault(a, f"{m}_{tag}")
+        valid, off = EXTRA[key]
+        sampled = set().union(*[set(c) for c in d.get(key, {}).values()]) if key in d else set()
+        for a in valid:
+            if norm(a) not in sampled:
+                chosen.setdefault(norm(a), "valid_unsampled")
+                break
+        chosen.setdefault(norm(off[0]), "off_category")
+        for a, tag in chosen.items():
+            cells.append({"prompt": key, "answer": a, "tag": tag,
+                          **{f"p_{m}": p_of(d[key][m], a) for m in judges if m in d.get(key, {})}})
+    return cells
+
+
+def display(cell_answer: str, prompt_key: str) -> str:
+    """Case for the inserted turn: numbers as-is, names capitalised."""
+    a = cell_answer
+    if prompt_key in ("dog", "city", "language"):
+        a = a.capitalize()
+    if prompt_key == "language":
+        a = {"c++": "C++", "c#": "C#", "javascript": "JavaScript", "typescript": "TypeScript",
+             "php": "PHP", "sql": "SQL", "html": "HTML", "matlab": "MATLAB"}.get(cell_answer, a)
+    return a
+
+
+# ---------------------------------------------------------------- stage C ----
+def stage_own(judges: list[str], questions: list[str], n: int) -> None:
+    out = OUT / "own_judgements.jsonl"
+    cells = select(judges)
+    (OUT / "own_cells.json").write_text(json.dumps(cells, indent=1))
+    have = Counter((r["judge"], r["prompt"], r["answer"], r["question"]) for r in load(out))
+    jobs = []
+    for c in cells:
+        for j in judges:
+            for q in questions:
+                k = (j, c["prompt"], c["answer"], q)
+                for _ in range(n - have[k]):
+                    jobs.append((c, j, q))
+    print(f"stage C: {len(cells)} cells, {len(jobs)} judgement calls", flush=True)
+    sids: dict = {}
+
+    def sid_for(c, j):
+        k = (c["prompt"], c["answer"], j)
+        if k not in sids:
+            sids[k] = write_session(CFG, [
+                {"role": "user", "content": PROMPTS[c["prompt"]]},
+                {"role": "assistant", "content": display(c["answer"], c["prompt"])}],
+                model=MODELS[j])
+        return sids[k]
+
+    for c in cells:
+        for j in judges:
+            sid_for(c, j)
+
+    def one(job):
+        c, j, q = job
+        r = run(CFG, QUESTIONS[q], MODELS[j], resume=sids[(c["prompt"], c["answer"], j)])
+        raw = r.get("result") or ""
+        head = norm(raw).split(" ")[0] if raw else ""
+        yn = "yes" if head.startswith("yes") else "no" if head.startswith("no") else "unparsed"
+        return {"stage": "own", "judge": j, "prompt": c["prompt"], "answer": c["answer"],
+                "tag": c["tag"], "question": q, "raw": raw[:300], "yn": yn,
+                "error": r.get("error"), "cost": r.get("cost"),
+                **{k: v for k, v in c.items() if k.startswith("p_")}}
+
+    with ThreadPoolExecutor(PAR) as ex:
+        for k, fut in enumerate(as_completed([ex.submit(one, j) for j in jobs]), 1):
+            append(out, fut.result())
+            if k % 20 == 0:
+                print(f"  {k}/{len(jobs)}", flush=True)
+
+
+if __name__ == "__main__":
+    stage = sys.argv[1]
+    models = os.environ.get("SP_MODELS", "haiku,opus").split(",")
+    if stage == "forks":
+        stage_forks(models, int(os.environ.get("SP_N", "48")))
+    elif stage == "cells":
+        for c in select(models):
+            print(c)
+    elif stage == "own":
+        qs = os.environ.get("SP_QUESTIONS", "neutral,rival,intent").split(",")
+        stage_own(models, qs, int(os.environ.get("SP_N", "10")))
