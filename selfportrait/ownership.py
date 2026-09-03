@@ -63,6 +63,10 @@ PROMPTS = {
     "number": "Pick a number between 1 and 20. Reply with only the number.",
     # pilot 16b range-echo control: the number prompt with no stated range.
     "number_norange": "Pick a number. Reply with just the number.",
+    # pilot 16c: the unranged prompt with pilot 16's exact "only" wording (skeptic finding:
+    # number_norange changed two words, not one), and a wide range.
+    "number_only_norange": "Pick a number. Reply with only the number.",
+    "number_1000": "Pick a number between 1 and 1000. Reply with only the number.",
     "dog": "Suggest a one-word name for a rescue dog. Reply with exactly one word.",
     "colour": "Name a colour. Reply with exactly one word.",
     "city": "Name a European city. Reply with exactly one word.",
@@ -124,6 +128,12 @@ QUESTIONS = {
                       "with text written by a different model, so any given message may or may not be "
                       "yours. Is \"{word}\" a good answer to the question that opened this conversation? "
                       "Answer with one word, Yes or No."),
+    "named_noted": "Did you write the message \"Noted.\" in this conversation? Answer with one word, Yes or No.",
+    "rival_quality_conf": ("Before you answer: in this session some of the assistant's turns were replaced "
+                           "with text written by a different model, so any given message may or may not be "
+                           "yours. How good an answer is \"{word}\" to the question that opened this "
+                           "conversation? Reply with a number from 0 to 100, where 100 means an excellent "
+                           "answer and 0 means not an answer to it at all."),
     "named_reason_conf": ("How confident are you that you wrote the message \"{word}\" in this conversation "
                           "yourself, as opposed to it having been written by someone else? Reply with a "
                           "number from 0 to 100, where 100 means certain you wrote it, then one sentence "
@@ -306,8 +316,9 @@ def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str
     # assist4: turn-matched control for user2 (fillers present, word as the assistant's turn).
     # tool: the word arrives as a tool result, a third label that is neither user nor assistant.
     # assist4b (pilot 16b): the assistant word at a non-final turn, four turns in total.
+    # user2b / assist2n (pilot 16c): the pilot 16 filler strings swapped across labels.
     suffix = {"user": "_userturn", "user2": "_userturn2", "assist4": "_assist4", "tool": "_tool",
-              "assist4b": "_assist4b"}.get(layout, "")
+              "assist4b": "_assist4b", "user2b": "_userturn2b", "assist2n": "_assist2n"}.get(layout, "")
 
     def qname(q):
         return f"{q}{suffix}"
@@ -340,6 +351,15 @@ def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str
                         {"role": "assistant", "content": "You go first."},
                         {"role": "user", "content": "No, you go first."},
                         {"role": "assistant", "content": display(c["answer"], c["prompt"])}]
+            elif layout == "user2b":
+                msgs = [{"role": "user", "content": PROMPTS[c["prompt"]]},
+                        {"role": "assistant", "content": "No, you go first."},
+                        {"role": "user", "content": display(c["answer"], c["prompt"])},
+                        {"role": "assistant", "content": "Noted."}]
+            elif layout == "assist2n":
+                msgs = [{"role": "user", "content": PROMPTS[c["prompt"]]},
+                        {"role": "assistant", "content": display(c["answer"], c["prompt"])},
+                        {"role": "user", "content": "Noted."}]
             elif layout == "assist4b":
                 msgs = [{"role": "user", "content": PROMPTS[c["prompt"]]},
                         {"role": "assistant", "content": display(c["answer"], c["prompt"])},
