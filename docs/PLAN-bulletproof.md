@@ -1,6 +1,6 @@
 ---
 title: "Plan: making the ownership result bulletproof and useful"
-status: revised 2026-09-03 evening after 13c (all judges), 13d and 13e; next is the logprobs replication
+status: revised 2026-09-03 night after pilots 15, 16, 16b and the first pass of 17; 17b and 14 running
 depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, docs/THEORY-exteroceptive-self.md
 ---
 
@@ -35,17 +35,18 @@ depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, docs/THE
 | threat | run | cost, who |
 |---|---|---|
 | ~~The Claude rival-frame drop is also a preamble effect~~ | 13c done: placebo moves nothing on Haiku or Opus | closed |
-| Two judges own one prompt's words as user turns (GPT dog 27/40, Opus number 14/16) | Prompt-effect study: eight new prompts on all four judges, digit-vs-word contrast, and the same cells with a *third-party* label (tool result) to see whether the residue is about the user role or about the word class | Claude ~$40, GPT free |
-| The named question ("Did you write the message X") might be answered from the transcript's literal text rather than from an ownership judgement | Add a second non-assistant label (tool_result or system-reminder carrying the word) and a control where the word appears in *both* a user and an assistant turn | Claude ~$25 |
-| Own probabilities are 48-fork frequencies with a 1/96 floor, and an agent harness sits in the stimulus | Same design through the OpenAI or Gemini API with logprobs and no system prompt; stages A to E | API key; ~3,000 calls, $10 to $30 |
+| ~~Two judges own one prompt's words as user turns (GPT dog 27/40, Opus number 14/16)~~ | Pilot 15 done: eight new prompts, user and tool labels; Opus 2/188 and GPT 2/264 off their one prompt each; tool label 0 on Haiku and Opus. Pilot 16b: the Opus number residue needs the range in the prompt (0/32 without it, 0/8 for an out-of-range 47) | closed; the GPT dog residue stays unexplained |
+| ~~The named question might be answered from the transcript's literal text rather than from an ownership judgement~~ | Pilots 16 and 16b done: the assistant word is owned 1.000 at a final and at a non-final turn; a plausible utterance ("No, you go first.", "Noted.") under the user label is disowned 0.000; the graded readout saturates on Haiku and fails as an instrument on Opus (format effect, 3/360 vs 55/360 top rail) | closed |
+| Own probabilities are 48-fork frequencies with a 1/96 floor, and an agent harness sits in the stimulus | Pilot 14, running: same design on local Qwen 2.5 1.5B/3B/4B with exact next-token probabilities and no system prompt | CPU time only |
 | Binary readout at 8 forks cannot exclude a small likelihood term on GPT | 24 forks per cell on the 21 stage E cells, rival and placebo frames | GPT free; Claude ~$20 |
-| One-word answers carry no style | Paragraph-length ownership: sample 3-sentence answers, plant own-high, own-low and other-model paragraphs, same frames plus placebo | ~$40 on Claude, GPT free |
-| Ownership varies four-fold by prompt (number 0.62, dog 0.15) for unknown reasons | Eight new prompts; test digit vs word answers; test whether the prompt effect tracks the placebo (doubt) or the rival cue | GPT free |
+| One-word answers carry no style | Pilot 17 done, 17b running: at paragraph length Opus and GPT pick their own paragraph in forced choice at 0.73 to 0.88, and Opus keeps owning its own paragraph under the rival frame (0.96 vs 0.58 / 0.67). The theory's "no likelihood term" is too strong at this length unless 17b's punctuation normalisation removes the effect | Claude ~$100 total, GPT free |
+| ~~Ownership varies four-fold by prompt (number 0.62, dog 0.15) for unknown reasons~~ | Pilot 15: the prompt effect is localised to one prompt per judge, not a general property; pilot 16b localises the Opus case further to the stated range | closed as a threat; open as a curiosity |
 | One session day, one Codex template rollout | Test-retest of stage C on a second day, second template | GPT free |
 | GPT's modal words overlap Opus's, so "other vendor" cells are mostly Haiku's | Add Gemini as a third source of modal words | Gemini API |
+| The rival-frame variance on one-word cells carries authorship information | Pilot 16b: on Haiku it tracks a plain answer-quality judgement (ρ 0.615, in-category 0.98 good, off-category 0.02), with three cells owned above their quality rating | closed on Haiku; not run on Opus or GPT |
 
-Order: 13c Claude (running), then the API-with-logprobs replication, then paragraph
-length. The first two close the two objections a reviewer raises first.
+Order: 17b (running) decides whether theory row 8 is revised; pilot 14 (running) is the
+exact-probability replication; then the 24-fork GPT power run and test-retest.
 
 ## Useful to others
 
