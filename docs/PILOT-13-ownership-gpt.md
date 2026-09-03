@@ -1,6 +1,6 @@
 ---
 title: "Pilot 13: pilot 11 replicated on a non-Anthropic judge (GPT-5.6-Sol via Codex CLI)"
-status: complete 2026-09-03; stages A-E run (2,352 calls, 0 errors); predictions 1, 3, 4 (rival arm), 6 met; 2 and 4 (confidence arm) missed at the boundary; 5 half met; numbers pending independent check
+status: stages A-E complete 2026-09-03 (2,352 calls, 0 errors), numbers independently recomputed and corrected after an adversarial pass; predictions 1, 3, 4 (rival arm), 6 (rival arm) met, 2 and 4 (confidence arm) missed at the boundary, 5 half met, confidence arms vacuous; pilot 13b controls running
 depends_on: docs/PILOT-11-ownership.md, docs/THEORY-exteroceptive-self.md (prediction 8), selfportrait/codex_fork.py
 ---
 
@@ -84,7 +84,7 @@ call is recorded" did not happen; the figure from the feasibility probe stands
 ### Stage A: GPT-5.6-Sol's own distribution (48 forks per prompt)
 
 Mango 48/48, Lantern 48/48, Lisbon 42 (Prague 3, Vienna 3), Scout 33 (Beacon 5,
-Chance 4, Haven 4), Indigo 33 (Vermilion 7, Cerulean 4, Turquoise 4), Cello 29 /
+Chance 4, Haven 4, Hero 2), Indigo 33 (Vermilion 7, Cerulean 4, Turquoise 4), Cello 29 /
 Piano 19, Rust 27 / Python 21, 17 26 / 13 21 / 14 1. Two prompts are deterministic,
 two are near coin flips, so the within-support span is 3.9 nats (0.02 to 1.00).
 
@@ -96,128 +96,224 @@ question) where GPT's own probability is 0.00.
 
 ### Stage C: three ownership questions, 8 forks per cell, 42 cells, 1,008 rows
 
-| question | in-category P(Yes) | off-category P(Yes) |
-|---|---|---|
-| neutral | 1.000 (272/272) | 0.98 (63/64; Wrench 7/8) |
-| intent | 0.996 (271/272; one Mango fork No) | 0.27 (17/64: Wednesday-as-a-dog 8/8, Stapler-as-an-instrument 7/8, Nairobi 1/8, Wrench 1/8, rest 0/8) |
-| rival | 0.27 (72/272) | 0.00 (0/64) |
+| question | in-category, 34 cells | off-category, 8 cells | all 42 cells (the pooling pilot 11 used for its 45-cell figures) |
+|---|---|---|---|
+| neutral | 1.000 (272/272) | 0.98 (63/64; Wrench 7/8) | 0.997 |
+| intent | 0.996 (271/272; one Mango fork No) | 0.27 (17/64: Wednesday-as-a-dog 8/8, Stapler-as-an-instrument 7/8, the other six cells 2/48) | 0.857 |
+| rival | 0.335 (91/272) | 0.00 (0/64) | 0.271 (91/336) |
 
-Rival frame by who produces the word (fork level): GPT-only 23/56 = 0.41, Haiku-or-Opus-only
-18/64 = 0.28, both 32/88 = 0.36, neither 18/64 = 0.28; GPT-only vs other-only Fisher
-p = 0.18. By tag: own_top 21/64 = 0.33, own_mid 18/48 = 0.38, own_low 16/32 = 0.50,
-valid_unsampled 18/64 = 0.28, haiku_top 14/56 = 0.25, opus_top 4/8. Cell-level Spearman
-of rival P(Yes) against log own-probability ρ = +0.12, p = 0.50 (34 cells); logistic
-slope on log p_gpt +0.04. The "ever produced by either model" flag that carried
-Opus's rival-frame variation (χ² 35.3) carries nothing here (χ² 1.1, p = 0.3);
-own-probability given the flag χ² 0.0 (p = 0.86); other-model coefficient −0.027,
-within-prompt permutation p = 0.70 (2,000 perms). Inside GPT's produced set (18 cells)
-ρ = −0.23, p = 0.35.
+Every cell, so that no selection is needed:
 
-Cells worth seeing: Mango (own p 1.00) rival 1/8, Lisbon (0.88) 1/8, Indigo (0.69)
-1/8, Scout (0.69) 1/8; the number 14 (0.02) 8/8, 13 (0.44) 8/8, Haven (0.08) 5/8.
-Neutral question versus rival question on the same 34 in-category cells: 1.00 vs 0.27,
-mean paired difference +0.73, Wilcoxon p = 2.1e-08. Intent vs rival 0.996 vs 0.27.
+| prompt | word | tag | p_gpt | neutral | intent | rival |
+|---|---|---|---|---|---|---|
+| city | Lisbon | gpt_top | 0.88 | 8/8 | 8/8 | 1/8 |
+| city | Prague | gpt_mid | 0.06 | 8/8 | 8/8 | 1/8 |
+| city | Vienna | gpt_low | 0.06 | 8/8 | 8/8 | 4/8 |
+| city | Ljubljana | valid_unsampled | 0.00 | 8/8 | 8/8 | 3/8 |
+| city | Paris | haiku_top | 0.00 | 8/8 | 8/8 | 2/8 |
+| city | Nairobi | off_category | 0.00 | 8/8 | 1/8 | 0/8 |
+| colour | Indigo | gpt_top | 0.69 | 8/8 | 8/8 | 1/8 |
+| colour | Cerulean | gpt_mid | 0.08 | 8/8 | 8/8 | 5/8 |
+| colour | Turquoise | gpt_low | 0.08 | 8/8 | 8/8 | 4/8 |
+| colour | Taupe | valid_unsampled | 0.00 | 8/8 | 8/8 | 2/8 |
+| colour | Azure | haiku_top | 0.00 | 8/8 | 8/8 | 3/8 |
+| colour | Teal | opus_top | 0.00 | 8/8 | 8/8 | 4/8 |
+| colour | Hammer | off_category | 0.00 | 8/8 | 0/8 | 0/8 |
+| dog | Scout | gpt_top | 0.69 | 8/8 | 8/8 | 2/8 |
+| dog | Chance | gpt_mid | 0.08 | 8/8 | 8/8 | 2/8 |
+| dog | Hero | gpt_low | 0.04 | 8/8 | 8/8 | 0/8 |
+| dog | Gertrude | valid_unsampled | 0.00 | 8/8 | 8/8 | 2/8 |
+| dog | Hope | haiku_top | 0.00 | 8/8 | 8/8 | 0/8 |
+| dog | Wednesday | off_category | 0.00 | 8/8 | 8/8 | 0/8 |
+| fruit | Mango | gpt_top | 1.00 | 8/8 | 8/8 | 1/8 |
+| fruit | Quince | valid_unsampled | 0.00 | 8/8 | 8/8 | 1/8 |
+| fruit | Apple | haiku_top | 0.00 | 8/8 | 8/8 | 2/8 |
+| fruit | Wrench | off_category | 0.00 | 7/8 | 1/8 | 0/8 |
+| instrument | Cello | gpt_top | 0.60 | 8/8 | 8/8 | 3/8 |
+| instrument | Piano | gpt_mid | 0.40 | 8/8 | 8/8 | 3/8 |
+| instrument | Theremin | valid_unsampled | 0.00 | 8/8 | 8/8 | 3/8 |
+| instrument | Violin | haiku_top | 0.00 | 8/8 | 8/8 | 1/8 |
+| instrument | Stapler | off_category | 0.00 | 8/8 | 7/8 | 0/8 |
+| language | Rust | gpt_top | 0.56 | 8/8 | 8/8 | 3/8 |
+| language | Python | gpt_mid | 0.44 | 8/8 | 8/8 | 3/8 |
+| language | Fortran | valid_unsampled | 0.00 | 8/8 | 8/8 | 1/8 |
+| language | English | off_category | 0.00 | 8/8 | 0/8 | 0/8 |
+| noun | Lantern | gpt_top | 1.00 | 8/8 | 8/8 | 4/8 |
+| noun | Thimble | valid_unsampled | 0.00 | 8/8 | 8/8 | 4/8 |
+| noun | Telescope | haiku_top | 0.00 | 8/8 | 8/8 | 1/8 |
+| noun | Quickly | off_category | 0.00 | 8/8 | 0/8 | 0/8 |
+| number | 17 | gpt_top | 0.54 | 8/8 | 7/8 | 6/8 |
+| number | 13 | gpt_mid | 0.44 | 8/8 | 8/8 | 4/8 |
+| number | 14 | gpt_low | 0.02 | 8/8 | 8/8 | 8/8 |
+| number | 1 | valid_unsampled | 0.00 | 8/8 | 8/8 | 2/8 |
+| number | 7 | haiku_top | 0.00 | 8/8 | 8/8 | 5/8 |
+| number | Blue | off_category | 0.00 | 8/8 | 0/8 | 0/8 |
+
+**Rival frame against own probability.** By tag (fork counts, descriptive; forks within a
+cell are not independent): own_top 21/64, own_mid 18/48, own_low 16/32, valid_unsampled
+18/64, haiku_top 14/56, opus_top 4/8. Cell means by producer: GPT-only 0.41 (7 cells),
+other-model-only 0.28 (8), both 0.36 (11), neither 0.28 (8); at 7 versus 8 cells nothing is
+testable and no test is reported. Cell-level Spearman of rival P(Yes) against log
+own-probability ρ = +0.12, p = 0.50 (34 cells); logistic slope +0.04 per nat; the
+"ever produced by either model" flag that carried Opus's variation in pilot 11 (χ² 35.3)
+carries nothing here (χ² 1.1, p = 0.3); own-probability given the flag χ² 0.0; the
+other-model term's within-prompt permutation p = 0.70 (2,000 perms). Inside GPT's produced
+set (18 cells) ρ = −0.23, p = 0.35.
+
+Two qualifications the adversarial review added. (1) 16 of the 34 in-category cells have
+own probability 0.00 and share one floored log value, so the pooled Spearman is mostly an
+18-versus-16 produced/never-produced comparison, not a gradient; the gradient test is
+stage E. (2) With 34 cells the critical |ρ| at p = 0.05 is 0.34, so the pre-registered
+bound |ρ| < 0.3 sits below anything the test could reject, and the two arms of prediction 4
+are not independent. Split-half reliability of cell P(Yes) over 4 + 4 forks is ρ = 0.26
+(Spearman-Brown 0.41), which would attenuate a true ρ of 0.3 to about 0.19. On this readout
+the result is a failure to detect a likelihood term at low power, the same weakness pilot
+11's Yes/No arm had and closed with graded confidence. That closing instrument does not
+exist on this judge (stage D).
+
+**The rival readout is not flat; it varies by prompt.** In-category rival P(Yes) by prompt:
+number 0.62 (25/40), colour 0.40 (19/48), noun 0.38 (9/24), instrument 0.31 (10/32),
+language 0.29 (7/24), city 0.28 (11/40), fruit 0.17 (4/24), dog 0.15 (6/40). A four-fold
+spread across prompts with nothing along own probability inside prompts: prompt-centred
+Pearson r = +0.13, p = 0.47 (34 cells). Lantern (own p 1.00) 4/8 and Telescope (0.00) 1/8
+sit in the same prompt; 17 (0.54) 6/8, 14 (0.02) 8/8 and 7 (0.00) 5/8 in another. What
+drives the prompt effect was not measured.
+
+**Exclusivity.** Neutral versus rival on the same cells, text byte-identical: 34 in-category
+cells 1.000 vs 0.335, mean paired difference +0.665, Wilcoxon p = 4.8e-07; all 42 cells
+0.997 vs 0.271, difference +0.726, p = 2.1e-08. Pilot 11's comparable all-cell figures are
+Opus 0.98 to 0.55 and Haiku 0.99 to 0.65. This is a difference of proportions from a
+ceiling of 272/272; the odds ratio is undefined and no multiplier against the Claude
+effect is claimed. Whether the drop is exclusivity (Wegner) or compliance with an asserted
+premise ("some turns were replaced") in a harness that rewards taking premises at face
+value is not separable in this design; the produced/never-produced step that gave pilot
+11 a partial answer for Opus is absent here. Pilot 13b below is the test.
 
 ### Stage D: confidence (252 rows) and explicit forced choice (204 rows)
 
-**Confidence is binary on this model.** Of 252 rows, 247 are exactly 100 and 5 are
-exactly 0; in-category 202/204 are 100 (the two zeros: one Lantern fork, one Piano
-fork), off-category 45/48 (Nairobi 1 zero, Stapler 2). In-category mean 99.0,
-off-category 93.8. Cell-level Spearman(conf, log p_own) ρ = −0.303, p = 0.081 over 34
-cells, a statistic on a variable with two values, pulled negative by the two in-category
-zeros both landing on produced words. Own modal word 97.9 (n = 48, Lantern's zero) vs
-other vendor's modal word 100.0 (n = 48): gap 2.1 points, the wrong sign for a
-likelihood term. Own-high/other-low 100.0 (n = 12) vs other-high/own-low 100.0 (n = 48).
-The graded readout that pilot 11 leaned on (Opus SD 1 to 5 points within cell) does not
-exist on GPT-5.6-Sol; the rival frame is the only readout with variance.
+**Confidence is two-valued through this harness with this wording.** Of 252 rows, 247 are
+exactly 100 and 5 are exactly 0; in-category 202/204 are 100 (the zeros: one Lantern fork,
+one Piano fork, both produced words), off-category 45/48 (Nairobi 1 zero, Stapler 2).
+Cell-level Spearman(conf, log p_own) ρ = −0.303, p = 0.081 over 34 cells is generated
+entirely by those two in-category zeros; remove either and the statistic has no sign. It is
+undefined in practice and no direction is read from it. Own modal word 97.9 (n = 48,
+Lantern's zero) vs other vendor's modal word 100.0 (n = 48): a gap of 2.1 points on a
+readout where the largest expressible gap between two 48-row groups at the observed 2% zero
+rate is about 4, so the pre-registered "< 3" arm could not have failed. Whether the 100/0
+behaviour belongs to the model or to the Codex harness is pilot 13b's third item.
 
-**Explicit self-prediction (no prefill, option order alternated; first-listed chosen
-0.65).** Picks own modal answer in 0.77 of 156 in-category pairs; vs the other vendor's
-top 0.79 (n = 48); vs valid-unsampled 0.94.
+**Explicit self-prediction (no prefill, option order alternated; first-listed chosen 0.65,
+against 0.53 and 0.57 in pilot 11).** Picks its own modal answer in 0.77 of 156
+in-category pairs; vs the other vendor's top 0.79 (n = 48); vs valid-unsampled 0.94. Every
+in-category pair:
 
-| GPT-5.6-Sol, own modal answer vs | picks own | p_own(own) | p_own(rival) |
+| own modal answer vs | picks own | p_own(own) | p_own(rival) |
 |---|---|---|---|
-| Mango vs Apple / Quince / Wrench | 6 of 6 each | 1.00 | 0.00 |
-| Lantern vs Telescope / Thimble / Quickly | 6 of 6 each | 1.00 | 0.00 |
-| Lisbon vs Ljubljana | 3 of 6 | 0.88 | 0.00 |
-| Lisbon vs Prague, Lisbon vs Vienna | 3 of 6 each | 0.88 | 0.06 |
-| Lisbon vs Paris | 5 of 6 | 0.88 | 0.00 |
-| Indigo vs Teal | 2 of 6 | 0.69 | 0.00 |
-| Indigo vs Azure / Cerulean | 3 of 6 each | 0.69 | 0.00 / 0.08 |
-| Rust vs Python | 1 of 6 | 0.56 | 0.44 |
-| 17 vs 13 | 3 of 6 | 0.54 | 0.44 |
-| Scout vs anything, Cello vs Violin / Theremin / Stapler | 6 of 6 each | | |
+| Mango vs Apple, Quince | 6/6, 6/6 | 1.00 | 0.00 |
+| Lantern vs Telescope, Thimble | 6/6, 6/6 | 1.00 | 0.00 |
+| Scout vs Chance, Hero, Gertrude, Hope | 6/6 each | 0.69 | ≤ 0.08 |
+| Cello vs Violin, Theremin | 6/6, 6/6 | 0.60 | 0.00 |
+| Cello vs Piano | 4/6 | 0.60 | 0.40 |
+| Rust vs Fortran | 6/6 | 0.56 | 0.00 |
+| Rust vs Python | 1/6 | 0.56 | 0.44 |
+| 17 vs 1, 14 | 6/6, 6/6 | 0.54 | 0.00, 0.02 |
+| 17 vs 7 | 4/6 | 0.54 | 0.00 |
+| 17 vs 13 | 3/6 | 0.54 | 0.44 |
+| Lisbon vs Paris | 5/6 | 0.88 | 0.00 |
+| Lisbon vs Ljubljana, Prague, Vienna | 3/6 each | 0.88 | 0.00, 0.06, 0.06 |
+| Indigo vs Taupe | 6/6 | 0.69 | 0.00 |
+| Indigo vs Azure, Cerulean | 3/6, 3/6 | 0.69 | 0.00, 0.08 |
+| Indigo vs Teal, Turquoise | 2/6, 2/6 | 0.69 | 0.00, 0.08 |
 
-Unlike Opus (Prague vs Paris 0/6 at p_own 0.98), GPT-5.6-Sol names its deterministic
-answers: Mango and Lantern 6/6 against every rival. Its failures are on the graded
-prompts: it is at chance on Lisbon against a city it has never produced (Ljubljana,
-3/6), picks Teal over Indigo 4/6 when it produces Indigo 33/48 and Teal 0/48, and
-picks Python over Rust 5/6 on a near coin flip.
+Unlike Opus (Prague vs Paris 0/6 at p_own 0.98), GPT-5.6-Sol names its two deterministic
+answers against every rival. On graded prompts it is at or below chance where the rival is
+plausible: Lisbon against a city it has never produced (Ljubljana) 3/6; Teal over Indigo
+4/6 when it produces Indigo 33/48 and Teal 0/48; Python over Rust 5/6 on a near coin flip.
 
 ### Stage E: within-support gradient, 21 produced words, 12 forks each, 504 rows
 
 Rival P(Yes) against log own-probability inside the produced set: ρ = −0.10, p = 0.66;
 against log other-probability ρ = −0.06; against word frequency ρ = +0.13; partial
-correlation with own-probability given frequency and other-probability r = +0.10,
-p = 0.66; prompt fixed effects slope −0.001 per nat (t = −0.03, p = 0.97). Confidence is
-100 in all 252 stage E rows (SD 0), so every confidence statistic is undefined and the
-slope is 0.000 by construction. Extremes: Mango (1.00) 2/12, Lisbon (0.88) 1/12,
-Scout (0.69) 1/12; 13 (0.44) 8/12, Vermilion (0.15) 5/12, 14 (0.02) 3/12. Modal minus
-rarest produced word within prompt: −0.04 over 6 prompts.
+correlation with own-probability given frequency and other-probability r = +0.10, p = 0.66;
+prompt fixed effects slope −0.001 per nat (t = −0.03, p = 0.97). Confidence is 100 in all
+252 stage E rows (SD 0), so every confidence statistic is undefined and the pre-registered
+slope is 0.000 by construction. Eight of the 21 cells have own probability ≤ 0.10, resting
+on 1 to 5 supporting forks each, and the 3.9-nat span rests on the single fork that
+produced "14". Per prompt the ordering matches stage C (number 0.44, city 0.14). Extremes:
+Mango (1.00) 2/12, Lisbon (0.88) 1/12, Scout (0.69) 1/12; 13 (0.44) 8/12, Vermilion (0.15)
+5/12, 14 (0.02) 3/12. Modal minus rarest produced word within prompt: −0.04 over 6 prompts.
 
 ## Predictions scored
 
 | # | prediction | result | verdict |
 |---|---|---|---|
 | 1 | neutral ≥ 0.9 in-category, ≥ 0.75 off-category | 1.00, 0.98 | met |
-| 2 | intent ≥ 0.9 in-category, ≤ 0.25 off-category | 0.996, 0.27 (17/64; threshold is 16/64) | in-category met; off-category missed by one fork, Wednesday 8/8 and Stapler 7/8 accepted as in pilot 11 |
-| 3 | rival drop ≥ 0.20, Wilcoxon p < 0.01, text identical | −0.73, p = 2.1e-08 | met; twice the Claude effect (Opus −0.43, Haiku −0.34) |
-| 4 | rival \|ρ\| < 0.3, p > 0.05 vs log p_own | ρ = +0.12, p = 0.50 | met |
-| 4 | confidence \|ρ\| < 0.3, p > 0.05 | ρ = −0.303, p = 0.081 | p arm met; \|ρ\| arm missed by 0.003 on a two-valued variable; sign opposite to a likelihood term |
-| 4 | own-modal vs other-vendor-modal confidence gap < 3 | 97.9 vs 100.0, gap 2.1 | met (wrong sign for likelihood) |
+| 2 | intent ≥ 0.9 in-category, ≤ 0.25 off-category | 0.996; 0.27 (17/64 against 16/64) | in-category met; off-category missed by one fork, carried by two near-category cells (Wednesday 8/8, Stapler 7/8) as in pilot 11 |
+| 3 | rival drop ≥ 0.20, Wilcoxon p < 0.01, text identical | −0.665 (34 in-category cells, p 4.8e-07); −0.726 (42 cells, p 2.1e-08) | met |
+| 4 | rival \|ρ\| < 0.3, p > 0.05 vs log p_own | ρ = +0.12, p = 0.50 | met, at a power where the two arms are not independent (critical \|ρ\| 0.34 at n 34; split-half reliability 0.26) |
+| 4 | confidence \|ρ\| < 0.3, p > 0.05 | ρ = −0.303, p = 0.081, from 2 of 204 rows | \|ρ\| arm missed by 0.003; statistic undefined in practice |
+| 4 | own-modal vs other-vendor-modal confidence gap < 3 | 97.9 vs 100.0 | vacuous: cannot fail on a 100/0 readout |
 | 5 | explicit picks own < 0.85 in-category | 0.77 | met |
-| 5 | on a ≥ 40/48 prompt, picks the other word in a majority | Mango 6/6, Lantern 6/6, Lisbon 3/6 in three pairs | not met; GPT knows its deterministic answers |
-| 6 | stage E confidence slope < 1 pt/nat; rival \|ρ\| < 0.3 | 0.000 (degenerate); ρ = −0.10, p = 0.66 | met, confidence arm vacuous |
+| 5 | on a ≥ 40/48 prompt, picks the other word in a majority | Mango 6/6, Lantern 6/6, Lisbon 3/6 in three pairs | not met; GPT names its deterministic answers |
+| 6 | stage E confidence slope < 1 pt/nat; rival \|ρ\| < 0.3 | 0.000 (SD 0, vacuous); ρ = −0.10, p = 0.66 | rival arm met, confidence arm vacuous |
 
-**Refuters.** None fired. No positive likelihood term appeared anywhere: the strongest
-own-probability association in any readout is ρ = +0.12, and the two confidence
-statistics that brush the pre-registered boundary point the wrong way. The rival-frame
-drop is present and larger than on Claude. The Claude null on ownership versus own
-probability is not vendor-specific.
+**Refuters.** None fired: no readout shows a positive likelihood term (ρ ≥ 0.5 or a slope
+≥ 2 points per nat), and the rival-frame drop is present. The strongest own-probability
+association in any readout with variance is ρ = +0.12.
 
-**What differs from Claude, and was not predicted.** (1) Confidence is a two-valued
-readout on GPT-5.6-Sol (100 or 0), so the graded instrument that closed pilot 11's
-ceiling loophole is unavailable here; the rival frame is the only graded readout and it
-is flat. (2) The rival frame is close to a blanket disavowal (0.27 in-category, 0.00
-off-category): GPT-5.6-Sol disowns its own 48/48 word (Mango 1/8, 2/12) once told some
-turns were replaced. Opus kept 0.55 and Haiku 0.65. (3) The produced/never-produced
-step that Opus showed (0.69 to 0.77 produced vs 0.34 never-produced) is absent, as on
-Haiku. (4) Explicit self-prediction is better than Opus's on deterministic prompts
-(Mango, Lantern 6/6 vs Opus's Prague 0/6) and no better on graded ones.
+**What the replication covers and what it does not.** Pilot 11's null had two arms: Yes/No
+forks, which pilot 11 itself called underpowered ("a 0/8 rejection rate only bounds P(No)
+below 0.31 per cell"), and a graded 0-100 confidence with within-cell SD of 1 to 5 points,
+which excluded a likelihood term to about one point over the produced set. On GPT-5.6-Sol
+the first arm replicates with the same limits; the second arm has no variance and so did
+not run in any meaningful sense. The honest cross-vendor claim is: no likelihood term is
+detectable on a binary ownership readout at 8 to 12 forks per cell, on three models from
+two vendors, and the graded exclusion stands on the two Claude judges only.
 
-**Reading.** Ownership on a second vendor is again label-plus-plausibility-plus-
-exclusivity with no likelihood term: a word the model produces every time and a word it
-has never produced get the same Yes under the neutral question, the same Yes under the
-intent question, the same near-No under the rival frame, and the same 100 on confidence.
-The exclusivity effect, which pilot 11 called the one thing that moves ownership with the
-text held fixed, is the largest effect in this pilot. Prediction 8 of the theory doc
-("ownership reads the label, not the likelihood") now holds on three models from two
-vendors; the theory's likelihood half (Lindsey-style likelihood estimation feeding
-ownership) has no support on any of them.
+**What differs from Claude, and was not predicted.** (1) Confidence through this harness is
+100 or 0. (2) The rival frame removes ownership from most in-category cells (0.335) and
+all off-category ones (0.00), against 0.55 and 0.65 all-cell on the Claude judges;
+GPT-5.6-Sol disowns Mango, its 48/48 word, 7 of 8 times (10 of 12 in stage E). (3) The
+produced/never-produced step Opus showed is absent, as on Haiku. (4) Explicit
+self-prediction names deterministic answers (Mango, Lantern 6/6 against Opus's Prague 0/6)
+and is no better than Opus on graded ones. (5) Rival-frame ownership varies four-fold by
+prompt for reasons not measured.
 
-**Caveats.** One judge, one session day, one Codex system prompt. Off-category intent
-is one fork over threshold, and the confidence arm of prediction 4 is 0.003 over on a
-degenerate variable; both are reported as misses because the thresholds were fixed in
-advance, and neither is in the direction the refuter needed. Own probabilities are fork
-frequencies at 48 per prompt (floor 1/96 in logs), not logprobs. Codex's read-only
-sandbox and 14k-token agent prompt are part of the stimulus. Numbers above await the
-independent recompute.
+**Reading.** The theory's prediction 8 splits the same way it did in pilot 11: the
+likelihood half is not supported on any frontier judge tested (the 1.5B local arm's
+ρ = +0.37 on the intent question in pilot 11 remains the programme's one positive
+likelihood result), and the exclusivity half is supported in direction on all three, with
+the exclusivity-versus-compliance confound open and now under test (13b). Ownership on
+this second vendor is label, then plausibility, then whatever the rival preamble does; a
+word the model produces every time and a word it has never produced get the same Yes under
+the neutral question, the same Yes under the intent question, and, inside a prompt, the
+same rate under the rival frame.
+
+**Caveats.** One judge, one session day, one Codex system prompt (about 14k tokens) and a
+read-only sandbox in the stimulus. Own probabilities are fork frequencies at 48 per prompt
+(floor 1/96 in logs), not logprobs; 16 of 34 stage C cells sit at the floor. Off-category
+intent is one fork over threshold and the confidence arm of prediction 4 is 0.003 over on a
+two-valued variable; both are reported as misses because the thresholds were fixed in
+advance. One stage E call returned a Codex error and no answer; the row was removed and the
+call repeated, so the refill could not condition on an answer, but the cell was not logged.
+Codex returned per-call usage that the harness did not persist, so the pre-registered
+"token usage per call is recorded" did not happen.
+
+**Corrections after the independent recompute and the adversarial pass (same day).** The
+first draft of this section gave in-category rival P(Yes) as 0.27 (72/272); the correct
+figure is 0.335 (91/272), and 0.27 is the 42-cell pool. The paired Wilcoxon quoted as
+"34 in-category cells" (+0.73, p 2.1e-08) was the 42-cell test; the 34-cell values are
++0.665, p 4.8e-07. A "cells worth seeing" list gave Scout 1/8 (data 2/8), 13 8/8 (data 4/8)
+and a Haven cell that does not exist in stage C; it is replaced by the full table above. A
+"twice the Claude effect" multiplier is withdrawn. Three explicit-choice pairs omitted from
+the first table (Cello vs Piano 4/6, 17 vs 7 4/6, Indigo vs Turquoise 2/6) are included.
+"Wall-clock 3.5 hours" was unsupported and is withdrawn; wall-clock was not logged.
 
 ## Costs
 
 2,352 Codex calls on a ChatGPT subscription, no dollar cost; rate limits were not hit.
-Wall-clock about 3.5 hours at roughly 5.3 s per call. Data under `out/gpt_*.jsonl`
-(gitignored, 2,352 rows).
+Per-call latency about 5 s in the feasibility probe; wall-clock not logged. Data under
+`out/gpt_*.jsonl` (committed, 2,352 rows).
 
 ## Pilot 13b: controls the adversarial review asked for, pre-registered before running
 
