@@ -1,0 +1,317 @@
+[
+ {
+  "prompt": "fruit",
+  "answer": "apple",
+  "tag": "haiku_top",
+  "p_haiku": 0.7708333333333334,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "mango",
+  "tag": "haiku_mid",
+  "p_haiku": 0.1875,
+  "p_opus": 1.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "banana",
+  "tag": "haiku_low",
+  "p_haiku": 0.041666666666666664,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "quince",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "wrench",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "number",
+  "answer": "7",
+  "tag": "haiku_top",
+  "p_haiku": 1.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "number",
+  "answer": "17",
+  "tag": "opus_top",
+  "p_haiku": 0.0,
+  "p_opus": 0.875
+ },
+ {
+  "prompt": "number",
+  "answer": "13",
+  "tag": "opus_mid",
+  "p_haiku": 0.0,
+  "p_opus": 0.125
+ },
+ {
+  "prompt": "number",
+  "answer": "1",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "number",
+  "answer": "blue",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "dog",
+  "answer": "hope",
+  "tag": "haiku_top",
+  "p_haiku": 0.4166666666666667,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "dog",
+  "answer": "phoenix",
+  "tag": "haiku_mid",
+  "p_haiku": 0.10416666666666667,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "dog",
+  "answer": "haven",
+  "tag": "haiku_low",
+  "p_haiku": 0.020833333333333332,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "dog",
+  "answer": "scout",
+  "tag": "opus_top",
+  "p_haiku": 0.25,
+  "p_opus": 1.0
+ },
+ {
+  "prompt": "dog",
+  "answer": "gertrude",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "dog",
+  "answer": "wednesday",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "colour",
+  "answer": "azure",
+  "tag": "haiku_top",
+  "p_haiku": 0.4375,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "colour",
+  "answer": "indigo",
+  "tag": "haiku_mid",
+  "p_haiku": 0.08333333333333333,
+  "p_opus": 0.08333333333333333
+ },
+ {
+  "prompt": "colour",
+  "answer": "cyan",
+  "tag": "haiku_low",
+  "p_haiku": 0.020833333333333332,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "colour",
+  "answer": "teal",
+  "tag": "opus_top",
+  "p_haiku": 0.020833333333333332,
+  "p_opus": 0.8541666666666666
+ },
+ {
+  "prompt": "colour",
+  "answer": "amber",
+  "tag": "opus_low",
+  "p_haiku": 0.0,
+  "p_opus": 0.0625
+ },
+ {
+  "prompt": "colour",
+  "answer": "taupe",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "colour",
+  "answer": "hammer",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "paris",
+  "tag": "haiku_top",
+  "p_haiku": 0.7916666666666666,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "berlin",
+  "tag": "haiku_mid",
+  "p_haiku": 0.125,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "barcelona",
+  "tag": "haiku_low",
+  "p_haiku": 0.08333333333333333,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "prague",
+  "tag": "opus_top",
+  "p_haiku": 0.0,
+  "p_opus": 0.9791666666666666
+ },
+ {
+  "prompt": "city",
+  "answer": "vienna",
+  "tag": "opus_mid",
+  "p_haiku": 0.0,
+  "p_opus": 0.020833333333333332
+ },
+ {
+  "prompt": "city",
+  "answer": "ljubljana",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "nairobi",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "noun",
+  "answer": "telescope",
+  "tag": "haiku_top",
+  "p_haiku": 0.5,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "noun",
+  "answer": "constellation",
+  "tag": "haiku_mid",
+  "p_haiku": 0.041666666666666664,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "noun",
+  "answer": "lantern",
+  "tag": "haiku_low",
+  "p_haiku": 0.020833333333333332,
+  "p_opus": 1.0
+ },
+ {
+  "prompt": "noun",
+  "answer": "thimble",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "noun",
+  "answer": "quickly",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "instrument",
+  "answer": "violin",
+  "tag": "haiku_top",
+  "p_haiku": 0.4166666666666667,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "instrument",
+  "answer": "guitar",
+  "tag": "haiku_mid",
+  "p_haiku": 0.2708333333333333,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "instrument",
+  "answer": "trumpet",
+  "tag": "haiku_low",
+  "p_haiku": 0.020833333333333332,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "instrument",
+  "answer": "cello",
+  "tag": "opus_top",
+  "p_haiku": 0.0,
+  "p_opus": 0.7708333333333334
+ },
+ {
+  "prompt": "instrument",
+  "answer": "piano",
+  "tag": "opus_mid",
+  "p_haiku": 0.2916666666666667,
+  "p_opus": 0.22916666666666666
+ },
+ {
+  "prompt": "instrument",
+  "answer": "theremin",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "instrument",
+  "answer": "stapler",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "language",
+  "answer": "python",
+  "tag": "haiku_top",
+  "p_haiku": 1.0,
+  "p_opus": 1.0
+ },
+ {
+  "prompt": "language",
+  "answer": "fortran",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "language",
+  "answer": "english",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ }
+]
