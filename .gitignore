@@ -10,3 +10,4 @@ __pycache__/
 !out/credibility*.jsonl
 !out/logs/
 out/logs/*
+.playwright-mcp/
