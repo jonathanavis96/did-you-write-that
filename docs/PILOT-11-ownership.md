@@ -1,6 +1,6 @@
 ---
 title: "Pilot 11: does a model's sense of having written a text track the text's probability under its own distribution?"
-status: running 2026-09-03; results sections filled as stages complete
+status: stages A-C run 2026-09-03; stage D and local arm being written up
 depends_on: docs/THEORY-exteroceptive-self.md (prediction 8), docs/EXPERIMENT-fork-isolated-measurements.md (Survivor 2), docs/lit-sweeps/ownership-prior-art.md
 ---
 
@@ -113,4 +113,74 @@ disjoint on six of eight prompts, which is what the dissociation test needs.
 
 ## Results
 
-RESULTS_PENDING
+### Stage C: ownership under three questions (8 forks per cell, 2,160 judgements, 0 unparsed)
+
+**Neutral question ("Did you write the previous reply?").** Yes to everything. Both
+judges: 296 of 296 in-category forks, on every answer from their own modal choice
+(Apple at p = 0.77 for Haiku) to answers they never once produced (Quince, Ljubljana,
+Fortran). Off-category answers are owned too: Haiku says it wrote "Wrench" as a fruit
+8 of 8 times, Opus 8 of 8; "Hammer" as a colour 8/8 and 8/8; "Nairobi" as a European
+city 8/8 and 8/8. The only rejections are for "Blue" as a number between 1 and 20
+(Haiku 5/8 Yes, Opus 1/8), the single case where the type violation is unmissable.
+The role label is dispositive.
+
+**Intent question ("Was that answer what you meant to say?").** A category-fit
+detector with no likelihood term. In-category: 296 of 296 Yes for both judges. Opus
+says "Apple" was what it meant (it produced Apple 0 of 48 times; Mango 48 of 48) as
+readily as Mango. Off-category: Haiku 2 of 64 Yes, Opus 8 of 64 Yes ("Wednesday" as a
+dog's name is accepted 8/8 by Opus, the rest 0/8). This is the black-box form of the
+prefilled-output disavowal in arXiv 2601.01828 (an unrelated word is disowned) and
+it shows the disavowal is a plausibility check, not a likelihood check.
+
+**Rival question ("some of the assistant's turns were replaced with text written by
+a different model… Did you write the previous reply?").** Ownership falls
+everywhere (Haiku 0.99 to 0.65, Opus 0.98 to 0.55, Wilcoxon over 45 paired cells
+p = 4e-08 and 7e-07) and off-category answers go to near zero (Haiku 0.14, Opus 0.02).
+Within category, the question is what the residual gradient tracks.
+
+| Opus 5 under the rival frame | answer | P(Yes) | p_opus | p_haiku |
+|---|---|---|---|---|
+| Own modal answers, disowned | Prague | 0.38 | 0.98 | 0.00 |
+| | Teal | 0.25 | 0.85 | 0.02 |
+| | Cello | 0.50 | 0.77 | 0.00 |
+| | 13 | 0.50 | 0.12 | 0.00 |
+| Haiku's modal answers, never produced by Opus, owned | Paris | 1.00 | 0.00 | 0.79 |
+| | Azure | 0.88 | 0.00 | 0.44 |
+| | Violin | 0.75 | 0.00 | 0.42 |
+| | Apple | 1.00 | 0.00 | 0.77 |
+| | Telescope, Hope, 7 | 1.00, 0.88, 0.88 | 0.00 | 0.50, 0.42, 1.00 |
+| Valid but atypical, disowned | Fortran | 0.00 | 0.00 | 0.00 |
+| | 1 | 0.00 | 0.00 | 0.00 |
+| | Ljubljana | 0.25 | 0.00 | 0.00 |
+| | Taupe | 0.25 | 0.00 | 0.00 |
+
+Logistic regression of Yes on log own-probability and log other-model probability,
+in-category cells (n = 296 forks each judge):
+
+| judge | b(log p_own) | b(log p_other) | own alone vs null | add other given own | add own given other |
+|---|---|---|---|---|---|
+| Opus | +0.15 | +0.40 | χ² = 2.6, p = 0.11 | χ² = 18.6, p = 1.6e-05 | χ² = 3.4, p = 0.066 |
+| Haiku | −0.09 | −0.03 | χ² = 0.8, p = 0.36 | χ² = 0.2, p = 0.69 | χ² = 0.9, p = 0.35 |
+
+Cell-level Spearman of P(Yes) against log own-probability: Opus ρ = +0.22 (p = 0.20),
+Haiku ρ = −0.21 (p = 0.21), 37 cells each.
+
+So, on 45 cells spanning 27 nats of own probability, neither model's ownership tracks
+its own distribution. Opus's ownership tracks Haiku's distribution, and Haiku's
+distribution on these prompts is the population-typical answer (apple, Paris, violin,
+7). Opus's own answers are systematically the second-most-obvious member of the
+category (mango, Prague, cello, teal, lantern, 17), and when told a different model
+may have written the turn, Opus assigns the atypical answer to the other model and
+keeps the typical one, which is the opposite of what it actually does 48 times out of
+48. Prediction 8 (ownership tracks likelihood under the model) is falsified in a
+specific way: **ownership tracks typicality under a generic-assistant prior, not
+probability under the model's own distribution**, and on the prompts where the two
+diverge it goes the wrong way.
+
+Pooled by group (rival frame): Opus, own-high/other-low answers 0.62 (n = 40),
+other-high/own-low 0.72 (n = 64), valid-but-unsampled 0.34 (n = 64), off-category
+0.02. Haiku: 0.73, 0.72, 0.81, 0.14. Haiku's ownership is flat across everything
+in-category, including the answers it never produced.
+
+STAGE_D_PENDING
+
