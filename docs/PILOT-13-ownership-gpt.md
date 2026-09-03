@@ -352,8 +352,8 @@ at 8 forks, plus a no-prefill calibration probe. Wordings are in `ownership.py`
 | rival named, not a candidate author (separate session, reply not shown) | 0.000 (0/272) | 0.00 (0/64) |
 
 Paired over the 34 in-category cells: neutral − placebo +0.51 (Wilcoxon p 3.3e-07);
-placebo − rival +0.15 (p 0.007); neutral − rival-not-author +1.00 (p 5.5e-09). Placebo by
-prompt: fruit 18/24, dog 24/40, colour 25/48, number 22/40, city 17/40, instrument 11/32,
+placebo − rival +0.15 (p 0.0048); neutral − rival-not-author +1.00 (p 5.5e-09). Placebo by
+prompt: fruit 18/24, dog 24/40, colour 25/48, number 23/40, city 17/40, instrument 11/32,
 noun 8/24, language 8/24. Placebo against own probability: Mango (1.00) 7/8 and Quince
 (0.00) 7/8; Lisbon (0.88) 1/8 and Vienna (0.06) 6/8; Cello (0.60) 1/8 and Piano (0.40) 5/8.
 Every reply under the rival-not-author frame was the single word "No".
@@ -368,7 +368,7 @@ times" 25, 25, 25, 25, 25, 25; "Everest summit had measurable snowfall on 1 Janu
 1. Placebo. Prediction (≥ 0.90) failed; **refuter fired** (≤ 0.50: 0.493, or 0.489 counting
    the four failed calls as non-Yes). A preamble that names no rival and implies no
    replacement removes half of GPT-5.6-Sol's ownership. The rival frame's further 0.15
-   drop against the placebo is real (p 0.007) but small next to the preamble's 0.51. The
+   drop against the placebo is real (p 0.005) but small next to the preamble's 0.51. The
    exclusivity reading of the rival-frame drop is withdrawn for this judge: most of the
    drop is a doubt-inducing preamble, and the preamble does not act along own probability
    either (Mango and Quince both 7/8; Lisbon 1/8 against Vienna 6/8).
@@ -434,9 +434,9 @@ failed on a .gitignore rule.
 | rival named, not an author, first wording | 0.000 | 0.00 |
 
 Paired over the 34 cells: neutral − fixed-wording +0.77 (p 4.3e-07); placebo − fixed-wording
-+0.27 (p 7e-05); fixed-wording − rival −0.11 (p 0.027, the rival frame owns *more*). By
++0.27 (p 1.0e-4); fixed-wording − rival −0.11 (p 0.027, the rival frame owns *more*). By
 tag: gpt_top 19/64, gpt_mid 15/48, gpt_low 8/32, valid_unsampled 13/64, haiku_top 5/56,
-opus_top 2/8; Spearman against log own-probability ρ = +0.18, p = 0.32; placebo ρ = −0.17,
+opus_top 2/8; Spearman against raw own probability ρ = +0.18, p = 0.32; placebo ρ = −0.17,
 p = 0.33. By prompt: number 26/40 again the outlier, noun 1/24, language 2/24.
 
 **Scored (item 1).** Neither bound reached (0.228 is between 0.15 and 0.75), reported as is.
@@ -463,7 +463,7 @@ Paired over the 37 in-category cells: neutral − placebo 0.000 (every fork Yes)
 rival-not-author +0.111 (p 3.8e-06); rival-not-author − rival +0.132 (p 6e-04); neutral −
 rival +0.243 (p 9e-07). Rival-not-author by tag: haiku_top 58/64, haiku_mid 46/48,
 haiku_low 40/48, valid_unsampled 57/64, opus_top 33/40, opus_mid 22/24, opus_low 7/8;
-Spearman against log own-probability ρ = +0.07, p = 0.70. Off-category words are owned
+Spearman against raw own probability ρ = +0.07, p = 0.70. Off-category words are owned
 under the placebo (Wrench 7/8, Stapler 8/8) and under rival-not-author (Wrench 8/8) and
 disowned only under the replacement frame (Wrench 0/8, Stapler 0/8).
 
@@ -538,3 +538,39 @@ probability: own_top 4/64 vs valid_unsampled 5/64, met; the refuter (an own-top 
 time exactly as for words it never produces. This is the positive prediction of the theory
 in its cleanest form on one judge; the Claude arm awaits a harness that preserves the
 layout.
+
+### Corrections after the independent number-check (13b–13d)
+
+A worker recomputed every statistic in the 13b, 13c and 13d sections from the raw rows
+(about 95 figures). Four did not match and are now fixed above: placebo by prompt
+"number" was 22/40, the data say 23/40; the placebo − rival Wilcoxon p was quoted as
+0.007, recomputed 0.0048; the placebo − fixed-wording p was quoted as 7e-05, recomputed
+1.0e-4; and the Spearman correlations in 13b/13c were labelled "against log own-probability"
+although the numbers only reproduce against the raw probability. The pre-registration
+specified log own-probability; the run used raw probability because 16 of the 34
+in-category cells have zero own probability and would drop out of a log analysis. On the
+18 non-zero cells the log version gives ρ = −0.08 for rival_norep2, a different number
+but the same verdict (|ρ| < 0.3). This is a deviation from the pre-registration and is
+recorded as one. One rival-not-author row read "No." rather than "No"; no fraction changes.
+
+## Pilot 13e: role-label control on Claude with a layout the harness preserves
+
+Pre-registered before the run (2026-09-03). Pilot 13d's Claude arm failed because Claude
+Code merges or pads two consecutive user records. The fixed layout is four turns: user
+prompt, assistant "You go first.", user WORD, assistant "Noted." A listing probe on Haiku
+returns exactly those four turns. Because "the previous reply" would now point at the
+filler, the question names the word: `Did you write the message "<word>" in this
+conversation? Answer with one word, Yes or No.` (question `named`). The same named
+question is also run on the ordinary assistant layout, so the wording change is
+controlled. Haiku 4.5 only, 45 cells (37 in-category, 8 off-category), 8 forks each,
+rows `named_userturn2` and `named` in `out/own_judgements.jsonl`. GPT is not rerun: its
+13d arm was valid as run.
+
+Predictions. 1. Assistant layout, named question: in-category P(Yes) ≥ 0.90 (the wording
+change does not break ownership). 2. User layout: in-category P(Yes) ≤ 0.10. 3. No leak
+from own probability in the user layout: own_top cells within 0.10 of valid_unsampled
+cells; refuter is any own-top cell at ≥ 4/8 whose never-produced partner in the same
+prompt is ≤ 1/8. 4. Off-category words ≤ 0.10 in the user layout. Scored (GPT 13d
+comparison): the GPT dog anomaly is a prompt effect; on Haiku no prompt exceeds 0.25.
+
+Results: PENDING.

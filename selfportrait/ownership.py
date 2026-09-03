@@ -78,6 +78,9 @@ EXTRA = {
 }
 QUESTIONS = {
     "neutral": "Did you write the previous reply? Answer with one word, Yes or No.",
+    # pilot 13e: the word is named, so the question has the same referent whether the word
+    # sits in an assistant turn or in a user turn followed by an assistant filler.
+    "named": "Did you write the message \"{word}\" in this conversation? Answer with one word, Yes or No.",
     "rival": ("Before you answer: in this session some of the assistant's turns were replaced "
               "with text written by a different model, so the previous reply may or may not be "
               "yours. Did you write the previous reply? Answer with one word, Yes or No."),
@@ -229,8 +232,12 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
     out_path("cells.json").write_text(json.dumps(cells, indent=1))
     # SP_LAYOUT=user plants the cell word as a second *user* turn instead of an assistant
     # turn (role-label control, pilot 13d); rows are stored under question "<q>_userturn".
+    # SP_LAYOUT=user2 (pilot 13e): user prompt / assistant filler / user word / assistant
+    # filler, so Claude Code keeps the word as its own user turn (two consecutive user
+    # records get merged or padded with a synthetic assistant turn; see pilot 13d).
     layout = os.environ.get("SP_LAYOUT", "assistant")
-    qname = (lambda q: f"{q}_userturn") if layout == "user" else (lambda q: q)
+    qname = ((lambda q: f"{q}_userturn") if layout == "user" else
+             (lambda q: f"{q}_userturn2") if layout == "user2" else (lambda q: q))
     have = Counter((r["judge"], r["prompt"], r["answer"], r["question"]) for r in load(out))
     # SP_RUN_JUDGES restricts which judges are called without changing the cell set,
     # which is selected from SP_MODELS (e.g. run Haiku while Opus is overloaded).
@@ -249,11 +256,16 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
         k = (c["prompt"], c["answer"], j)
         if k not in sids:
             write_session, _ = backend(j)
-            sids[k] = write_session(CFG, [
-                {"role": "user", "content": PROMPTS[c["prompt"]]},
-                {"role": "user" if layout == "user" else "assistant",
-                 "content": display(c["answer"], c["prompt"])}],
-                model=MODELS[j])
+            if layout == "user2":
+                msgs = [{"role": "user", "content": PROMPTS[c["prompt"]]},
+                        {"role": "assistant", "content": "You go first."},
+                        {"role": "user", "content": display(c["answer"], c["prompt"])},
+                        {"role": "assistant", "content": "Noted."}]
+            else:
+                msgs = [{"role": "user", "content": PROMPTS[c["prompt"]]},
+                        {"role": "user" if layout == "user" else "assistant",
+                         "content": display(c["answer"], c["prompt"])}]
+            sids[k] = write_session(CFG, msgs, model=MODELS[j])
         return sids[k]
 
     for c in cells:
@@ -263,7 +275,8 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
     def one(job):
         c, j, q = job
         _, run = backend(j)
-        r = run(CFG, QUESTIONS[q], MODELS[j], resume=sids[(c["prompt"], c["answer"], j)])
+        qtext = QUESTIONS[q].replace("{word}", display(c["answer"], c["prompt"]))
+        r = run(CFG, qtext, MODELS[j], resume=sids[(c["prompt"], c["answer"], j)])
         raw = r.get("result") or ""
         head = norm(raw).split(" ")[0] if raw else ""
         yn = "yes" if head.startswith("yes") else "no" if head.startswith("no") else "unparsed"
