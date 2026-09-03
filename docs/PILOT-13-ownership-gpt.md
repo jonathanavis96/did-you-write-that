@@ -515,8 +515,8 @@ an alternating history, so Haiku saw the word as an assistant turn (or a synthet
 assistant turn) and its 284/296 Yes measures nothing about the label. The 360 Haiku rows
 stay in `out/own_judgements.jsonl` under `neutral_userturn` and are excluded from every
 statistic. A Claude label control needs a different layout, most likely an assistant
-tool_use followed by a tool_result carrying the word, which Claude Code does preserve. Not
-yet built.
+tool_use followed by a tool_result carrying the word, which Claude Code does preserve.
+Built instead as a four-turn layout in pilot 13e below.
 
 **GPT arm valid.** The same probe on Codex lists "user: Name a fruit … / user: Mango"; and
 "The user wrote the last message." 336 rows, 0 errors. In-category P(Yes) 32/272 = 0.118
