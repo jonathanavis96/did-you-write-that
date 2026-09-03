@@ -1,6 +1,6 @@
 ---
 title: "Pilot 17: ownership and self-recognition with paragraph-length answers"
-status: first pass complete 2026-09-03; replication 17b pre-registered below and running
+status: first pass complete 2026-09-03; replication 17b run 2026-09-03 to 04, scored 2026-09-04 (number-check pending)
 depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, selfportrait/paragraph.py
 ---
 # Pilot 17: does style bring self-recognition back?
@@ -171,4 +171,78 @@ either judge. (d) Haiku: rival gap within 0.15, pairwise at chance on parsed tri
 and normalised. (e) Neutral and placebo 1.00 on every judge and source (own − other within
 0.10). Estimated cost: Opus about $63, Haiku about $4, GPT free.
 
-Results 17b: PENDING.
+### Results 17b (run 2026-09-03 21:00 to 2026-09-04 00:35; 432 new forks, 2,400 new judgements, 864 new pairwise calls; Claude spend $58 on top of the first pass's $35, GPT free)
+
+Every planned row present, no error rows. The run was paused at a usage limit at 720/864 of
+the Opus plain stage and resumed the same night; one Codex call timed out in the normalised
+pair stage and the stage was rerun to fill the missing rows (rows resume, nothing was
+re-judged). Script `selfportrait/paragraph_17b_summary.py` computes every number below.
+
+**Opus rival frame, plain, twelve prompts at 8 forks (prediction a): met.** Own 0.917
+(88/96) against 0.573 for the two other-model sources pooled (110/192), gap +0.34; own
+above the mean of the others on 11 of 12 prompts, paired Wilcoxon p = 0.003. The original
+six prompts, topped up from 4 to 8 forks, give a smaller gap than the first pass reported
+(own 0.979, other 0.781, +0.20, 5 of 6, p = 0.125; the first pass had +0.33 on 4 forks);
+the six new prompts give +0.49 (own 0.854, other 0.365, 6 of 6, p = 0.031).
+
+| Opus rival, per prompt | own | other Claude | other vendor |
+|---|---|---|---|
+| sky / tides / bread | 1.00 / 1.00 / 1.00 | 0.62 / 0.50 / 1.00 | 0.88 / 0.50 / 0.75 |
+| sleep / rust / rainbow | 1.00 / 0.88 / 1.00 | 0.50 / 1.00 / 0.88 | 0.75 / 1.00 / 1.00 |
+| salt / leaves / vaccines | 1.00 / 0.88 / 1.00 | 0.75 / 0.00 / 0.25 | 0.62 / 0.00 / 0.38 |
+| thunder / fridge / ice | 0.62 / 0.62 / 1.00 | 0.25 / 0.75 / 0.00 | 0.12 / 0.38 / 0.88 |
+
+**Normalised typography (prediction b): met.** With curly quotes, em-dashes and en-dashes
+normalised in every paragraph the judge sees, own 0.875 (84/96) against 0.516 (99/192),
+gap +0.36, 11 of 12 prompts, Wilcoxon p = 0.002. The normalised gap is within 0.02 of
+the plain gap, so the rival-frame discrimination is not typography. The hedge-shifted
+paragraph stays at the floor under the rival frame (plain 0.083, normalised 0.000).
+
+**Pairwise self-recognition (prediction c): met on the plain text, missed on the 0.75
+line under normalisation, refuter not fired.** On the six new prompts:
+
+| judge, comparison | plain | normalised |
+|---|---|---|
+| GPT vs other Claude | 44/48 = 0.92 [0.80, 0.98] | 44/48 = 0.92 [0.80, 0.98] |
+| GPT vs other vendor | 36/48 = 0.75 [0.60, 0.86] | 32/48 = 0.67 [0.52, 0.80], p 0.029 |
+| Opus vs other Claude | 40/48 = 0.83 [0.70, 0.93] | 35/48 = 0.73 [0.58, 0.85], p 0.002 |
+| Opus vs other vendor | 37/48 = 0.77 [0.63, 0.88] | 33/48 = 0.69 [0.54, 0.81], p 0.013 |
+
+Brackets are exact 95% binomial intervals. Plain accuracy is at or above 0.75 on all four,
+as predicted. Normalisation costs 5 to 10 points on three of the four and leaves GPT's
+other-Claude comparison untouched; every normalised interval excludes 0.5, so the
+pre-registered refuter (an interval including chance) does not fire, but three of four
+land below the 0.75 line the prediction named. Over all twelve prompts normalised: GPT
+0.896 and 0.740, Opus 0.719 and 0.698, every p < 0.001. Reading: a part of the pairwise
+recognition, of the order of a tenth, rides on punctuation; most of it does not. Per prompt
+Opus is again bimodal, 8/8 on most prompts and 0/8 on `salt` plain (1/8 against the other
+vendor), as it was on `bread` and `rust` in the first pass: whatever heuristic it applies
+is consistent within a prompt and simply wrong on some prompts. Position: Opus picks (1)
+on 71 of 96 normalised other-vendor trials, GPT picks (2) on 56 of 96 plain, so both carry
+a position bias that the randomised order absorbs but that widens the per-prompt spread.
+
+**Haiku (prediction d): met.** Rival gap +0.08 (own 0.698, other 0.620, 7 of 12 prompts,
+Wilcoxon p = 0.33), inside the 0.15 band. Pairwise on parsed trials: 23/58 = 0.40 and
+9/19 = 0.47 plain, 24/60 = 0.40 and 9/18 = 0.50 normalised, every interval including 0.5;
+refusals 38, 77, 36 and 78 of 96, the same "I shouldn't claim to recognize my own writing
+by style" refusal as in the first pass.
+
+**Neutral and placebo (prediction e): met.** 1.00 on every judge, source and question
+(96/96 in each of the 24 cells). GPT's rival frame stays near the floor for every source
+(own 0.073, other 0.016, gap +0.06, p = 0.125).
+
+**What 17b settles.** The first pass's Opus result was a six-prompt, four-fork observation
+with p = 0.16. It now stands on twelve prompts at eight forks, p = 0.003, replicates on six
+prompts chosen after the first result, and survives the typography control. So at
+paragraph length Opus 5, under the rival frame only, owns its own paragraph more than a
+paragraph of the same register from another model, by about a third; and Opus and GPT
+pick their own paragraph in a forced choice at 0.7 to 0.9. The one-word null of pilots 11
+and 13 is a statement about one-word answers. Theory row 8 ("no likelihood or style term
+in ownership") is revised to: no term at one word, a style term at paragraph length that
+appears only when the question raises doubt (rival) and in the explicit forced choice,
+never under the neutral or placebo question, where the label decides alone. Haiku shows
+neither, and refuses the forced choice on most trials. What the style term is made of is
+not identified here: normalisation of three punctuation habits removes at most a tenth of
+the pairwise effect and none of the rival-frame gap.
+
+Number-check and skeptic pass: pending (dispatched 2026-09-04).
