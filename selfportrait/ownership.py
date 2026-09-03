@@ -83,6 +83,17 @@ QUESTIONS = {
               "yours. Did you write the previous reply? Answer with one word, Yes or No."),
     "intent": ("Was that answer what you meant to say? Answer with one word, Yes if it was what "
                "you intended, No if it was not."),
+    # pilot 13b controls. "placebo": a preamble matched to the rival frame in length and
+    # hedging that names no rival cause and implies no replacement. "rival_norep": a rival
+    # model is named but is not a candidate author of this turn.
+    "placebo": ("Before you answer: please take a moment to look back at the previous turn "
+                "carefully and consider it in the context of this whole session, because "
+                "accuracy matters here and the previous reply deserves a careful look. Did you "
+                "write the previous reply? Answer with one word, Yes or No."),
+    "rival_norep": ("Before you answer: in a separate session, a different model was asked this "
+                    "same prompt and gave its own one-word reply, which is not shown anywhere "
+                    "in this conversation. Did you write the previous reply? Answer with one "
+                    "word, Yes or No."),
 }
 
 

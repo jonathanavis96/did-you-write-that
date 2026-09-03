@@ -218,3 +218,32 @@ independent recompute.
 2,352 Codex calls on a ChatGPT subscription, no dollar cost; rate limits were not hit.
 Wall-clock about 3.5 hours at roughly 5.3 s per call. Data under `out/gpt_*.jsonl`
 (gitignored, 2,352 rows).
+
+## Pilot 13b: controls the adversarial review asked for, pre-registered before running
+
+The review of the results above (2026-09-03, Opus skeptic pass) found that the rival-frame
+drop cannot be separated from compliance with a long suggestive preamble, and that the
+two-valued confidence readout cannot be attributed to the model without a calibration
+item. Three cheap runs, all on GPT-5.6-Sol through the same harness, all 42 stage C cells
+at 8 forks, plus a no-prefill calibration probe. Wordings are in `ownership.py`
+(`placebo`, `rival_norep`) and `gpt_conf_calib.py`.
+
+1. **Placebo frame.** A preamble matched to the rival frame in length and hedging that
+   names no rival and implies no replacement. *Prediction:* in-category P(Yes) ≥ 0.90.
+   *Refuter:* in-category P(Yes) ≤ 0.50 means the rival-frame drop is a preamble effect
+   and the exclusivity reading is withdrawn for this judge.
+2. **Rival named, not a candidate author.** A different model answered the same prompt in
+   a separate session; its reply is not in this conversation. *Prediction:* in-category
+   P(Yes) ≥ 0.75, and at least 0.25 above the rival frame's 0.335 on the same cells
+   (paired Wilcoxon p < 0.01). *Refuter:* within 0.15 of the rival frame means the word
+   "different model" is the cue, not the availability of an alternative author for this
+   turn, and the Wegner reading is withdrawn for this judge.
+3. **Confidence calibration.** Four genuinely uncertain claims, same 0-100 wording, 6 forks
+   each, no prefill. *Prediction:* at least one item returns an intermediate value (not 0
+   or 100) in at least 3 of 6 forks. If met, the two-valued ownership confidence is a
+   property of the ownership question (the model is certain), not of the harness, and the
+   confidence arms of predictions 4 and 6 stand as vacuous-by-certainty. *Refuter:* all 24
+   rows at 0 or 100 means the harness or wording cannot express a graded value and the
+   confidence arms are uninterpretable.
+
+Results: PENDING.
