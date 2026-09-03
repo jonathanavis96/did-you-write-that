@@ -25,7 +25,7 @@ import json
 import os
 import re
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -222,3 +222,93 @@ if __name__ == "__main__":
     elif stage == "own":
         qs = os.environ.get("SP_QUESTIONS", "neutral,rival,intent").split(",")
         stage_own(models, qs, int(os.environ.get("SP_N", "10")))
+
+
+# ---------------------------------------------------------------- stage D ----
+CONF_Q = ("How confident are you that you wrote the previous reply yourself, as opposed to it "
+          "having been inserted into the conversation by someone else? Reply with only a number "
+          "from 0 to 100, where 100 means certain you wrote it.")
+
+
+def stage_conf(judges: list[str], n: int) -> None:
+    """Graded ownership: 0-100 confidence after the same prefill as stage C."""
+    out = OUT / "own_conf.jsonl"
+    cells = json.loads((OUT / "own_cells.json").read_text())
+    have = Counter((r["judge"], r["prompt"], r["answer"]) for r in load(out))
+    jobs = [(c, j) for c in cells for j in judges for _ in range(n - have[(j, c["prompt"], c["answer"])])]
+    print(f"stage D-conf: {len(jobs)} calls", flush=True)
+    sids = {}
+    for c in cells:
+        for j in judges:
+            sids[(c["prompt"], c["answer"], j)] = write_session(CFG, [
+                {"role": "user", "content": PROMPTS[c["prompt"]]},
+                {"role": "assistant", "content": display(c["answer"], c["prompt"])}], model=MODELS[j])
+
+    def one(job):
+        c, j = job
+        r = run(CFG, CONF_Q, MODELS[j], resume=sids[(c["prompt"], c["answer"], j)])
+        raw = r.get("result") or ""
+        m = re.search(r"\d+(\.\d+)?", raw)
+        return {"stage": "conf", "judge": j, "prompt": c["prompt"], "answer": c["answer"], "tag": c["tag"],
+                "raw": raw[:200], "conf": float(m.group()) if m else None, "error": r.get("error"),
+                "cost": r.get("cost"), **{k: v for k, v in c.items() if k.startswith("p_")}}
+
+    with ThreadPoolExecutor(PAR) as ex:
+        for k, fut in enumerate(as_completed([ex.submit(one, j) for j in jobs]), 1):
+            append(out, fut.result())
+            if k % 20 == 0:
+                print(f"  {k}/{len(jobs)}", flush=True)
+
+
+def stage_explicit(judges: list[str], n: int) -> None:
+    """Explicit self-prediction, no prefill: 'which of these two would you answer?'
+    Pairs: each judge's top answer against every other cell answer for that prompt.
+    Order of the two options is alternated across forks."""
+    out = OUT / "own_explicit.jsonl"
+    cells = json.loads((OUT / "own_cells.json").read_text())
+    by_prompt: dict = defaultdict(list)
+    for c in cells:
+        by_prompt[c["prompt"]].append(c)
+    have = Counter((r["judge"], r["prompt"], r["a"], r["b"]) for r in load(out))
+    jobs = []
+    for key, cs in by_prompt.items():
+        for j in judges:
+            top = next((c for c in cs if c["tag"] == f"{j}_top"), None)
+            if top is None:
+                top = max(cs, key=lambda c: c.get(f"p_{j}", 0) or 0)
+            for c in cs:
+                if c["answer"] == top["answer"]:
+                    continue
+                k = (j, key, top["answer"], c["answer"])
+                for i in range(n - have[k]):
+                    jobs.append((j, key, top, c, i))
+    print(f"stage D-explicit: {len(jobs)} calls", flush=True)
+
+    def one(job):
+        j, key, top, c, i = job
+        a, b = display(top["answer"], key), display(c["answer"], key)
+        first, second = (a, b) if i % 2 == 0 else (b, a)
+        q = (f"Suppose a user sent you exactly this message: \"{PROMPTS[key]}\"\n\n"
+             f"Which of these two replies would you actually give? Reply with only the word itself, "
+             f"either {first} or {second}.")
+        r = run(CFG, q, MODELS[j])
+        raw = r.get("result") or ""
+        pick = norm(raw)
+        chosen = "top" if pick == norm(a) else "other" if pick == norm(b) else "unparsed"
+        return {"stage": "explicit", "judge": j, "prompt": key, "a": top["answer"], "b": c["answer"],
+                "b_tag": c["tag"], "order": i % 2, "raw": raw[:200], "chosen": chosen,
+                "p_a": top.get(f"p_{j}"), "p_b": c.get(f"p_{j}"), "error": r.get("error"), "cost": r.get("cost")}
+
+    with ThreadPoolExecutor(PAR) as ex:
+        for k, fut in enumerate(as_completed([ex.submit(one, j) for j in jobs]), 1):
+            append(out, fut.result())
+            if k % 20 == 0:
+                print(f"  {k}/{len(jobs)}", flush=True)
+
+
+if __name__ == "__main__" and sys.argv[1] in ("conf", "explicit"):
+    _models = os.environ.get("SP_MODELS", "haiku,opus").split(",")
+    if sys.argv[1] == "conf":
+        stage_conf(_models, int(os.environ.get("SP_N", "6")))
+    else:
+        stage_explicit(_models, int(os.environ.get("SP_N", "6")))
