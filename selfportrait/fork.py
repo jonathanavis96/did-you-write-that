@@ -20,6 +20,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# Claude Code reads ~/.claude/CLAUDE.md through HOME regardless of CLAUDE_CONFIG_DIR, and
+# CLAUDE.md / AGENTS.md from every parent of the working directory. Until 2026-09-04 every
+# fork therefore carried Jonathan's personal CLAUDE.md (including a "caveman" reply-style
+# section that Opus 5 sometimes obeyed in its paragraphs) and /home/grafe/code/CLAUDE.md.
+# Forks now run with HOME inside the isolated config dir and from a neutral directory
+# with no instruction files above it; the probe "list every CLAUDE.md in your context"
+# answers NONE under this setting and named both files without it.
+NEUTRAL_CWD = Path(os.environ.get("SP_FORK_CWD", "/tmp/claude-1000/sp-cwd"))
 NOTOOLS = ["--disallowed-tools", "Bash", "Read", "Write", "Edit", "WebFetch",
            "WebSearch", "Glob", "Grep", "Task", "Agent"]
 
@@ -41,7 +49,7 @@ def _slug(cwd: Path) -> str:
     return str(cwd).replace("/", "-")
 
 
-def write_session(cfg: Path, messages: list[dict], cwd: Path = ROOT,
+def write_session(cfg: Path, messages: list[dict], cwd: Path = NEUTRAL_CWD,
                   sid: str | None = None, model: str = "claude-opus-5") -> str:
     """messages: [{"role": "user"|"assistant", "content": str}, ...]. Returns sid."""
     sid = sid or str(uuid.uuid4())
@@ -90,13 +98,16 @@ def write_session(cfg: Path, messages: list[dict], cwd: Path = ROOT,
 
 
 def run(cfg: Path, prompt: str, model: str = "opus", resume: str | None = None,
-        cwd: Path = ROOT, timeout: int = 300, extra: list[str] | None = None) -> dict:
+        cwd: Path = NEUTRAL_CWD, timeout: int = 300, extra: list[str] | None = None) -> dict:
     cmd = ["claude", "-p", prompt, "--model", model, "--output-format", "json", *NOTOOLS]
+    cwd.mkdir(parents=True, exist_ok=True)
+    home = cfg / "home"
+    home.mkdir(exist_ok=True)
     if resume:
         cmd += ["--resume", resume, "--fork-session"]
     if extra:
         cmd += extra
-    env = dict(os.environ, CLAUDE_CONFIG_DIR=str(cfg))
+    env = dict(os.environ, CLAUDE_CONFIG_DIR=str(cfg), HOME=str(home))
     try:
         p = subprocess.run(cmd, cwd=str(cwd), env=env, capture_output=True, text=True,
                            timeout=timeout)

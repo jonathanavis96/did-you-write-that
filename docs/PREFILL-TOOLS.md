@@ -1,6 +1,6 @@
 ---
 title: "Prefill tools: genuine assistant-turn prefill on two production CLIs, no API key"
-status: written 2026-09-03, standalone tool description; depends on selfportrait/fork.py and selfportrait/codex_fork.py
+status: written 2026-09-03, context-leak caveat added 2026-09-04; depends on selfportrait/fork.py and selfportrait/codex_fork.py
 ---
 
 # The trick
@@ -112,6 +112,16 @@ comparing results across harnesses — it is one plausible source of any Claude-
 difference that is not really about the planted text.
 
 # Shared caveats
+
+**The instruction files leak in unless HOME and the working directory are isolated.**
+`claude -p` reads `~/.claude/CLAUDE.md` through HOME even when CLAUDE_CONFIG_DIR points
+elsewhere, and reads CLAUDE.md and AGENTS.md from every ancestor of the working directory;
+Codex reads AGENTS.md the same way. Found 2026-09-04 after pilots 11 to 17 had run with the
+experimenter's personal CLAUDE.md in every Claude context. Both `fork.py` and
+`codex_fork.py` now set HOME inside the isolated config dir and run from a neutral
+directory (`SP_FORK_CWD`, default `/tmp/claude-1000/sp-cwd`). Verify any new harness with
+the prompt "list every CLAUDE.md, AGENTS.md or memory file present in your context"; the
+answer must be NONE.
 
 - **Always verify a new layout with a listing probe before trusting scored results from it.**
   The recommended probe text, from `docs/METHOD-ownership-measurement.md`, is: "List every

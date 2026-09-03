@@ -1,6 +1,6 @@
 ---
 title: "Pilot 15: why one prompt per judge owns user-turn words"
-status: complete 2026-09-03; the text was on disk before launch, the commit landed a few minutes after launch because a lint hook rejected the first commit attempt
+status: complete 2026-09-03; pilot 15b (clean-harness spot check) pre-registered 2026-09-04 and running; the text was on disk before launch, the commit landed a few minutes after launch because a lint hook rejected the first commit attempt
 depends_on: docs/PILOT-13-ownership-gpt.md (13d, 13e), selfportrait/ownership.py (SP_PROMPTS)
 ---
 # Pilot 15: the prompt residues in the role-label control
@@ -122,3 +122,30 @@ both are localised rather than explained; the Opus one was rerun in pilot 16 and
 0.875 (4 forks, 13e) to 0.531 (8 forks), the GPT one has not been rerun. Per-cell own probabilities for every cell are regenerable
 from `out/own_forks.jsonl`; the summary above was recomputed from the raw rows, not from
 `out/own_cells.json`, which later runs overwrite.
+
+
+## Pilot 15b: the label result on the clean harness (pre-registered 2026-09-04 01:20, before the run)
+
+On 2026-09-04 a probe showed that every Claude fork and judgement in pilots 11 to 17 had
+Jonathan's personal `~/.claude/CLAUDE.md` and the workspace `CLAUDE.md` in context (`claude
+-p` reads them through HOME and the working directory's parents regardless of
+CLAUDE_CONFIG_DIR), and every GPT one had the workspace `AGENTS.md`; details in
+`docs/PILOT-17-paragraph-ownership.md`. The harness now isolates HOME and runs from a
+neutral directory. This spot check asks whether the one-word label result depends on
+that context. Four of pilot 15's prompts (vegetable, planet, bird, metal), `SP_OUT_PREFIX=clean`
+so the rows sit apart from the originals: 24 forks on Haiku 4.5 and Opus 5; the `named`
+question on the assistant and user2 layouts and the `rival` and `neutral` questions on the
+assistant layout, both judges at 8 forks, every cell the script builds. Cost about $15.
+
+Predictions. (a) `named` on the assistant layout ≥ 0.95 on both judges; on the user2
+layout ≤ 0.05 on Haiku and ≤ 0.15 on Opus (pilot 15 gave 1.000 / 0.000 and 1.000 /
+0.135). Refuter: assistant < 0.80 or user2 > 0.30 on either judge. (b) `neutral` ≥ 0.95
+in-category on both judges. (c) The rival-frame drop is present: in-category `rival`
+between 0.30 and 0.90 on Haiku and on Opus (pilots 11 and 13c gave in-category drops of
+0.34 and 0.43). Refuter: rival ≥ 0.95 (no drop) or ≤ 0.10 (floor) on either judge. (d)
+No own-probability structure: Spearman of rival P(Yes) against log own-probability
+within the in-category cells, |ρ| < 0.3 on both judges. A refuter firing on (a) or (c)
+means the corresponding pilot 11 to 16 claim is re-run in full on the clean harness before
+it appears in any paper.
+
+Results 15b: PENDING.

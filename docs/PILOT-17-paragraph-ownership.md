@@ -1,6 +1,6 @@
 ---
 title: "Pilot 17: ownership and self-recognition with paragraph-length answers"
-status: first pass complete 2026-09-03; replication 17b run 2026-09-03 to 04, scored 2026-09-04 (number-check pending)
+status: 17b scored and number-checked 2026-09-04; harness contamination found the same night; 17c (clean rerun) pre-registered and running
 depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, selfportrait/paragraph.py
 ---
 # Pilot 17: does style bring self-recognition back?
@@ -218,8 +218,9 @@ recognition, of the order of a tenth, rides on punctuation; most of it does not.
 Opus is again bimodal, 8/8 on most prompts and 0/8 on `salt` plain (1/8 against the other
 vendor), as it was on `bread` and `rust` in the first pass: whatever heuristic it applies
 is consistent within a prompt and simply wrong on some prompts. Position: Opus picks (1)
-on 71 of 96 normalised other-vendor trials, GPT picks (2) on 56 of 96 plain, so both carry
-a position bias that the randomised order absorbs but that widens the per-prompt spread.
+on 71 of 96 normalised other-vendor trials, GPT picks (2) on 56 of 96 plain other-vendor
+trials over the twelve prompts, so both carry a position bias that the randomised order
+absorbs but that widens the per-prompt spread.
 
 **Haiku (prediction d): met.** Rival gap +0.08 (own 0.698, other 0.620, 7 of 12 prompts,
 Wilcoxon p = 0.33), inside the 0.15 band. Pairwise on parsed trials: 23/58 = 0.40 and
@@ -245,4 +246,83 @@ neither, and refuses the forced choice on most trials. What the style term is ma
 not identified here: normalisation of three punctuation habits removes at most a tenth of
 the pairwise effect and none of the rival-frame gap.
 
-Number-check and skeptic pass: pending (dispatched 2026-09-04).
+Number-check (2026-09-04, independent recompute of 73 figures from the rows): no numeric
+mismatch; one ambiguous sentence (the GPT position count, now qualified above) and one
+note that "of the order of a tenth" holds for accuracy points but that GPT's other-vendor
+cell loses a third of its margin over chance under normalisation.
+
+### Skeptic pass and the harness contamination it uncovered (2026-09-04)
+
+The adversarial review found that Opus's `own` paragraph on `bread`, `rust` and `salt`,
+the three prompts where its pairwise choice is consistently wrong, is written in a broken
+register ("Yeast eat sugar in dough, fart out gas"; "Rain hit rock, break rock slow"):
+19, 14 and 6 of the 24 Opus forks on those prompts by an article-frequency heuristic, and
+fork 0, which `stage_cells` takes as `own`, on all three. Reading the forks identified the
+register: it is the "caveman" reply style described in Jonathan's personal
+`~/.claude/CLAUDE.md`. A probe through the fork harness ("list every CLAUDE.md, AGENTS.md
+or memory file in your context") named `/home/grafe/.claude/CLAUDE.md` and
+`/home/grafe/code/CLAUDE.md` and quoted the "Reply style — caveman full" heading: `claude
+-p` reads the user-level CLAUDE.md through HOME regardless of CLAUDE_CONFIG_DIR, and the
+workspace CLAUDE.md from the parent of the working directory. The same probe through the
+Codex harness named `/home/grafe/code/AGENTS.md`. **Every Claude fork and judgement in
+pilots 11 to 17, and every GPT one, carried these files as context.** Fixed in
+`selfportrait/fork.py` and `codex_fork.py` (HOME inside the isolated config dir, neutral
+working directory); both probes now answer NONE. The one-word pilots are unlikely to be
+moved by a reply-style instruction, but that is an assumption until pilot 15b (the
+clean-harness spot check in `docs/PILOT-15-prompt-effects.md`) is run; the paragraph
+pilots are directly affected, because the style signal under test is exactly what the
+leaked instruction manipulates on some forks.
+
+Other findings of the review, in order of threat:
+
+- **Length is collinear with authorship.** Mean words per paragraph over the twelve first
+  forks: GPT 40.8, Haiku 60.2, Opus 71.5. So for GPT `own` is always the shortest of the
+  three sources and for Opus always the longest, and "pick the shortest" or "pick the
+  longest" reproduces both judges' forced-choice direction with no authorship signal. Haiku,
+  in the middle, is the judge at chance. The design cannot separate the two; 17c reports
+  accuracy split by whether `own` is the longer paragraph of the pair.
+- **The Yes/No readout is robust to the register outlier; the forced choice is not.** Opus
+  owns its broken-register `own` paragraph under the rival frame at 1.00, 0.88 and 1.00 on
+  the three affected prompts, while picking it 0/8, 2/8 and 0/8 in forced choice. The
+  comparative readout keys on text quality, the ownership readout does not.
+- **Position.** Opus is right on 160/179 trials when its own paragraph is at (1) and
+  126/205 at (2); GPT 138/188 at (1) and 182/196 at (2). Per-prompt position counts on the
+  affected prompts are balanced, so this does not explain them, but it widens the
+  per-prompt spread and per-prompt counts should be read with it in mind.
+- **Normalisation scope.** `SP_TEXT_NORM` maps quotes and dashes only; sentence openers,
+  lexical tics and register are untouched. "Not typography" means not those three marks.
+- **Statistics.** A prompt-level sign-permutation test (100,000 resamples) on the Opus
+  rival gap gives one-sided p = 0.0016, in agreement with the Wilcoxon p = 0.003. The
+  pooled gap does not depend on fork pooling.
+
+The theory revision in the paragraph above is therefore withdrawn pending 17c and
+replaced by the tightest reading consistent with the data: *at paragraph length Opus and
+GPT show a comparative signal that separates own from other in forced choice and, on
+Opus, under the rival frame; the signal is confounded with paragraph length and, on three
+of twelve prompts, with a leaked style instruction, so what it is made of is not
+established.* The "consistent within a prompt and simply wrong" reading of the bimodal
+prompts is withdrawn: those are the prompts where the harness handed Opus an outlier as
+its own text.
+
+## Pilot 17c: the clean rerun (pre-registered 2026-09-04 01:20, before the run)
+
+Same twelve prompts, same script, on the fixed harness (no instruction file in any
+fork's context, verified by probe on both CLIs before the run), rows under `out/p17c/`.
+Stage A: 24 forks per prompt on all three models. Cells rebuilt from the new forks.
+Stage C: `neutral` and `rival` on own / other-Claude / other-vendor / shifted, all three
+judges at 8 forks (placebo dropped: 1.00 on every judge twice over). Stage P: plain
+pairwise, both comparisons, 8 trials, all judges. No normalised arm (settled by 17b).
+Cost: Opus about $45, Haiku about $8, GPT free.
+
+Predictions. (a) Opus rival own − other ≥ 0.25 pooled over twelve prompts, Wilcoxon on
+prompt-level means p < 0.05; refuter: gap < 0.10, in which case the 17b gap is attributed
+to the leaked instruction. (b) Pairwise accuracy ≥ 0.75 for Opus and GPT on both
+comparisons; refuter: 95% interval includes 0.5. (c) No Opus fork on any prompt in the
+caveman register (0 of 288 by the article heuristic, confirmed by reading the flagged
+forks); at most one prompt per comparison with Opus at 2/8 or below. (d) Length: Opus's
+and GPT's pairwise accuracy is above chance both when `own` is the longer and when it is
+the shorter paragraph of the pair (each split's interval excludes 0.5); refuter: at
+chance in one split, which reads as a length heuristic. (e) Haiku: rival gap within 0.15,
+pairwise at chance on parsed trials. (f) Neutral 1.00 on every judge and source.
+
+Results 17c: PENDING.

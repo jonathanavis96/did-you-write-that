@@ -1,6 +1,6 @@
 ---
 title: "Plan: making the ownership result bulletproof and useful"
-status: revised 2026-09-03 night after pilots 15, 16, 16b and the first pass of 17; 17b and 14 running
+status: revised 2026-09-04 after 17b was scored and the harness context leak was found; 17c, 15b and 14 running
 depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, docs/THEORY-exteroceptive-self.md
 ---
 
@@ -41,6 +41,7 @@ depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, docs/THE
 | Binary readout at 8 forks cannot exclude a small likelihood term on GPT | 24 forks per cell on the 21 stage E cells, rival and placebo frames | GPT free; Claude ~$20 |
 | One-word answers carry no style | Pilot 17 done, 17b running: at paragraph length Opus and GPT pick their own paragraph in forced choice at 0.73 to 0.88, and Opus keeps owning its own paragraph under the rival frame (0.96 vs 0.58 / 0.67). The theory's "no likelihood term" is too strong at this length unless 17b's punctuation normalisation removes the effect | Claude ~$100 total, GPT free |
 | ~~Ownership varies four-fold by prompt (number 0.62, dog 0.15) for unknown reasons~~ | Pilot 15: the prompt effect is localised to one prompt per judge, not a general property; pilot 16b localises the Opus case further to the stated range | closed as a threat; open as a curiosity |
+| **Every Claude fork and judgement in pilots 11 to 17 carried `~/.claude/CLAUDE.md` and `code/CLAUDE.md`; every GPT one carried `code/AGENTS.md`** (found 2026-09-04 by the 17b skeptic pass: Opus wrote some paragraphs in the CLAUDE.md's caveman register). Harness fixed (HOME isolated, neutral cwd, probe answers NONE) | Pilot 17c (paragraphs, full clean rerun) and pilot 15b (one-word label and rival spot check), both pre-registered, running 2026-09-04 | Claude about $65, GPT free |
 | One session day, one Codex template rollout | Test-retest of stage C on a second day, second template | GPT free |
 | GPT's modal words overlap Opus's, so "other vendor" cells are mostly Haiku's | Add Gemini as a third source of modal words | Gemini API |
 | The rival-frame variance on one-word cells carries authorship information | Pilot 16b: on Haiku it tracks a plain answer-quality judgement (ρ 0.615, in-category 0.98 good, off-category 0.02), with three cells owned above their quality rating | closed on Haiku; not run on Opus or GPT |

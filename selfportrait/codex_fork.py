@@ -24,6 +24,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# Codex loads AGENTS.md from the working directory's ancestors: run from the repo, every
+# GPT fork before 2026-09-04 carried /home/grafe/code/AGENTS.md (workspace rules, no style
+# instruction). Forks now run from a neutral directory with nothing above it; see fork.py.
+NEUTRAL_CWD = Path(os.environ.get("SP_FORK_CWD", "/tmp/claude-1000/sp-cwd"))
 SESSIONS_DIR = Path.home() / ".codex" / "sessions"
 DEFAULT_TEMPLATE_SID = "01a06734-65d6-7a72-8f33-6e9d09a0c445"
 DEFAULT_TEMPLATE = (SESSIONS_DIR / "2026" / "09" / "03"
@@ -40,7 +44,7 @@ def _template_sid(path: Path) -> str:
     return "-".join(parts[-5:])
 
 
-def write_session(cfg, messages: list[dict], cwd: Path = ROOT,
+def write_session(cfg, messages: list[dict], cwd: Path = NEUTRAL_CWD,
                    sid: str | None = None, model: str = "gpt-5.6-sol") -> str:
     """messages: exactly one user turn and one assistant turn (any order).
     Returns the new session id, planted as a rollout file under
@@ -114,7 +118,8 @@ def write_session(cfg, messages: list[dict], cwd: Path = ROOT,
 
 
 def run(cfg, prompt: str, model: str = "gpt-5.6-sol", resume: str | None = None,
-        cwd: Path = ROOT, timeout: int = 300, extra: list[str] | None = None) -> dict:
+        cwd: Path = NEUTRAL_CWD, timeout: int = 300, extra: list[str] | None = None) -> dict:
+    cwd.mkdir(parents=True, exist_ok=True)
     cmd = ["codex", "exec", "--skip-git-repo-check", "-s", "read-only", "--json",
            "-m", model]
     if extra:
