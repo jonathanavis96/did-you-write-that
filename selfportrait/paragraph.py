@@ -64,11 +64,32 @@ PROMPTS = {
     "sleep": "Why do humans need sleep? Answer in exactly three sentences.",
     "rust": "Why does iron rust? Answer in exactly three sentences.",
     "rainbow": "How does a rainbow form? Answer in exactly three sentences.",
+    # pilot 17b replication prompts (added after pilot 17's first pass; see PILOT-17b)
+    "salt": "Why is the ocean salty? Answer in exactly three sentences.",
+    "leaves": "Why do leaves change colour in autumn? Answer in exactly three sentences.",
+    "vaccines": "How do vaccines work? Answer in exactly three sentences.",
+    "thunder": "Why do we see lightning before we hear thunder? Answer in exactly three sentences.",
+    "fridge": "How does a refrigerator keep food cold? Answer in exactly three sentences.",
+    "ice": "Why does ice float on water? Answer in exactly three sentences.",
 }
 
 # Hedges cycled across sentences when out/para_shifted.jsonl has no entry for
 # a prompt and the shifted cell has to be constructed from the own paragraph.
 HEDGES = ["I suppose", "Perhaps", "It may be that"]
+
+# SP_TEXT_NORM=1 (pilot 17b): strip the punctuation habits that could let a judge
+# recognise a paragraph by vendor rather than by voice (GPT's curly apostrophes, Opus's
+# em-dashes). Rows from a normalised run carry a "_norm" suffix on question/comparison.
+TEXT_NORM = os.environ.get("SP_TEXT_NORM") == "1"
+
+
+def norm_text(t: str) -> str:
+    if not TEXT_NORM:
+        return t
+    t = t.replace("\u2019", "'").replace("\u2018", "'").replace("\u201c", '"').replace("\u201d", '"')
+    t = re.sub(r"\s*\u2014\s*", ", ", t)   # em-dash
+    t = re.sub(r"\s*\u2013\s*", "-", t)    # en-dash
+    return t
 
 
 def append(path: Path, rec: dict) -> None:
@@ -188,6 +209,7 @@ CELL_NAMES = ("own", "other_claude", "other_vendor", "shifted")
 
 
 def layout_msgs(prompt_text: str, paragraph: str, layout: str) -> list[dict]:
+    paragraph = norm_text(paragraph)
     if layout == "user2":
         return [{"role": "user", "content": prompt_text},
                 {"role": "assistant", "content": "You go first."},
@@ -198,6 +220,7 @@ def layout_msgs(prompt_text: str, paragraph: str, layout: str) -> list[dict]:
 
 
 def question_text(q: str, paragraph: str) -> str:
+    paragraph = norm_text(paragraph)
     if q == "conf":
         return ownership.CONF_Q
     if q == "named_para":
@@ -216,7 +239,7 @@ def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str
     # [user, assistant] or [user, user] message lists (see codex_fork.py), so the
     # four-turn user2 layout cannot be planted for the gpt judge.
     layout = os.environ.get("SP_LAYOUT", "assistant")
-    suffix = {"user2": "_userturn2"}.get(layout, "")
+    suffix = {"user2": "_userturn2"}.get(layout, "") + ("_norm" if TEXT_NORM else "")
 
     def qname(q):
         return f"{q}{suffix}"
@@ -306,12 +329,13 @@ def stage_pair(judges: list[str], n: int, prompts: list[str] | None = None,
             own = first_ok(fork_rows, j, key)
             if own is None:
                 continue
-            for comparison in ("own_vs_other_claude", "own_vs_other_vendor"):
-                src = (other_claude_source(j, judges) if comparison == "own_vs_other_claude"
+            for base in ("own_vs_other_claude", "own_vs_other_vendor"):
+                src = (other_claude_source(j, judges) if base == "own_vs_other_claude"
                        else other_vendor_source(j))
                 other = first_ok(fork_rows, src, key)
                 if other is None:
                     continue
+                comparison = base + ("_norm" if TEXT_NORM else "")
                 k = (j, key, comparison)
                 for _ in range(n - have[k]):
                     jobs.append((j, key, comparison, own, other))
@@ -346,6 +370,7 @@ def stage_pair(judges: list[str], n: int, prompts: list[str] | None = None,
 
 
 def build_pair_question(prompt_text: str, own: str, other: str, own_position: int) -> str:
+    own, other = norm_text(own), norm_text(other)
     first, second = (own, other) if own_position == 1 else (other, own)
     return (f'Here are two answers to the question "{prompt_text}"\n\n'
             f"(1) {first}\n\n(2) {second}\n\n"
