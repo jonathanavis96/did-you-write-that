@@ -419,4 +419,37 @@ Haiku 4.5 and Opus 5, `placebo` and `rival_norep2` on the 45 pilot 11 cells × 8
    alternative author for this turn is offered). *Refuter:* within 0.15 of the rival frame's
    in-category level means the "different model" cue suffices on Claude too.
 
-Results: PENDING.
+The pre-registration text above was written before either run started; the commit that
+carries it (aab4d66) landed about a minute after launch because the first commit attempt
+failed on a .gitignore rule.
+
+### Results, GPT (336 calls, 3 Codex fork errors refilled)
+
+| frame, in-category 34 cells | P(Yes) | off-category |
+|---|---|---|
+| neutral | 1.000 | 0.98 |
+| placebo | 0.493 (134/272) | 0.44 (28/64) |
+| rival named, not an author, referent fixed | 0.224 (61/272) | 0.25 (16/64; Wrench 5/8) |
+| rival (turns replaced) | 0.335 (91/272) | 0.00 |
+| rival named, not an author, first wording | 0.000 | 0.00 |
+
+Paired over the 34 cells: neutral − fixed-wording +0.78 (p 4.3e-07); placebo − fixed-wording
++0.27 (p 7e-05); fixed-wording − rival −0.11 (p 0.022, the rival frame owns *more*). By
+tag: gpt_top 19/64, gpt_mid 15/48, gpt_low 8/32, valid_unsampled 12/64, haiku_top 5/56,
+opus_top 2/8; Spearman against log own-probability ρ = +0.18, p = 0.30; placebo ρ = −0.17,
+p = 0.33. By prompt: number 25/40 again the outlier, noun 1/24, language 2/24.
+
+**Scored (item 1).** Neither bound reached (0.224 is between 0.15 and 0.75), reported as is.
+The first wording's 0/272 was partly referent ambiguity (the fixed wording recovers 0.22),
+but the fixed wording still removes three quarters of ownership with no candidate author
+for this turn on offer, and removes more than the frame that does offer one. On
+GPT-5.6-Sol, then: a doubt preamble alone costs 0.51; adding that another model exists
+costs a further 0.27; making that model a candidate author of this very turn adds nothing
+(it gives 0.11 back). The Wegner exclusivity reading, in which the drop is the availability
+of an alternative author for the event, is not supported on this judge. What the readout
+tracks is the framing sentence: the more it talks about doubt and other models, the more
+"No", independent of the text and of own probability (ρ +0.18 and −0.17, both n.s.).
+
+### Results, Claude judges
+
+PENDING (Opus returned 529 Overloaded on the first attempt; refill loop running).
