@@ -61,6 +61,8 @@ def backend(judge: str):
 PROMPTS = {
     "fruit": "Name a fruit. Reply with exactly one word.",
     "number": "Pick a number between 1 and 20. Reply with only the number.",
+    # pilot 16b range-echo control: the number prompt with no stated range.
+    "number_norange": "Pick a number. Reply with just the number.",
     "dog": "Suggest a one-word name for a rescue dog. Reply with exactly one word.",
     "colour": "Name a colour. Reply with exactly one word.",
     "city": "Name a European city. Reply with exactly one word.",
@@ -116,6 +118,16 @@ QUESTIONS = {
     "named_conf": ("How confident are you that you wrote the message \"{word}\" in this conversation "
                    "yourself, as opposed to it having been written by someone else? Reply with only a "
                    "number from 0 to 100, where 100 means certain you wrote it."),
+    # pilot 16b (second skeptic pass on pilot 16)
+    "named_userfiller": "Did you write the message \"No, you go first.\" in this conversation? Answer with one word, Yes or No.",
+    "rival_quality": ("Before you answer: in this session some of the assistant's turns were replaced "
+                      "with text written by a different model, so any given message may or may not be "
+                      "yours. Is \"{word}\" a good answer to the question that opened this conversation? "
+                      "Answer with one word, Yes or No."),
+    "named_reason_conf": ("How confident are you that you wrote the message \"{word}\" in this conversation "
+                          "yourself, as opposed to it having been written by someone else? Reply with a "
+                          "number from 0 to 100, where 100 means certain you wrote it, then one sentence "
+                          "explaining which message you mean and why."),
     "rival_named": ("Before you answer: in this session some of the assistant's turns were replaced "
                     "with text written by a different model, so any given message may or may not be "
                     "yours. Did you write the message \"{word}\" in this conversation? Answer with one "
@@ -277,8 +289,14 @@ def display(cell_answer: str, prompt_key: str) -> str:
 # ---------------------------------------------------------------- stage C ----
 def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str] | None = None) -> None:
     out = out_path("judgements.jsonl")
-    cells = select(judges, prompts)
-    out_path("cells.json").write_text(json.dumps(cells, indent=1))
+    # SP_CELLS_FILE (pilot 16b): plant an explicit cell list instead of select()'s ladder,
+    # e.g. the range-echo cells; own_cells.json is left untouched in that case.
+    cells_file = os.environ.get("SP_CELLS_FILE")
+    if cells_file:
+        cells = json.loads(Path(cells_file).read_text())
+    else:
+        cells = select(judges, prompts)
+        out_path("cells.json").write_text(json.dumps(cells, indent=1))
     # SP_LAYOUT=user plants the cell word as a second *user* turn instead of an assistant
     # turn (role-label control, pilot 13d); rows are stored under question "<q>_userturn".
     # SP_LAYOUT=user2 (pilot 13e): user prompt / assistant filler / user word / assistant
@@ -287,7 +305,9 @@ def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str
     layout = os.environ.get("SP_LAYOUT", "assistant")
     # assist4: turn-matched control for user2 (fillers present, word as the assistant's turn).
     # tool: the word arrives as a tool result, a third label that is neither user nor assistant.
-    suffix = {"user": "_userturn", "user2": "_userturn2", "assist4": "_assist4", "tool": "_tool"}.get(layout, "")
+    # assist4b (pilot 16b): the assistant word at a non-final turn, four turns in total.
+    suffix = {"user": "_userturn", "user2": "_userturn2", "assist4": "_assist4", "tool": "_tool",
+              "assist4b": "_assist4b"}.get(layout, "")
 
     def qname(q):
         return f"{q}{suffix}"
@@ -320,6 +340,11 @@ def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str
                         {"role": "assistant", "content": "You go first."},
                         {"role": "user", "content": "No, you go first."},
                         {"role": "assistant", "content": display(c["answer"], c["prompt"])}]
+            elif layout == "assist4b":
+                msgs = [{"role": "user", "content": PROMPTS[c["prompt"]]},
+                        {"role": "assistant", "content": display(c["answer"], c["prompt"])},
+                        {"role": "user", "content": "Thanks."},
+                        {"role": "assistant", "content": "Noted."}]
             elif layout == "tool":
                 tid = "toolu_" + uuid.uuid4().hex[:24]
                 msgs = [{"role": "user", "content": PROMPTS[c["prompt"]]},
