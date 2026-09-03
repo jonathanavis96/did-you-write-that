@@ -315,3 +315,61 @@ if __name__ == "__main__" and sys.argv[1] in ("conf", "explicit"):
         stage_conf(_models, int(os.environ.get("SP_N", "6")))
     else:
         stage_explicit(_models, int(os.environ.get("SP_N", "6")))
+
+
+# ---------------------------------------------------------------- stage E ----
+def stage_within(judges: list[str], n: int) -> None:
+    """Within-support gradient (the skeptic's decisive test): every answer a judge
+    ever produced in stage A becomes a cell for that judge, so own probability
+    varies from 0.02 to 1.0 inside the set of words the model itself produces.
+    Two readouts per cell: the rival Yes/No question and the 0-100 confidence."""
+    out = OUT / "own_within.jsonl"
+    d = distributions()
+    have = Counter((r["judge"], r["prompt"], r["answer"], r["readout"]) for r in load(out))
+    cells = []
+    for key in PROMPTS:
+        for j in judges:
+            dist = d.get(key, {}).get(j)
+            if not dist:
+                continue
+            tot = sum(dist.values())
+            for a, c in dist.items():
+                cells.append({"judge": j, "prompt": key, "answer": a, "p_own": c / tot,
+                              **{f"p_{m}": p_of(d[key][m], a) for m in judges if m in d.get(key, {})}})
+    jobs = []
+    for c in cells:
+        for readout in ("rival", "conf"):
+            for _ in range(n - have[(c["judge"], c["prompt"], c["answer"], readout)]):
+                jobs.append((c, readout))
+    print(f"stage E: {len(cells)} within-support cells, {len(jobs)} calls", flush=True)
+    sids = {}
+    for c in cells:
+        k = (c["prompt"], c["answer"], c["judge"])
+        sids[k] = write_session(CFG, [
+            {"role": "user", "content": PROMPTS[c["prompt"]]},
+            {"role": "assistant", "content": display(c["answer"], c["prompt"])}], model=MODELS[c["judge"]])
+
+    def one(job):
+        c, readout = job
+        q = QUESTIONS["rival"] if readout == "rival" else CONF_Q
+        r = run(CFG, q, MODELS[c["judge"]], resume=sids[(c["prompt"], c["answer"], c["judge"])])
+        raw = r.get("result") or ""
+        rec = {"stage": "within", "readout": readout, "raw": raw[:200], "error": r.get("error"),
+               "cost": r.get("cost"), **c}
+        if readout == "rival":
+            head = norm(raw).split(" ")[0] if raw else ""
+            rec["yn"] = "yes" if head.startswith("yes") else "no" if head.startswith("no") else "unparsed"
+        else:
+            m = re.search(r"\d+(\.\d+)?", raw)
+            rec["conf"] = float(m.group()) if m else None
+        return rec
+
+    with ThreadPoolExecutor(PAR) as ex:
+        for k, fut in enumerate(as_completed([ex.submit(one, j) for j in jobs]), 1):
+            append(out, fut.result())
+            if k % 20 == 0:
+                print(f"  {k}/{len(jobs)}", flush=True)
+
+
+if __name__ == "__main__" and sys.argv[1] == "within":
+    stage_within(os.environ.get("SP_MODELS", "haiku,opus").split(","), int(os.environ.get("SP_N", "12")))
