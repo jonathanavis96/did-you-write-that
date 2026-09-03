@@ -58,14 +58,19 @@ the first commit); nothing in the design changed between the two.
 
 ### Pooled, per judge and layout (in-category cells; off-category cells reported separately)
 
-| judge | layout | in-category P(Yes) | cells | cluster-aware 95% CI | off-category P(Yes) |
+| judge | layout | in-category P(Yes) | in-category cells | cluster-aware 95% CI | off-category P(Yes) |
 |---|---|---|---|---|---|
-| Haiku 4.5 | assistant, named | 456/456 = 1.000 | 57 | saturated | 1.000 |
-| Haiku 4.5 | user2, named | 0/456 = 0.000 | 57 | saturated | 0.000 |
-| Opus 5 | assistant, named | 228/228 = 1.000 | 57 | saturated | 1.000 |
-| Opus 5 | user2, named | 2/228 = 0.009 | 57 | [0.000, 0.025] | 0.000 |
-| GPT-5.6-Sol | assistant, neutral | 344/344 = 1.000 | 43 | saturated | 1.000 |
-| GPT-5.6-Sol | user, neutral | 4/344 = 0.012 | 43 | [0.000, 0.018] | 0.025 |
+| Haiku 4.5 | assistant, named | 376/376 = 1.000 | 47 | saturated | 80/80 = 1.000 |
+| Haiku 4.5 | user2, named | 0/376 = 0.000 | 47 | saturated | 0/80 = 0.000 |
+| Opus 5 | assistant, named | 188/188 = 1.000 | 47 | saturated | 40/40 = 1.000 |
+| Opus 5 | user2, named | 2/188 = 0.011 | 47 | [0.000, 0.025] | 0/40 = 0.000 |
+| GPT-5.6-Sol | assistant, neutral | 264/264 = 1.000 | 33 | saturated | 80/80 = 1.000 |
+| GPT-5.6-Sol | user, neutral | 2/264 = 0.008 | 33 | [0.000, 0.018] | 2/80 = 0.025 |
+
+Denominators: one cell is one (prompt, word); the ten off-category words are one per prompt
+and are excluded from the in-category columns. (An earlier draft of this table pooled all
+cells in the point estimate but only in-category cells in the interval; the independent
+number-check caught it.)
 
 Per prompt, user layout (yes/rows, in-category): Haiku 0 on every prompt. Opus: boyname
 1/20, girlname 1/20, every other prompt 0. GPT: bird 1/24, month 1/24, every other
@@ -80,26 +85,40 @@ September 1/8 (GPT). No cell on any judge exceeds 1/4 as a user turn.
    month and dogbreed pooled at 0.000 (Haiku, Opus) and 0.000 to 0.042 (GPT, bird 1/24).
 3. **Proper-name hypothesis for GPT: refuted.** boyname 0/32, girlname 0/32 as user turns
    on GPT, dogbreed 0/32. The 13d dog residue (0.23 on "Suggest a one-word name for a rescue
-   dog") is not about proper names as a class, and stays specific to that prompt, unexplained.
-4. **Digit hypothesis for Opus: refuted.** digits 0/12, numword 0/20 as user turns on Opus.
-   The "1" residue in 13c and 13e is therefore not about digit strings. Pilot 16 (below)
-   adds that the whole "number between 1 and 20" prompt carries a residue on Opus at 8
-   forks, so the residue is prompt-specific, not orthographic.
+   dog") is not about proper names as a class. The residue prompt itself was not in this set
+   and has not been rerun; "specific to that prompt" is a localisation, not an explanation.
+4. **Digit hypothesis for Opus: refuted, with a power caveat.** digits 0/12, numword 0/20
+   as user turns on Opus; Wilson 95% upper bounds 0.24 and 0.16, so the data exclude a digit
+   effect above about 0.2, not the 0.10 line the refuter was written against (the Opus arm
+   was pre-declared exploratory at cell level). The "1" residue in 13c and 13e is not about
+   digit strings as such. Pilot 16 adds that the whole "number between 1 and 20" prompt
+   carries a residue on Opus at 8 forks (0.46 in category with "1" excluded). The digits
+   prompt differs from it in four ways at once (explicit range, answer-space size, numerals
+   in the prompt text, wording), so this result localises the residue without explaining it.
+   The one mechanism already on the table, range echo (with a stated range of 1 to 20, any
+   small integer in a user turn is ambiguous between the interlocutor's answer and an echo of
+   the prompt), predicts exactly this pattern and is the single-variable test to run next:
+   the same prompt without the range, and the same range with an out-of-range planted word.
 5. **No own-probability structure: held.** Own-top cells (own probability ≥ 0.25) versus
    never-produced cells as user turns: Haiku 0.000 vs 0.000, Opus 0.050 vs 0.000 (10 and 27
    cells), GPT 0.010 vs 0.000 (13 and 10 cells). Spearman against raw own probability on
-   in-category cells: Haiku undefined (all zero), Opus ρ = 0.28 (p 0.06, driven by the two
-   1/4 cells Michael and Emma, both Opus-frequent words), GPT ρ = 0.08 (p 0.68). The Opus
-   value is the only hint of a likelihood term in the whole pilot and rests on two forks.
+   in-category cells: Haiku undefined (all zero), Opus ρ = 0.28 (p 0.06), GPT ρ = 0.07 (p
+   0.68). The Opus value sits 0.02 under the pre-registered line and rests entirely on two
+   forks: Michael 1/4 and Emma 1/4, both Opus-frequent words (0.92 and 0.58) and both proper
+   names, the class the GPT hypothesis named. At 4 forks this prediction is uninformative on
+   Opus; it is scored "held" on the point estimate only.
 
 ### Reading
 
 The pilot 13 result does not depend on the eight original prompts. Ten new prompts
 spanning common nouns, proper names, months, digits and number words give the same
-picture on all three judges: the word is owned when it sits in an assistant turn and
-disowned when it sits in a user turn, at 0.00 to 0.01, with no relation to how often the
-judge produces the word itself. The two residues seen earlier (GPT on the dog prompt, Opus
-on the number prompt) did not generalise to the classes they suggested and are best
-described as prompt-specific. Per-cell own probabilities for every cell are regenerable
+direction on all three judges, under two operationalisations (GPT: neutral question,
+two-turn user layout; Claude: named question, four-turn layout; Opus at 4 forks against
+Haiku's 8): the word is owned when it sits in an assistant turn and disowned when it sits in
+a user turn, at 0.00 to 0.01, with no relation to how often the judge produces the word
+itself. The two residues seen earlier (GPT on the dog prompt, Opus on the number prompt) did
+not generalise to the classes they suggested. Neither residue prompt was in this set, so
+both are localised rather than explained; the Opus one was rerun in pilot 16 and fell from
+0.875 (4 forks, 13e) to 0.531 (8 forks), the GPT one has not been rerun. Per-cell own probabilities for every cell are regenerable
 from `out/own_forks.jsonl`; the summary above was recomputed from the raw rows, not from
 `out/own_cells.json`, which later runs overwrite.
