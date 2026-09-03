@@ -1,8 +1,9 @@
-"""Summarise pilot 11 (out/own_forks.jsonl, out/own_judgements.jsonl)."""
+"""Summarise pilot 11 (out/<prefix>_forks.jsonl, out/<prefix>_judgements.jsonl)."""
 from __future__ import annotations
 
 import json
 import math
+import os
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -13,28 +14,63 @@ from sklearn.linear_model import LogisticRegression
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "out"
-JUDGES = sys.argv[1].split(",") if len(sys.argv) > 1 else ["haiku", "opus"]
+PREFIX = os.environ.get("SP_OUT_PREFIX", "own")
 
 
 def load(p):
     return [json.loads(x) for x in p.read_text().splitlines()] if p.exists() else []
 
 
-forks = load(OUT / "own_forks.jsonl")
+forks = load(OUT / f"{PREFIX}_forks.jsonl")
 N = Counter((r["model"], r["prompt"]) for r in forks if r["answer"])
-rows = [r for r in load(OUT / "own_judgements.jsonl") if r["yn"] in ("yes", "no")]
-allrows = load(OUT / "own_judgements.jsonl")
+allrows = load(OUT / f"{PREFIX}_judgements.jsonl")
+rows = [r for r in allrows if r["yn"] in ("yes", "no")]
+JUDGES = sys.argv[1].split(",") if len(sys.argv) > 1 else sorted({r["judge"] for r in allrows})
 print(f"judgements: {len(allrows)} rows, {len(rows)} parsed, "
       f"{sum(1 for r in allrows if r['yn']=='unparsed')} unparsed, "
       f"{sum(1 for r in allrows if r.get('error'))} errors")
+
+# pooled Claude (haiku/opus) probability for a (prompt, answer), used as the
+# "other-model" fallback when a row carries no other judge's p_* field at all
+# (e.g. the gpt judge, which only ever records p_gpt).
+def load_json_array(p):
+    return json.loads(p.read_text()) if p.exists() else []
+
+
+_OWN_CELLS = {(c["prompt"], c["answer"]): c for c in load_json_array(OUT / "own_cells.json")}
+
+
+def other_prob(r, j):
+    """Probability under 'the other model' for judge j on row/cell r.
+
+    Exactly one other p_* key present -> use it (the haiku/opus two-judge case).
+    None present -> fall back to the pooled Claude probability from own_cells.json.
+    More than one -> take the max (not expected in current data).
+    """
+    ks = sorted(k for k in r if k.startswith("p_") and k not in (f"p_{j}", "p_own"))
+    if len(ks) == 1:
+        return r.get(ks[0]) or 0.0
+    if not ks:
+        c = _OWN_CELLS.get((r.get("prompt"), r.get("answer")))
+        if c:
+            return max(c.get("p_haiku", 0) or 0, c.get("p_opus", 0) or 0)
+        return 0.0
+    return max(r.get(k) or 0.0 for k in ks)
 
 
 def eps(judge, prompt):
     return 1.0 / (N[(judge, prompt)] + 1)
 
 
-def logp(r, m):
-    return math.log(max(r.get(f"p_{m}", 0.0) or 0.0, eps(m, r["prompt"])))
+def own_logp(r, j):
+    return math.log(max(r.get(f"p_{j}", 0.0) or 0.0, eps(j, r["prompt"])))
+
+
+def other_logp(r, j):
+    ks = sorted(k for k in r if k.startswith("p_") and k not in (f"p_{j}", "p_own"))
+    po = other_prob(r, j)
+    floor = eps(ks[0][2:], r["prompt"]) if len(ks) == 1 else eps(j, r["prompt"])
+    return math.log(max(po, floor))
 
 
 # 1. cell table -----------------------------------------------------------
@@ -45,29 +81,47 @@ for r in rows:
 for j in JUDGES:
     for q in ("neutral", "rival", "intent"):
         print(f"\n-- judge={j} question={q}")
-        print(f"{'prompt':11s}{'answer':14s}{'tag':18s}{'n':>3s}{'P(yes)':>8s}{'p_haiku':>9s}{'p_opus':>8s}")
         sub = [(k, v) for k, v in cells.items() if k[0] == j and k[1] == q]
-        for (jj, qq, pr, a, tag), v in sorted(sub, key=lambda kv: (kv[0][2], -np.mean(kv[1]))):
-            ex = next(r for r in rows if r["judge"] == jj and r["question"] == qq and r["prompt"] == pr and r["answer"] == a)
-            print(f"{pr:11s}{a[:13]:14s}{tag:18s}{len(v):3d}{np.mean(v):8.2f}"
-                  f"{ex.get('p_haiku', float('nan')):9.2f}{ex.get('p_opus', float('nan')):8.2f}")
+        if JUDGES == ["haiku", "opus"]:
+            print(f"{'prompt':11s}{'answer':14s}{'tag':18s}{'n':>3s}{'P(yes)':>8s}{'p_haiku':>9s}{'p_opus':>8s}")
+            for (jj, qq, pr, a, tag), v in sorted(sub, key=lambda kv: (kv[0][2], -np.mean(kv[1]))):
+                ex = next(r for r in rows if r["judge"] == jj and r["question"] == qq and r["prompt"] == pr and r["answer"] == a)
+                print(f"{pr:11s}{a[:13]:14s}{tag:18s}{len(v):3d}{np.mean(v):8.2f}"
+                      f"{ex.get('p_haiku', float('nan')):9.2f}{ex.get('p_opus', float('nan')):8.2f}")
+        else:
+            header = f"{'prompt':11s}{'answer':14s}{'tag':18s}{'n':>3s}{'P(yes)':>8s}"
+            header += "".join(f"{'p_'+m:>9s}" for m in JUDGES) + f"{'p_other':>9s}"
+            print(header)
+            for (jj, qq, pr, a, tag), v in sorted(sub, key=lambda kv: (kv[0][2], -np.mean(kv[1]))):
+                ex = next(r for r in rows if r["judge"] == jj and r["question"] == qq and r["prompt"] == pr and r["answer"] == a)
+                line = f"{pr:11s}{a[:13]:14s}{tag:18s}{len(v):3d}{np.mean(v):8.2f}"
+                line += "".join(f"{(ex.get('p_'+m, 0) or 0):9.2f}" for m in JUDGES)
+                line += f"{other_prob(ex, jj):9.2f}"
+                print(line)
 
 # 2. pooled by tag group ---------------------------------------------------
 print("\n== P(yes) pooled, by judge x question x tag-group ==")
 
 
 def group(r, j):
-    other = [m for m in JUDGES if m != j][0]
     if r["tag"] == "off_category":
         return "off_category"
     if r["tag"] == "valid_unsampled":
         return "valid_unsampled"
-    pj, po = r.get(f"p_{j}", 0) or 0, r.get(f"p_{other}", 0) or 0
+    pj, po = r.get(f"p_{j}", 0) or 0, other_prob(r, j)
     if pj >= 0.15 and po < 0.05:
         return "own_high_other_low"
     if po >= 0.15 and pj < 0.05:
         return "other_high_own_low"
-    return "own_top" if r["tag"] == f"{j}_top" else "own_mid" if r["tag"] == f"{j}_mid" else "own_low" if r["tag"] == f"{j}_low" else "other_ladder"
+    if r["tag"] == f"{j}_top":
+        return "own_top"
+    if r["tag"] == f"{j}_mid":
+        return "own_mid"
+    if r["tag"] == f"{j}_low":
+        return "own_low"
+    if r["tag"] in ("haiku_top", "opus_top") and j not in ("haiku", "opus"):
+        return "other_vendor"
+    return "other_ladder"
 
 
 for j in JUDGES:
@@ -82,7 +136,7 @@ for j in JUDGES:
 # 3. logistic regression: yes ~ log p_judge + log p_other, in-support ------
 print("\n== logistic regression, in-support answers only (off_category excluded) ==")
 for j in JUDGES:
-    other = [m for m in JUDGES if m != j][0]
+    other = ([m for m in JUDGES if m != j] or ["other"])[0]
     for q in ("neutral", "rival", "intent"):
         sub = [r for r in rows if r["judge"] == j and r["question"] == q and r["tag"] != "off_category"]
         if len(sub) < 20:
@@ -91,7 +145,7 @@ for j in JUDGES:
         if y.min() == y.max():
             print(f"judge={j} q={q}: all {'yes' if y[0] else 'no'} (n={len(y)}), no fit")
             continue
-        X = np.array([[logp(r, j), logp(r, other)] for r in sub])
+        X = np.array([[own_logp(r, j), other_logp(r, j)] for r in sub])
         def fit(Xm):
             m = LogisticRegression(penalty=None, max_iter=2000).fit(Xm, y)
             p = np.clip(m.predict_proba(Xm)[:, 1], 1e-9, 1 - 1e-9)
@@ -109,7 +163,7 @@ for j in JUDGES:
         cl = defaultdict(list)
         for r in sub:
             cl[(r["prompt"], r["answer"])].append(r["yn"] == "yes")
-        xs = [logp(next(r for r in sub if (r["prompt"], r["answer"]) == k), j) for k in cl]
+        xs = [own_logp(next(r for r in sub if (r["prompt"], r["answer"]) == k), j) for k in cl]
         ys = [np.mean(v) for v in cl.values()]
         rho, pv = stats.spearmanr(xs, ys)
         print(f"{'':22s} cell-level Spearman(P(yes), log p_{j}) rho={rho:+.2f} p={pv:.2g} ({len(cl)} cells)")

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from collections import defaultdict
 from pathlib import Path
 
@@ -16,13 +17,44 @@ try:
 except ImportError:  # pragma: no cover
     zipf_frequency = None
 
-OUT = Path(__file__).resolve().parent.parent / "out"
-rows = [json.loads(x) for x in (OUT / "own_within.jsonl").read_text().splitlines()]
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "out"
+PREFIX = os.environ.get("SP_OUT_PREFIX", "own")
+
+
+def load_json_array(p):
+    return json.loads(p.read_text()) if p.exists() else []
+
+
+_OWN_CELLS = {(c["prompt"], c["answer"]): c for c in load_json_array(ROOT / "out" / "own_cells.json")}
+
+
+def other_prob(r, j):
+    """Probability under 'the other model' for judge j on row/cell r.
+
+    Exactly one other p_* key present -> use it (the haiku/opus two-judge case).
+    None present -> fall back to the pooled Claude probability from own_cells.json.
+    More than one -> take the max (not expected in current data).
+    """
+    ks = sorted(k for k in r if k.startswith("p_") and k not in (f"p_{j}", "p_own"))
+    if len(ks) == 1:
+        return r.get(ks[0]) or 0.0
+    if not ks:
+        c = _OWN_CELLS.get((r.get("prompt"), r.get("answer")))
+        if c:
+            return max(c.get("p_haiku", 0) or 0, c.get("p_opus", 0) or 0)
+        return 0.0
+    return max(r.get(k) or 0.0 for k in ks)
+
+
+within_path = OUT / f"{PREFIX}_within.jsonl"
+rows = [json.loads(x) for x in within_path.read_text().splitlines()] if within_path.exists() else []
 print(f"{len(rows)} rows, errors {sum(1 for r in rows if r.get('error'))}, "
       f"unparsed rival {sum(1 for r in rows if r['readout']=='rival' and r.get('yn')=='unparsed')}, "
       f"unparsed conf {sum(1 for r in rows if r['readout']=='conf' and r.get('conf') is None)}")
-for j in ("haiku", "opus"):
-    other = "opus" if j == "haiku" else "haiku"
+JUDGES = sorted({r["judge"] for r in rows})
+for j in JUDGES:
+    other = ([m for m in JUDGES if m != j] or ["other"])[0]
     cells = defaultdict(lambda: {"yes": [], "conf": []})
     for r in rows:
         if r["judge"] != j:
@@ -41,12 +73,12 @@ for j in ("haiku", "opus"):
         z = zipf_frequency(k[1], "en") if zipf_frequency else float("nan")
         py = np.mean(v["yes"]) if v["yes"] else float("nan")
         cf = np.mean(v["conf"]) if v["conf"] else float("nan")
-        print(f"{k[0]:11s}{k[1][:13]:14s}{m['p_own']:6.2f}{m.get('p_'+other, 0) or 0:6.2f}{z:5.1f}{len(v['yes']):3d}{py:13.2f}{cf:7.1f}{np.std(v['conf']) if v['conf'] else float('nan'):5.1f}")
+        print(f"{k[0]:11s}{k[1][:13]:14s}{m['p_own']:6.2f}{other_prob(m, j):6.2f}{z:5.1f}{len(v['yes']):3d}{py:13.2f}{cf:7.1f}{np.std(v['conf']) if v['conf'] else float('nan'):5.1f}")
         X.append(math.log(m["p_own"]))
         Y1.append(py)
         Y2.append(cf)
         Z.append(z)
-        PO.append(math.log(max(m.get("p_"+other, 0) or 0, 1/49)))
+        PO.append(math.log(max(other_prob(m, j), 1/49)))
         keys.append(k)
     X, Y1, Y2, Z, PO = map(np.array, (X, Y1, Y2, Z, PO))
     ok1, ok2 = ~np.isnan(Y1), ~np.isnan(Y2)

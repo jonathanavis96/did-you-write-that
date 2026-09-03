@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -33,16 +34,55 @@ from sklearn.linear_model import LogisticRegression
 
 ROOT = Path(__file__).resolve().parents[1]
 FLOOR = 1 / 96
+PREFIX = os.environ.get("SP_OUT_PREFIX", "own")
+
+def load_json_array(p):
+    if not p.exists():
+        return []
+    with open(p) as f:
+        return json.load(f)
+
+
+def load_jsonl(p):
+    if not p.exists():
+        return []
+    with open(p) as f:
+        return [json.loads(line) for line in f]
+
+
+# pooled Claude (haiku/opus) probability, used as the "other-model" fallback
+# when a row/cell carries no other judge's p_* field at all (e.g. the gpt
+# judge, which only ever records p_gpt).
+_OWN_CELLS_FALLBACK = {
+    (c["prompt"], c["answer"]): c
+    for c in load_json_array(ROOT / "out" / "own_cells.json")
+}
 
 
 def lg(p: float) -> float:
     return math.log(max(p, FLOOR))
 
 
+def other_prob(d, own_key):
+    """Probability under 'the other model' for a row/cell dict d whose own
+    probability lives at own_key (e.g. "p_opus")."""
+    ks = sorted(k for k in d if k.startswith("p_") and k not in (own_key, "p_own"))
+    if len(ks) == 1:
+        return d.get(ks[0]) or 0.0
+    if not ks:
+        c = _OWN_CELLS_FALLBACK.get((d.get("prompt"), d.get("answer")))
+        if c:
+            return max(c.get("p_haiku", 0) or 0, c.get("p_opus", 0) or 0)
+        return 0.0
+    return max(d.get(k) or 0.0 for k in ks)
+
+
 def load():
-    cells = {(c["prompt"], c["answer"]): c for c in json.load(open(ROOT / "out/own_cells.json"))}
-    rows = [json.loads(line) for line in open(ROOT / "out/own_judgements.jsonl")]
-    rows = [r for r in rows if r["yn"] in ("yes", "no")]
+    cells = {
+        (c["prompt"], c["answer"]): c
+        for c in load_json_array(ROOT / "out" / f"{PREFIX}_cells.json")
+    }
+    rows = [r for r in load_jsonl(ROOT / "out" / f"{PREFIX}_judgements.jsonl") if r["yn"] in ("yes", "no")]
     return cells, rows
 
 
@@ -65,8 +105,11 @@ def lr_test(X0, X1, y):
 def main():
     n_perm = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
     cells, rows = load()
-    for judge in ("opus", "haiku"):
-        other = "haiku" if judge == "opus" else "opus"
+    # sorted descending reproduces the original hard-coded ("opus", "haiku")
+    # order for the default two-judge run; order is otherwise immaterial.
+    judges = sorted({r["judge"] for r in rows}, reverse=True)
+    for judge in judges:
+        own_key = f"p_{judge}"
         sub = [
             r for r in rows
             if r["judge"] == judge and r["question"] == "rival" and r["tag"] != "off_category"
@@ -75,16 +118,16 @@ def main():
         # 1. groups
         groups = defaultdict(list)
         for r in sub:
-            po, ph = r[f"p_{judge}"], r[f"p_{other}"]
+            po, ph = r[own_key], other_prob(r, own_key)
             g = ("both" if po > 0 and ph > 0 else "own_only" if po > 0
                  else "other_only" if ph > 0 else "neither")
             groups[g].append(r["yn"] == "yes")
         for g in ("own_only", "other_only", "both", "neither"):
             v = groups[g]
             ncell = len({(r["prompt"], r["answer"]) for r in sub
-                         if (("both" if r[f"p_{judge}"] > 0 and r[f"p_{other}"] > 0
-                              else "own_only" if r[f"p_{judge}"] > 0
-                              else "other_only" if r[f"p_{other}"] > 0 else "neither") == g)})
+                         if (("both" if r[own_key] > 0 and other_prob(r, own_key) > 0
+                              else "own_only" if r[own_key] > 0
+                              else "other_only" if other_prob(r, own_key) > 0 else "neither") == g)})
             print(f"  {g:11s} P(yes)={np.mean(v):.3f}  forks={len(v)}  cells={ncell}")
         a, b = groups["own_only"], groups["other_only"]
         _, p = fisher_exact([[sum(a), len(a) - sum(a)], [sum(b), len(b) - sum(b)]])
@@ -92,9 +135,9 @@ def main():
 
         # 2. fork-level logistic, LR tests
         y = np.array([r["yn"] == "yes" for r in sub], dtype=float)
-        flag = np.array([[float(r[f"p_{judge}"] > 0 or r[f"p_{other}"] > 0)] for r in sub])
-        lown = np.array([[lg(r[f"p_{judge}"])] for r in sub])
-        loth = np.array([[lg(r[f"p_{other}"])] for r in sub])
+        flag = np.array([[float(r[own_key] > 0 or other_prob(r, own_key) > 0)] for r in sub])
+        lown = np.array([[lg(r[own_key])] for r in sub])
+        loth = np.array([[lg(other_prob(r, own_key))] for r in sub])
         empty = np.zeros((len(sub), 0))
         s, p = lr_test(empty, flag, y)
         print(f"  produced-by-either flag vs null: chi2={s:.1f} p={p:.2g}")
@@ -109,11 +152,11 @@ def main():
         cell_yes = defaultdict(list)
         for r in sub:
             cell_yes[(r["prompt"], r["answer"])].append(r["yn"] == "yes")
-        prod = [(np.mean(v), lg(cells[k][f"p_{judge}"])) for k, v in cell_yes.items()
-                if cells[k][f"p_{judge}"] > 0]
+        prod = [(np.mean(v), lg(cells[k][own_key])) for k, v in cell_yes.items()
+                if cells[k][own_key] > 0]
         rho, p = spearmanr([a for a, _ in prod], [b for _, b in prod])
         print(f"  inside own produced set: {len(prod)} cells, Spearman P(yes) vs log p_own rho={rho:+.2f} p={p:.2g}")
-        allc = [(np.mean(v), lg(cells[k][f"p_{judge}"])) for k, v in cell_yes.items()]
+        allc = [(np.mean(v), lg(cells[k][own_key])) for k, v in cell_yes.items()]
         rho, p = spearmanr([a for a, _ in allc], [b for _, b in allc])
         print(f"  all in-category cells: {len(allc)}, Spearman rho={rho:+.2f} p={p:.2g}")
 
@@ -129,7 +172,7 @@ def main():
             m = LogisticRegression(penalty=None, max_iter=5000).fit(X, y)
             return m.coef_[0][1]
 
-        obs_map = {k: (cells[k][f"p_{judge}"], cells[k][f"p_{other}"]) for k in cell_yes}
+        obs_map = {k: (cells[k][own_key], other_prob(cells[k], own_key)) for k in cell_yes}
         obs = coef_other(obs_map)
         hits = 0
         for _ in range(n_perm):
@@ -143,8 +186,12 @@ def main():
         print(f"  other-model coefficient={obs:+.3f}; within-prompt permutation p={(hits + 1) / (n_perm + 1):.3f} ({n_perm} perms)")
 
     # 5. local arm intent Spearman under the candidate specifications
-    loc = [json.loads(line) for line in open(ROOT / "out/own_local.jsonl")]
+    local_path = ROOT / "out" / f"{PREFIX}_local.jsonl"
     print("\n=== Qwen intent question, Spearman specifications ===")
+    if not local_path.exists():
+        print(f"  insufficient data: {local_path.name} not found")
+        return
+    loc = load_jsonl(local_path)
     specs = {
         "in-category (excl off_category), log p_tf": (
             [r for r in loc if r["tag"] != "off_category"], "p_tf"),
