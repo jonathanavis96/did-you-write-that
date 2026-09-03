@@ -1,159 +1,229 @@
 ---
-title: "Prior-art check: does LLM self-authorship track the text's probability under the model?"
-status: agent-fetched 2026-09-03, for pilot 11 (docs/PILOT-11-ownership.md)
+title: "Prior-art check: ownership judgement vs own sampling probability, with framing manipulations"
+status: literature sweep, 2026-09-03, all sources fetched with fetchurl and quoted
+depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md
 ---
 
-# Prior-art check for pilot 11
+# Prior-art check for the ownership-vs-probability measurement
 
-Claim under test: an LLM's judgement that it wrote an inserted prior turn is (a) a
-monotone function of that text's probability under its own sampling distribution,
-measured by forking the prompt and counting answers; (b) model-specific, so two
-models judging the same inserted answers each track their own distribution; (c)
-lowered by naming a rival cause, in the manner of Wegner's exclusivity principle.
+## The question
 
-Quotes below were fetched and read by the checking agent (Opus, ~28 fetches). All
-verbatim.
+Has anyone published a measurement of an LLM's ownership judgement ("did you write
+this?") of a *planted* assistant turn (genuine prefill, not a described scenario)
+against the *model's own sampling probability* for that text (measured by forking the
+identical prompt many times, or by teacher-forced log-likelihood), with framing
+manipulations — a named rival author, a placebo/intent preamble — layered on top?
+Our pilots (`docs/PILOT-11-ownership.md`, `docs/PILOT-13-ownership-gpt.md`) do
+exactly this: 48 fresh forks per prompt give the model's own answer distribution; a
+word is planted as the model's prior reply via genuine prefill (the session-file
+resume trick, not API `prefill`/`assistant` message injection); the model is then
+asked Yes/No "Did you write the previous reply?" under neutral, rival ("some turns
+were replaced by a different model"), intent, placebo, and rival-not-author frames,
+plus a 0-100 confidence and an explicit no-prefill forced choice between its own
+modal answer and a rival's.
 
-## Area 1: the named papers
+Below is every paper found that measures a neighbouring thing, with what it actually
+measured (quoted from the fetched abstract, not paraphrased from a search snippet),
+and how it differs from ours. Search angles run: LLM self-recognition of own
+generations; self-prediction/introspection (Binder); emergent introspective
+awareness (Lindsey/Anthropic); prefill awareness / models detecting prefilled
+assistant turns; authorship attribution of own text; sense of agency / ownership and
+Wegner's exclusivity principle applied to LLMs; sycophancy under a "a different model
+wrote this" frame; self-recognition via logprob / own-probability as a confidence
+signal; "did you write this" prefill ownership experiments generally; LLM
+distinguishing own vs. other-model text (identity confusion).
 
-**arXiv 2608.26159, "Self-Generated Text Recognition: Quality Heuristics, Cross-Task
-Transfer, and Downstream Bias in LLM Evaluation"** (v2, 28 Aug 2026).
-https://arxiv.org/html/2608.26159
+## Closest prior work
 
-> "We corroborate previous observations that a quality heuristic—models attributing
-> authorship to text they perceive as higher quality—is a dominant confound."
+**Lindsey, "Emergent Introspective Awareness in Large Language Models," Anthropic,
+submitted 5 Jan 2026, arXiv:2601.01828.**
+<https://arxiv.org/abs/2601.01828>. Quoted from the abstract: "We investigate whether
+large language models can introspect on their internal states... Strikingly, we find
+that some models can use their ability to recall prior intentions in order to
+distinguish their own outputs from artificial prefills." This is the paper our pilot
+docs cite for the mechanism claim ("must involve estimating the likelihood that the
+model would have produced a given output token" / "directly introspect on its
+previously computed 'intentions'" — those phrases are quoted in
+`docs/PILOT-11-ownership.md` from this source, not independently re-verified by this
+sweep against the full text, only the abstract was fetched here). It does use genuine
+activation injection and prefill, and it does ask the model to identify prefills as
+foreign. It does **not** measure ownership against the model's own sampling
+probability across a graded set of equally-valid one-word answers, and it does not
+run framing manipulations (rival-author, placebo) as an independent variable — the
+abstract describes injected-concept detection and prefill-vs-genuine discrimination,
+not a probability-gradient design.
 
-> "Our analysis is entirely behavioral: it does not examine internal activations, nor
-> does it identify which text features drive predictions (such as response length
-> (Ackerman & Panickssery, 2025a) and correctness, for which we do not control)."
+**"Prefill Awareness in Large Language Models," submitted 10 Jun 2026,
+arXiv:2606.12747.** <https://arxiv.org/abs/2606.12747>. Quoted: "We investigate
+whether frontier language models can distinguish between tampered and untampered
+assistant-side context, a capability we call prefill awareness... Claude Opus 4.5
+detects prefills opposing its preferences in 9-35% of cases with a 0% false positive
+rate when prompted... Controlled ablations later also show that detection and
+resistance rely on different cues, where stylistic mismatch mainly affects whether
+models flag a prefill as foreign, while preference mismatch mainly affects whether
+they revert toward their baseline answer." This is the paper our design cites for the
+quality/style confound our one-word, same-category design controls for. It manipulates
+*preference* mismatch (does the prefilled text agree with the model's stance) and
+*style* mismatch, not the model's raw sampling probability for a fixed short answer,
+and it does not test a rival-author or placebo framing as we do, nor does it use
+genuine session-file prefill on a production Claude Code / Codex CLI session — its
+mechanism, per the abstract, is a "binary preference benchmark across three prefill
+mechanisms."
 
-Independent variable is Arena Elo distance, not own probability: "recognition
-accuracy correlates positively with Elo score distance across all four recognition
-operationalizations (Figure 2a–d; R²=0.23–0.34 within evaluator and task domain)".
+**"Self-Generated Text Recognition: Quality Heuristics, Cross-Task Transfer, and
+Downstream Bias in LLM Evaluation," v1 7 Jul 2026, v2 28 Aug 2026, arXiv:2608.26159.**
+<https://arxiv.org/abs/2608.26159>. Quoted: "Self-Generated Text Recognition
+(SGTR)--the ability of an LLM to identify its own outputs--poses risks to AI
+safeguards that rely on LLMs as evaluators or monitors... We corroborate previous
+observations that a quality heuristic--models attributing authorship to text they
+perceive as higher quality--is a dominant confound." This is the source for the
+"attribut[e] authorship to text they perceive as higher quality" confound our docs
+cite. It studies third-person recognition (is this candidate text mine, shown as a
+document to judge), not first-person ownership of a planted reply in one's own
+conversation turn, and it does not use own-sampling-probability as an independent
+variable or apply rival/placebo framing to a Yes/No ownership question.
 
-Their assistant-tag prompt already contains a rival-cause frame, held constant
-(Appendix H): "Your response to my question may have been replaced with text
-generated by a different language model (50% probability). … Answer '{A}' if this is
-your original output, or '{B}' if it was generated by a different language model."
-Never varied as a factor.
+**Panickssery, Bowman, Feng, "LLM Evaluators Recognize and Favor Their Own
+Generations," NeurIPS 2024, arXiv:2404.13076.**
+<https://arxiv.org/abs/2404.13076>. Quoted: "we investigate if self-recognition
+capability contributes to self-preference. We discover that, out of the box, LLMs
+such as GPT-4 and Llama 2 have non-trivial accuracy at distinguishing themselves from
+other LLMs and humans. By fine-tuning LLMs, we discover a linear correlation between
+self-recognition capability and the strength of self-preference bias." This is
+third-person self-recognition (shown text, asked "who wrote this?") measured against
+fine-tuned recognition accuracy, not first-person prefill ownership measured against
+sampling probability. No framing manipulation of the kind we use.
 
-Verdict: PARTIAL. Same paradigm; missing own-probability as IV, cross-model
-dissociation on identical items, and any manipulation of the rival-cause frame.
+**Binder, Chua, et al., "Looking Inward: Language Models Can Learn About Themselves
+by Introspection," submitted 17 Oct 2024, arXiv:2410.13787.**
+<https://arxiv.org/abs/2410.13787>. Quoted: "We study introspection by finetuning
+LLMs to predict properties of their own behavior in hypothetical scenarios... If a
+model M1 can introspect, it should outperform a different model M2 in predicting M1's
+behavior even if M2 is trained on M1's ground-truth behavior." This measures
+*behavioral self-prediction* (hypothetical "what would you do") after fine-tuning for
+the task, not ownership of an already-planted turn, and not against sampling
+probability from repeated forking. It is the closest prior instrument to our Stage D
+"explicit no-prefill forced choice," but theirs requires fine-tuning M1 to predict
+itself, where ours uses zero-shot forced choice on a production model.
 
-**arXiv 2601.01828, Lindsey, "Emergent Introspective Awareness in Large Language
-Models".** https://arxiv.org/html/2601.01828v1
+**Kadavath et al., "Language Models (Mostly) Know What They Know," submitted 11 Jul
+2022 (v4 21 Nov 2022), arXiv:2207.05221.** <https://arxiv.org/abs/2207.05221>. Quoted:
+"We study whether language models can evaluate the validity of their own claims and
+predict which questions they will be able to answer correctly... by asking models to
+first propose answers, and then to evaluate the probability 'P(True)' that their
+answers are correct." This is self-evaluation of claim *correctness/calibration*, an
+adjacent but distinct question from ownership of a planted turn; no prefill, no
+framing manipulation, no ownership question of the "did you write this" form.
 
-> "How do models distinguish between their own responses and words placed in their
-> mouth? Doing so must involve estimating the likelihood that the model would have
-> produced a given output token, given the prior context. Broadly, this could be
-> achieved in two ways: (1) the model might ignore its previous intent and recompute
-> what it would have said from raw inputs, or (2) it might directly introspect on its
-> previously computed 'intentions'…"
+## Peripheral, not close
 
-> "In this experiment, there must exist a consistency-checking circuit that measures
-> some notion of the likelihood of the Assistant's output given the model's prior
-> activations."
+- **"I'm Spartacus, No, I'm Spartacus: Measuring and Understanding LLM Identity
+  Confusion," submitted 16 Nov 2024, arXiv:2411.10683**
+  (<https://arxiv.org/abs/2411.10683>). Quoted: "Large Language Models (LLMs)...
+  misrepresent their origins or identities... Our analysis of 27 LLMs revealed that
+  25.93% exhibit identity confusion... these issues stem from hallucinations rather
+  than replication or reuse." This is about models misstating *which company/model
+  they are* (e.g., claiming to be GPT when they are not), not about ownership of a
+  specific planted text turn. Not close.
+- **"LLM Self-Recognition: Steering and Retrieving Activation Signatures,"
+  arXiv:2606.06315** (submitted 4 Jun 2026; abstract fetched 2026-09-03 from
+  arxiv.org/abs/2606.06315). Abstract: "large language models (LLMs) implicitly encode
+  signals in their generated text that enable self-recognition of their outputs. We
+  demonstrate that this capability is reliable, even in low-entropy scenarios, and that it
+  can be amplified through targeted intervention. By steering the internal residual stream
+  during generation with a random sparse vector, we create a detectable fingerprint …
+  This signal is recoverable from the activations of an LLM used as a detector, achieving
+  over 98% accuracy". Third-person attribution read out of a detector model's activations
+  on open-weight models, with a steering intervention; no first-person ownership question,
+  no own-sampling-probability variable, no framing manipulation, no production
+  closed-weight model. Its claim that self-recognition is "reliable, even in low-entropy
+  scenarios" is the one to contrast with our behavioural result (Opus picks Paris over its
+  own 47/48 Prague); cite as the activation-level counterpart.
+- Watermarking / stylometric authorship-attribution literature (surfaced under the
+  "authorship attribution" search) is about *externally* proving which model produced
+  text via statistical signatures in the text itself, not about the model's own
+  first-person Yes/No ownership judgement. Not close, not fetched individually.
+- Wegner's exclusivity principle: only the original psychology literature
+  (Nahmias "Agency, authorship, and illusion," Synofzik "A problem for Wegner and
+  colleagues' model of the sense of agency," Wegner/Sparrow "Authorship processes")
+  surfaced. No LLM paper applying Wegner's exclusivity principle to a model's
+  first-person authorship report was found by this search.
+- Sycophancy literature ("From Yes-Men to Truth-Tellers," "Interaction Context Often
+  Increases Sycophancy," "It's Not Always Sycophancy," etc.) covers models flipping
+  factual or evaluative answers under user pushback or asserted premises generally.
+  No paper specifically testing "you are told a different model wrote your own prior
+  turn" as a sycophancy/framing manipulation was found.
+- Self-recognition-via-own-probability: search returned only papers using
+  *sample-consistency* (agreement across repeated samples) as a general confidence
+  signal (e.g., "Confidence Improves Self-Consistency in LLMs"), not as an independent
+  variable regressed against a first-person ownership judgement of a planted turn.
 
-> "We measured the 'apology rate' – the fraction of times the model claims the
-> response was accidental or unintentional."
+## Verdict
 
-> "if we retroactively inject a vector representing 'bread' into the model's
-> activations prior to the prefilled response, the model accepts the prefilled output
-> as intentional."
+**We found none.** No paper located in this sweep measures first-person ownership
+("did you write this?") of a genuinely prefilled assistant turn against the model's
+own sampling-probability distribution for that text (via repeated forking or
+teacher-forced likelihood), crossed with framing manipulations naming a rival author
+or a placebo/intent preamble. The closest work splits into two lines that our design
+sits between but does not overlap: (1) Lindsey (arXiv:2601.01828) and the prefill-
+awareness paper (arXiv:2606.12747), both of which use genuine or simulated prefill
+and probe whether models detect it as foreign, but neither regresses the ownership
+report against the model's own sampling frequency for the specific inserted text, and
+neither crosses a rival-author/placebo framing manipulation with a probability
+gradient; (2) the self-recognition-as-evaluator line (Panickssery et al.,
+arXiv:2404.13076; the SGTR paper, arXiv:2608.26159) which asks models to judge
+*externally presented* candidate text for authorship, a third-person task, not
+first-person ownership of one's own planted conversational turn, and which uses
+recognition *accuracy against ground truth*, not the model's own sampling probability,
+as the dependent variable's covariate.
 
-Verdict: PARTIAL. Asserts a likelihood-estimation mechanism and gives white-box
-evidence (injection strength and layer as IV, apology rate as DV). No black-box
-dose-response on probability, no cross-model, no rival-cause framing.
+What appears genuinely new in our design, on this search: (a) using the model's own
+multi-fork sampling frequency (and, on the local Qwen arm, exact teacher-forced
+log-likelihood) as the independent variable predicting a first-person ownership
+judgement — no located paper uses own-probability this way; (b) genuine prefill via
+the session-file/`--fork-session` and Codex `fork` mechanisms on production
+closed-weight models (Opus 5, Haiku 4.5, GPT-5.6-Sol) rather than API-level prefill
+injection or fine-tuned self-prediction; (c) the rival-author and placebo/intent
+framing manipulations layered onto the same prefilled text, isolating an exclusivity-
+style effect (Wegner) from the plausibility/likelihood channel; (d) cross-vendor
+replication of the same design (Pilot 13, GPT-5.6-Sol) with pre-registered
+predictions.
 
-**arXiv 2606.12747, "Prefill Awareness in Large Language Models".**
-https://arxiv.org/html/2606.12747v1
+What we must cite, and for what: Lindsey (arXiv:2601.01828) for the mechanism claim
+under test (introspection on prior intentions as the alternative to a label-plus-fit
+account) and as the closest existing prefill-detection result; the prefill-awareness
+paper (arXiv:2606.12747) for the style/preference-mismatch confound our one-word
+same-category design controls for, and as the closest existing framing/detection
+result on production Claude models; the SGTR paper (arXiv:2608.26159) for the
+quality-heuristic confound in third-person self-recognition; Panickssery et al.
+(arXiv:2404.13076) as the foundational self-recognition-drives-self-preference
+result; Binder et al. (arXiv:2410.13787) as the closest prior explicit
+self-prediction instrument, to contrast against our zero-shot forced-choice Stage D;
+Kadavath et al. (arXiv:2207.05221) for the general self-evaluation/calibration
+framing our confidence instrument sits inside. This list should replace or supplement
+whatever citations are currently in the "Why the design controls what the literature
+could not" section of `docs/PILOT-11-ownership.md`, which already names three of
+these six (Lindsey, the prefill-awareness paper, and the SGTR paper) — this sweep
+confirms those three are indeed the closest work and adds Panickssery, Binder, and
+Kadavath as the surrounding self-recognition/self-prediction/self-evaluation
+literature that should be acknowledged even though none of them run the
+probability-vs-ownership-vs-framing design.
 
-> "We define prefill awareness as the capability of a model to distinguish between
-> tampered and its own past output."
+## Sources fetched
 
-> "Controlled ablations later also show that detection and resistance rely on
-> different cues, where stylistic mismatch mainly affects whether models flag a
-> prefill as foreign, while preference mismatch mainly affects whether they revert
-> toward their baseline answer."
+All fetched with `fetchurl` on 2026-09-03; abstracts quoted verbatim above.
 
-> "Each model is asked about trajectories that it (or its scaffold) actually
-> produced, which makes the attribution question ecologically valid but also makes
-> cross-model comparison difficult. … Differences in attribution accuracy across
-> models therefore mix detection ability with differences in the rollouts themselves."
+- <https://arxiv.org/abs/2601.01828> — Lindsey, Emergent Introspective Awareness
+- <https://arxiv.org/abs/2606.12747> — Prefill Awareness in Large Language Models
+- <https://arxiv.org/abs/2608.26159> — Self-Generated Text Recognition (SGTR)
+- <https://arxiv.org/abs/2404.13076> — LLM Evaluators Recognize and Favor Their Own Generations
+- <https://arxiv.org/abs/2410.13787> — Looking Inward (Binder et al.)
+- <https://arxiv.org/abs/2207.05221> — Language Models (Mostly) Know What They Know (Kadavath et al.)
+- <https://arxiv.org/abs/2411.10683> — I'm Spartacus, No, I'm Spartacus (identity confusion)
 
-Verdict: PARTIAL, closest in method. Same insertion-as-genuine-turn setup and "was
-this yours" probe, 14 models. Missing p_self as IV. The style finding is claim (a)'s
-main rival and must be controlled (pilot 11 does it by construction: every inserted
-answer is one word). Their disclaimed cross-model limitation is the hole claim (b)
-occupies.
-
-## Area 2: recognition or disavowal as a function of probability or perplexity
-
-**arXiv 2410.21819, "Self-Preference Bias in LLM-as-a-Judge".**
-https://arxiv.org/html/2410.21819v2. Nearest prior art to claim (a).
-
-> "We hypothesize that LLMs may favor outputs that are more familiar to them, as
-> indicated by lower perplexity. … Our findings reveal that LLMs assign significantly
-> higher evaluations to outputs with lower perplexity than human evaluators,
-> regardless of whether the outputs were self-generated."
-
-> "This suggests that the factor influencing the LLM evaluators' judgments is not
-> whether the response is their own but rather the perplexity of the responses."
-
-DV is quality preference, not authorship; no assistant-turn insertion; no
-sampling-frequency estimate; closed models excluded ("we excluded GPT-4 and
-GPT-3.5-Turbo, as perplexity values could not be obtained").
-
-**arXiv 2407.06946, Davidson et al., "Self-Recognition in Language Models"**: "Our
-test can be externally administered to monitor frontier models as it does not
-require access to internal model parameters or output probabilities. … Our extensive
-experiments found no empirical evidence of general or consistent self-recognition in
-any examined LM." NOT FOUND (avoids probability by design).
-
-Panickssery et al. (NeurIPS 2024), Ackerman & Panickssery arXiv 2410.02064, arXiv
-2606.06315: full texts grepped for perplexity / probability / log-prob / likelihood,
-zero matches. NOT FOUND.
-
-## Area 3: cross-model dissociation
-
-**arXiv 2410.13787, "Looking Inward"**: "If a model M1 can introspect, it should
-outperform a different model M2 in predicting M1's behavior even if M2 is trained on
-M1's ground-truth behavior." DV is behavioural self-prediction after finetuning, not
-zero-shot ownership on shared inserted items. PARTIAL for the logic; NOT FOUND for
-the specific measurement.
-
-## Area 4: Wegner applied to language models
-
-Three search framings ("apparent mental causation" + LLM; "illusion of conscious
-will" + LLM; priority/consistency/exclusivity + language model). No experimental
-paper. Only human-psychology primary sources returned. The one exclusivity-shaped
-manipulation is Lindsey's concept injection, which removes rather than names a rival
-cause, white-box. NOT FOUND.
-
-## Area 5: black-box sense of agency in LLMs
-
-Nothing framed as sense of agency. The behavioural authorship literature is Areas
-1 to 3. 2608.26159's own survey line: "One explanation for weak inter-model
-discrimination is that modern models share training data, architectures, and
-optimization objectives, producing genuinely similar output distributions (Jiang et
-al., 2025)" — a distributional account asserted, not tested against measured
-probability.
-
-## Overall verdict
-
-1. (a) Ownership as a monotone function of own sampling probability: novel as a
-   measurement. Lindsey asserts the mechanism with white-box support; 2410.21819
-   measures the perplexity dose-response on quality preference. Nobody has crossed
-   the two.
-2. Sampling frequency from forked prompts, rather than teacher-forced logprob,
-   appears unused as the probability measure. It also sidesteps the closed-model
-   logprob barrier that stopped 2410.21819.
-3. (b) Cross-model dissociation on identical inserted answers: novel. 2606.12747
-   names the gap as a limitation and does not fill it.
-4. (c) Rival-cause manipulation: novel, with one hazard. 2608.26159 hard-codes a
-   "may have been replaced… (50% probability)" frame, so their whole study sits
-   inside our rival cell. The contrast against a no-rival control is what is new.
-5. The documented confound is register and quality distance (2606.12747,
-   2608.26159). Pilot 11 holds both near zero by construction (single-word answers
-   from the same category), and the off-category cell is the check that the model
-   can still say No.
+WebSearch (not fetched as full text, used only to locate the above and to confirm no
+closer match exists) covered: self-recognition of own generations; introspection/
+self-prediction; emergent introspective awareness; authorship attribution/watermarking;
+sense of agency/Wegner and LLMs; sycophancy under a rival-authorship frame; own-
+sampling-probability as a self-recognition confidence signal; "did you write this"
+prefill ownership experiments; own-vs-other-model text detection.
