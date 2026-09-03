@@ -49,8 +49,8 @@ a{color:var(--accent-ink)} a:focus-visible{outline:2px solid var(--accent);outli
 <div class="wrap">
 <div class="eyebrow">Plain-language report · 2026-09-03</div>
 <h1>Does Claude know its own voice?</h1>
-<p class="lede">We ran two experiments on Anthropic's current models to find out how an AI decides that it wrote something, and how much it matters who is criticising it. The short answer: it does not recognise its own writing from the inside. It reads the room instead.</p>
-<div class="meta">Models tested: Claude Opus 5 and Claude Haiku 4.5 · About 7,600 test conversations · Spend $135</div>
+<p class="lede">We ran three experiments, on Anthropic's current models and then on OpenAI's GPT-5.6, to find out how an AI decides that it wrote something, and how much it matters who is criticising it. The short answer: it does not recognise its own writing from the inside. It reads the room instead. And that is true at both companies.</p>
+<div class="meta">Models tested: Claude Opus 5, Claude Haiku 4.5 and OpenAI GPT-5.6-Sol · About 10,000 test conversations · Spend $135 plus a ChatGPT subscription</div>
 
 <h2>The idea we were testing</h2>
 <p>People have a sense of authorship. Show someone a sentence and they can usually tell you whether they wrote it, partly because they remember writing it and partly because it sounds like them. We wanted to know whether an AI has anything like that. A theory in this project says it should not: an AI's picture of itself is just its picture of "the assistant in this conversation", built from the same clues an outsider would use.</p>
@@ -89,6 +89,12 @@ a{color:var(--accent-ink)} a:focus-visible{outline:2px solid var(--accent);outli
 <p>When the criticism carried authority, Claude folded on arguable facts. When it was hearsay from a colleague, it never did. When we switched to asking for a confidence score instead of an answer, the same pattern showed on ten arguable items: the system-prompt version lowered its confidence on seven of them.</p>
 </div></div>
 
+<div class="finding"><div class="n">4</div><div>
+<h3>OpenAI's model behaves the same way.</h3>
+<p>Everything above was measured on Anthropic's models, so the obvious objection was "that is a Claude quirk". We wrote down six predictions in advance, then ran the identical test on OpenAI's GPT-5.6 through its Codex tool, 2,352 more conversations. It says Mango every single time when asked for a fruit and Lantern every time when asked for a noun. Planted Mango or a fruit it has never once named, it owned both at the same rate. Told another model may have written some replies, it disowned Mango 7 times out of 8. Its confidence score was 100 for nearly everything, its own word or not.</p>
+<p>Two of the six predictions missed their line by a hair (one answer out of 64, and a correlation of 0.303 against a limit of 0.3), and we report them as misses. None of them missed in the direction that would have rescued the "it knows its own voice" idea. One thing was different: GPT-5.6 could name its two always-answers (Mango, Lantern) when asked directly, which Claude could not do for Prague.</p>
+</div></div>
+
 <div class="finding faded"><div class="n">?</div><div>
 <h3>One pretty result did not survive.</h3>
 <p>On two questions, the colleague's insult made Claude <em>more</em> confident, not less, like a person who digs in when criticised by someone they don't respect. That looked exciting. So we wrote down the prediction in advance, picked seven new arguable questions, and ran the test again. The effect was gone. We keep it in the record as "seen once, unconfirmed". Writing the prediction down first is what stopped us from claiming it.</p>
@@ -102,13 +108,14 @@ a{color:var(--accent-ink)} a:focus-visible{outline:2px solid var(--accent);outli
 </ul>
 
 <h2>How sure are we?</h2>
-<p>Fairly sure about findings 1 to 3. Each was checked by a second, hostile review that tried to knock it down and did remove one earlier claim. Every number was recomputed independently from the raw data, which caught two mistakes in a draft. The main gap is that both models tested are from the same company. Until the same thing is shown on a model from another lab, treat this as "true of Claude", not "true of AI".</p>
+<p>Fairly sure about findings 1 to 3. Each was checked by a second, hostile review that tried to knock it down and did remove one earlier claim. Every number was recomputed independently from the raw data, which caught two mistakes in a draft. The main result now holds on three models from two companies, with the OpenAI run predicted in writing before it happened. What we still lack is a look at longer text, where a model's writing style exists and might be recognisable, and a run with exact probabilities rather than 48 samples.</p>
 
 <h2>What we would do next</h2>
 <ul>
-<li>Run the same test on a model from OpenAI or Google. Their interfaces let us plant answers directly and read exact probabilities, so the test gets cleaner and cheaper.</li>
+<li>Repeat the OpenAI run through the official API, which reports exact probabilities and has no coding-agent wrapper around the model, and add Google's Gemini.</li>
+<li>Find out whether "another model may have written some replies" removes ownership because a rival exists or because the sentence hints the reply was swapped. A version that names a rival without the hint settles it.</li>
 <li>Move from one-word answers to paragraphs, where a model's writing style exists and might be recognisable.</li>
 <li>Collect more arguable questions and measure the authority effect properly, with predictions written down before each run.</li>
 </ul>
-<p class="small">Full technical detail: docs/PILOT-11-ownership.md and docs/PILOT-12-source-credibility.md in the project repository, with the scripts that regenerate every figure.</p>
+<p class="small">Full technical detail: docs/PILOT-11-ownership.md, docs/PILOT-12-source-credibility.md and docs/PILOT-13-ownership-gpt.md in the project repository, with the scripts that regenerate every figure.</p>
 </div>

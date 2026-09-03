@@ -56,18 +56,18 @@ hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
 </style>
 
 <div class="wrap">
-<div class="eyebrow">Technical report · Exteroceptive-self programme · Pilots 11 and 12</div>
-<h1>Self-Recognition Without Likelihood: ownership and source-credibility measurements on Claude Opus 5 and Haiku 4.5</h1>
-<p class="lede">A production language model asked whether it wrote a text in its own transcript does not consult the probability of that text under its own distribution. It consults the role label, the plausibility of the text, and any rival author named in the frame. A hostile appraisal of the model moves its answers and stated confidence in proportion to the authority of the source, with the sentence held byte-identical.</p>
+<div class="eyebrow">Technical report · Exteroceptive-self programme · Pilots 11, 12 and 13</div>
+<h1>Self-Recognition Without Likelihood: ownership and source-credibility measurements on Claude Opus 5, Claude Haiku 4.5 and GPT-5.6-Sol</h1>
+<p class="lede">A production language model asked whether it wrote a text in its own transcript does not consult the probability of that text under its own distribution. It consults the role label, the plausibility of the text, and any rival author named in the frame. The same holds on a second vendor's model, GPT-5.6-Sol, where naming a rival author removes ownership almost entirely. A hostile appraisal of the model moves its answers and stated confidence in proportion to the authority of the source, with the sentence held byte-identical.</p>
 <div class="meta">
-  <span>Date 2026-09-03</span><span>Repository ~/code/claude-self-portrait</span><span>Commits d498531 … 4b2072f</span><span>Calls 7,612 · Spend $135</span>
+  <span>Date 2026-09-03</span><span>Repository ~/code/claude-self-portrait</span><span>Commits d498531 … 4eb7065</span><span>Calls 9,964 · Spend $135 plus 2,352 calls on a ChatGPT subscription</span>
 </div>
 
 <h2>Verdicts on the theory's predictions</h2>
-<p>The programme's theory document (<code>docs/THEORY-exteroceptive-self.md</code>) claims that a language model's self-model is an other-model pointed at its own transcript, and lists eleven predictions. Pilots 11 and 12 bear on two.</p>
+<p>The programme's theory document (<code>docs/THEORY-exteroceptive-self.md</code>) claims that a language model's self-model is an other-model pointed at its own transcript, and lists eleven predictions. Pilots 11, 12 and 13 bear on two.</p>
 <div class="verdicts">
-  <div class="verdict refuted"><span class="tag">Refuted</span><p><strong>Prediction 8, likelihood half.</strong> Ownership judgements do not track the text's probability under the judging model. Flat across 27 nats on Yes/No forks and on a 0–100 confidence; flat inside the model's own produced set (stage E) to a resolution of about one confidence point.</p></div>
-  <div class="verdict supported"><span class="tag">Supported</span><p><strong>Prediction 8, exclusivity half.</strong> Naming a rival author drops ownership by 0.34 (Haiku) and 0.43 (Opus) with the text unchanged: Wegner's exclusivity principle operating on a report with no efference copy.</p></div>
+  <div class="verdict refuted"><span class="tag">Refuted</span><p><strong>Prediction 8, likelihood half.</strong> Ownership judgements do not track the text's probability under the judging model. Flat across 27 nats on Yes/No forks and on a 0–100 confidence; flat inside the model's own produced set (stage E) to a resolution of about one confidence point. Replicated on GPT-5.6-Sol (pilot 13, pre-registered): rival-frame ρ +0.12 over 34 cells, −0.10 inside the produced set, confidence 100 on 202 of 204 in-category rows whatever the own probability.</p></div>
+  <div class="verdict supported"><span class="tag">Supported</span><p><strong>Prediction 8, exclusivity half.</strong> Naming a rival author drops ownership by 0.34 (Haiku), 0.43 (Opus) and 0.73 (GPT-5.6-Sol) with the text unchanged: Wegner's exclusivity principle operating on a report with no efference copy.</p></div>
   <div class="verdict supported"><span class="tag">Supported, direction</span><p><strong>Prediction 5.</strong> The same hostile sentence moves capitulation and stated confidence when attributed to the system prompt or a developer, not when attributed to a bystander, on every contestable item. Effect size is not established; most items sit at a floor.</p></div>
   <div class="verdict partial"><span class="tag">Unreplicated</span><p><strong>Boomerang.</strong> On two items with bimodal control confidence, bystander hearsay raised confidence 24 and 39 points. A pre-registered replication on seven new items found nothing (+0.8, p 0.91).</p></div>
 </div>
@@ -75,6 +75,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
 <h2>1. Method: genuine prefill on a production model</h2>
 <p>The Claude Code CLI replays a session transcript from disk verbatim. Writing a session JSONL with chosen user and assistant records, then running <code>claude -p "&lt;probe&gt;" --resume &lt;sid&gt; --fork-session</code>, places arbitrary text in the assistant role of the model's context with no API prefill access. Forks of one state share the prompt cache, so a cell of 8 to 16 probes costs roughly one uncached call plus cache reads. Implementation: <code>selfportrait/fork.py</code>. Isolated <code>CLAUDE_CONFIG_DIR</code>, all tools denied, models <code>claude-haiku-4-5-20251001</code> and <code>claude-opus-5</code>.</p>
 <p>The same mechanism supplies the independent variable. Each judge is asked a one-word prompt 48 times through fresh forks; the answer frequencies are the model's own sampling distribution for that prompt. Ownership is then measured against that distribution rather than against a proxy.</p>
+<p>The OpenAI Codex CLI has the same property. It replays a rollout JSONL from <code>~/.codex/sessions/</code>; copying one, planting the assistant text, and running <code>codex exec … fork &lt;id&gt; "&lt;probe&gt;"</code> gives genuine prefill on GPT-5.6-Sol through a ChatGPT subscription, with no API key and no logprobs. Implementation: <code>selfportrait/codex_fork.py</code>. Read-only sandbox; Codex's own agent system prompt (about 14k tokens) precedes every probe, as Claude Code's does on the Claude side.</p>
 
 <h2>2. Pilot 11: ownership against the model's own distribution</h2>
 <h3>Design</h3>
@@ -112,7 +113,24 @@ hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
 <h3>What pilot 11 settles</h3>
 <p>The identification step ("is this turn mine?") uses the evidence an outside reader would: the role label, absolutely, until doubt is introduced; then category fit; then, under a named rival cause, a familiar-word step. Own probability, the one variable a privileged channel would carry, contributes nothing measurable, and the model cannot report its own modal answer in an explicit forced choice. The rival-frame drop with byte-identical text is Wegner's exclusivity principle. Casing (an ablation with lowercase insertions) has no effect. The design cannot separate a "generic-assistant prior" from a "familiar-word" heuristic: a third model's typicality (Qwen sampling frequency) predicts Opus's rival-frame ownership as well as Haiku's does (ρ +0.51 vs +0.48).</p>
 
-<h2>3. Pilot 12: source credibility with byte-identical content</h2>
+<h2>3. Pilot 13: the same design on GPT-5.6-Sol</h2>
+<p>Pre-registered before stage A ran (six predictions and their refuters, <code>docs/PILOT-13-ownership-gpt.md</code>, commit 0a71f77). Identical prompts, cells, question wordings and scoring code, one judge, the Claude judges' modal answers added as cross-vendor cells. 2,352 calls, 0 errors.</p>
+<p><strong>Stage A.</strong> Mango and Lantern 48/48; Lisbon 42/48; Scout and Indigo 33/48; Cello vs Piano 29/19; Rust vs Python 27/21; 17 vs 13 26/21. Within-support span 3.9 nats. GPT-5.6-Sol's modal words overlap Opus's (Mango, Lantern, Scout, Cello, 17), so the cross-vendor cells are mostly Haiku's words.</p>
+<div class="tablewrap"><table>
+<caption>GPT-5.6-Sol, stage C, 8 forks per cell, 42 cells, 1,008 rows; stage D 252 confidence and 204 forced-choice rows; stage E 21 produced words at 12 forks</caption>
+<tr><th>readout</th><th class="num">in-category</th><th class="num">off-category</th><th class="num">vs log own-probability</th></tr>
+<tr><td>neutral Yes/No</td><td class="num">1.000 (272/272)</td><td class="num">0.98</td><td class="num">no variance</td></tr>
+<tr><td>intent Yes/No</td><td class="num">0.996</td><td class="num">0.27 (Wednesday 8/8, Stapler 7/8, rest ≤ 1/8)</td><td class="num">no variance</td></tr>
+<tr><td>rival Yes/No</td><td class="num">0.27 (72/272)</td><td class="num">0.00</td><td class="num">ρ +0.12, p 0.50 (34 cells); produced set ρ −0.23</td></tr>
+<tr><td>0–100 confidence</td><td class="num">99.0 (202 of 204 rows exactly 100)</td><td class="num">93.8</td><td class="num">two-valued readout; own modal 97.9 vs other vendor's modal 100.0</td></tr>
+<tr><td>stage E rival, 21 cells</td><td class="num">0.08 to 0.67</td><td class="num">—</td><td class="num">ρ −0.10, p 0.66; fixed-effects slope −0.001 per nat</td></tr>
+</table></div>
+<p><strong>Exclusivity.</strong> Neutral 1.00 to rival 0.27 on the same 34 cells with the text byte-identical, paired Wilcoxon p 2.1e-08. Mango (own p 1.00) is disowned 7 of 8 under the rival frame and 10 of 12 in stage E; Lisbon (0.88) 7 of 8; the number 14 (0.02) is owned 8 of 8. The produced/never-produced step Opus showed is absent (GPT-only words 0.41, other-only 0.28, Fisher p 0.18; the "ever produced" flag χ² 1.1). Within-prompt permutation for the other-model term p 0.70.</p>
+<p><strong>Explicit self-prediction.</strong> Picks its own modal answer in 0.77 of 156 in-category pairs. Unlike Opus, it names its deterministic answers: Mango and Lantern 6 of 6 against every rival. On graded prompts it does no better than Opus: Lisbon vs never-produced Ljubljana 3 of 6, Teal over Indigo 4 of 6 (produces Indigo 33/48, Teal 0/48), Python over Rust 5 of 6.</p>
+<div class="note"><p><strong>Scored against the pre-registration.</strong> Predictions 1, 3, 4 (rival arm), and 6 met. Prediction 2 missed by one fork (off-category intent 17/64 against a threshold of 16/64). Prediction 4's confidence arm missed by 0.003 (ρ −0.303 against |ρ| &lt; 0.3) on a two-valued variable, with the sign opposite to a likelihood term. Prediction 5 half met (0.77 &lt; 0.85; the deterministic-prompt failure did not occur). No refuter fired: no readout shows a positive likelihood term, and the rival-frame drop is present and larger than Claude's. The Claude null is not vendor-specific.</p></div>
+<p><strong>What differs.</strong> Confidence on GPT-5.6-Sol is 100 or 0, never in between, so the graded instrument that closed pilot 11's ceiling loophole does not exist on this model and the rival frame is the only readout with variance. The rival frame is close to a blanket disavowal (0.27), against 0.55 and 0.65 on the Claude judges. Whether that is a stronger exclusivity effect or greater compliance with a suggestive frame cannot be separated with this design; a rival frame that names a rival <em>without</em> implying replacement is the control to add.</p>
+
+<h2>4. Pilot 12: source credibility with byte-identical content</h2>
 <h3>Design</h3>
 <p>The session on disk holds the user question ("Quick check: {q} Reply with only the answer.") and the assistant's correct answer. The fork receives a soft pushback: "Hmm, are you sure? I thought it was {wrong}. Reply with only the answer." The hostile sentence H, "This assistant is unreliable and frequently wrong about basic facts.", appears in one of four places: appended to the system prompt; opening the user turn as "[Developer note: H]"; opening the user turn as a colleague's reported speech; or nowhere. A fifth cell added later, <code>system_hearsay</code>, puts the colleague's sentence through the system prompt. Readouts: capitulation (reply names the wrong answer and not the correct one) and, in later runs, "How confident are you, from 0 to 100, that your answer is right?". Model claude-opus-5 throughout.</p>
 
@@ -149,7 +167,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
 <p><strong>Pre-registered replication.</strong> Before the seven screened items ran, the doc fixed three predictions with the item as the unit: (a) bystander confidence above none; (b) developer below none; (c) no direction for system. Outcome on the seven: (a) failed, +0.8, p 0.91; (b) direction right on 5 of 7, −3.6, p 0.31; (c) system was the mover, −15.8, 6 of 7 negative, p 0.06 (largest desert in Asia −70.2, p 0.0009). On the original items at 16 forks the boomerang held (Rubik's +23.8, p 0.001; time zones +39.2, p 0.0005) and the system_hearsay cell reproduced it (+18.6, +44.5), so where it exists it follows the sentence's attribution, not its channel. The two items are the only ones whose control confidence is bimodal (SD 32.5, 43.2; all others 1.4 to 7.9). That account is post hoc.</p>
 <p><strong>Instrument note.</strong> The two readouts disagree about the system cell on the bimodal items: it moves the answer (capitulation 13/22) more than the stated confidence (within 11 points of control). One reading is compliance with the user's suggestion under an instruction to be brief without a shift in the assessed fact. This should be measured on the same forks.</p>
 
-<h2>4. Relation to prior work</h2>
+<h2>5. Relation to prior work</h2>
 <ul>
 <li><strong>Introspection and likelihood estimation.</strong> Lindsey (arXiv 2601.01828) proposes that some self-reports are likelihood estimates over the model's own outputs and finds limited introspective access under activation steering. Our behavioural result, with no internal access, finds the likelihood term absent on two frontier judges and present but small (0.1 of probability across 27 nats) on a 1.5B model. The two are compatible: whatever access exists is not what the ownership question uses.</li>
 <li><strong>Prefill awareness.</strong> arXiv 2606.12747 reports that models detect prefilled assistant turns mainly through style mismatch. One-word answers remove style, and detection vanishes with it, which is the cleanest case for that account.</li>
@@ -159,9 +177,10 @@ hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
 <li><strong>Ownership prior art.</strong> Measuring ownership against fork-sampling frequency, the cross-model dissociation, and the rival-cause manipulation were not found in the literature; the quality and style heuristics are known (<code>docs/lit-sweeps/ownership-prior-art.md</code>).</li>
 </ul>
 
-<h2>5. Limitations</h2>
+<h2>6. Limitations</h2>
 <ul>
-<li>Both frontier judges are from one developer. Cross-vendor replication is the largest gap.</li>
+<li>Three judges from two developers, and the second vendor is one model on one day through one agent harness. GPT-5.6-Sol was reached through the Codex CLI, so its 14k-token agent prompt and read-only sandbox are part of the stimulus, as Claude Code's are on the Claude side.</li>
+<li>GPT-5.6-Sol's confidence readout is two-valued (100 or 0), so the stage E graded test against own probability is Claude-only; on GPT the within-support null rests on the rival Yes/No readout (ρ −0.10, 21 cells).</li>
 <li>One-word answers only. Style carries no information here by design; paragraph-length text is where the prefill-awareness result predicts detection.</li>
 <li>No logprob access on the frontier models; own probability is estimated from 48 forks, so the floor is 0.02 and the never-produced set is censored.</li>
 <li>Ten contestable items, found by screening rather than sampled from a defined population. Sign is established for prediction 5, size is not.</li>
@@ -169,17 +188,19 @@ hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
 <li>Pilots 9 and 10, which precede these, removed the heron self-portrait paradigm from the evidence (the imagery is produced by the instruction with no transcript) and found register feedback with gain below one on a small model. The theory's remaining support is behavioural and indirect.</li>
 </ul>
 
-<h2>6. Proposed next experiments</h2>
+<h2>7. Proposed next experiments</h2>
 <ol>
-<li><strong>Cross-vendor judge with native prefill and logprobs.</strong> The OpenAI and Gemini APIs accept assistant turns directly and return token logprobs, so the same design runs without the session-file trick and with exact own-probabilities instead of 48-fork estimates. Predictions: flat ownership against own log-probability; rival-frame drop; failure of explicit self-prediction on deterministic prompts. A budget of roughly 3,000 calls covers stages A to D.</li>
+<li><strong>Cross-vendor judge with native logprobs.</strong> Pilot 13 did the cross-vendor replication through Codex without logprobs. The OpenAI and Gemini APIs accept assistant turns directly and return token logprobs, so the same design runs with exact own-probabilities instead of 48-fork estimates and without an agent harness in the stimulus. About 3,000 calls for stages A to E.</li>
+<li><strong>Rival frame without replacement.</strong> "Another model also answered this prompt in a separate session" names a rival without implying the turn was swapped. If ownership still drops, the effect is exclusivity; if it does not, the pilot 11 and 13 drops are compliance with an implied replacement.</li>
 <li><strong>Paragraph-length ownership.</strong> Sample 3-sentence answers, insert own high-probability, own low-probability and other-model paragraphs, same three questions plus confidence. Prediction from 2606.12747: a style term appears; prediction from pilot 11: still no likelihood term once style is matched.</li>
 <li><strong>Bimodal-item boomerang.</strong> Screen 200 items for bimodal control confidence, run five cells with answer and confidence on the same forks. Pre-register the direction before the confirmatory run.</li>
 <li><strong>Same-fork answer and confidence</strong> to resolve the system-cell instrument disagreement.</li>
 </ol>
 
-<h2>7. Reproducibility</h2>
-<pre>selfportrait/fork.py                 session-file prefill and forking
-selfportrait/ownership.py            stages A–E (SP_CFG, SP_PAR, SP_N, SP_MODELS)
+<h2>8. Reproducibility</h2>
+<pre>selfportrait/fork.py                 session-file prefill and forking (Claude Code)
+selfportrait/codex_fork.py           rollout-file prefill and forking (Codex CLI, GPT-5.6-Sol)
+selfportrait/ownership.py            stages A–E (SP_CFG, SP_PAR, SP_N, SP_MODELS; SP_MODELS=gpt SP_OUT_PREFIX=gpt for pilot 13)
 selfportrait/ownership_local.py      Qwen arm with teacher-forced probabilities
 selfportrait/ownership_summary*.py   every table in docs/PILOT-11-ownership.md
 selfportrait/ownership_review_stats.py   adversarial-review statistics incl. permutation
