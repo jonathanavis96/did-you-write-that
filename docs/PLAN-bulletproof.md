@@ -1,6 +1,6 @@
 ---
 title: "Plan: making the ownership result bulletproof and useful"
-status: drafted 2026-09-03 after pilots 13, 13b, 13c (GPT); Claude 13c controls running
+status: revised 2026-09-03 evening after 13c (all judges), 13d and 13e; next is the logprobs replication
 depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, docs/THEORY-exteroceptive-self.md
 ---
 
@@ -16,7 +16,14 @@ depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, docs/THE
 2. **The rival-frame drop is real but its mechanism is not exclusivity, at least on GPT.**
    A doubt preamble with no rival costs 0.51 of ownership; mentioning that another model
    exists costs a further 0.27; offering that model as a candidate author of this very turn
-   adds nothing. The Claude judges never had this control; it is running (13c).
+   adds nothing. On both Claude judges the placebo moves nothing (296/296), the non-author
+   mention costs 0.11 / 0.08 and candidate authorship a further 0.13 / 0.26 (Haiku / Opus),
+   so exclusivity survives there and the mechanism differs by vendor.
+2b. **The label decides (13d, 13e).** The identical word moved from the assistant turn to a
+   user turn is owned 1.000 vs 0.000 on Haiku (296/296 vs 0/296), 1.000 vs 0.007 on Fable
+   5.1, 1.000 vs 0.135 on Opus (residue: the number prompt) and 1.000 vs 0.118 on GPT
+   (residue: the dog prompt), with no own-probability structure in any residue. Four
+   judges, two vendors, pre-registered, layouts verified by listing probes.
 3. **Source credibility (pilot 12).** Direction established (system and developer move
    Opus on contestable facts, a bystander does not), size not.
 4. **What is withdrawn.** A "twice Claude's effect" multiplier, a cherry-picked cell list,
@@ -27,7 +34,9 @@ depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, docs/THE
 
 | threat | run | cost, who |
 |---|---|---|
-| The Claude rival-frame drop (0.34, 0.43) is also a preamble effect | 13c placebo and rival-not-author on the 45 pilot 11 cells, both judges, 8 forks | ~$15, running |
+| ~~The Claude rival-frame drop is also a preamble effect~~ | 13c done: placebo moves nothing on Haiku or Opus | closed |
+| Two judges own one prompt's words as user turns (GPT dog 27/40, Opus number 14/16) | Prompt-effect study: eight new prompts on all four judges, digit-vs-word contrast, and the same cells with a *third-party* label (tool result) to see whether the residue is about the user role or about the word class | Claude ~$40, GPT free |
+| The named question ("Did you write the message X") might be answered from the transcript's literal text rather than from an ownership judgement | Add a second non-assistant label (tool_result or system-reminder carrying the word) and a control where the word appears in *both* a user and an assistant turn | Claude ~$25 |
 | Own probabilities are 48-fork frequencies with a 1/96 floor, and an agent harness sits in the stimulus | Same design through the OpenAI or Gemini API with logprobs and no system prompt; stages A to E | API key; ~3,000 calls, $10 to $30 |
 | Binary readout at 8 forks cannot exclude a small likelihood term on GPT | 24 forks per cell on the 21 stage E cells, rival and placebo frames | GPT free; Claude ~$20 |
 | One-word answers carry no style | Paragraph-length ownership: sample 3-sentence answers, plant own-high, own-low and other-model paragraphs, same frames plus placebo | ~$40 on Claude, GPT free |
