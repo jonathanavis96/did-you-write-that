@@ -168,6 +168,6 @@ The Opus rival cells make the point directly: it disowns `neptune` (its own top 
 probability 1.00) on 6 of 8 forks and owns `titanium` (also own probability 1.00) on 8 of 8;
 the two lowest Opus cells are `makemake` (0.00) and `osmium` and `neptune` (0.25 each).
 
-Cost recorded on the rows: forks $1.39, judgements $11.15. Conclusion: the one-word label
+Cost recorded on the rows: forks $1.39, judgements $11.15. Number-check: an independent recompute from the raw rows (`scratchpad/recompute15b.py`, without sight of the scoring script) matched all 22 figures above, including the cell extremes and the two Spearman values; no wording changes were needed. Conclusion: the one-word label
 result, the neutral ceiling and the rival-frame drop are unchanged on the clean harness, so
 the pilot 11 to 16 claims stand without a full clean rerun.
