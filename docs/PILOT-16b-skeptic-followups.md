@@ -76,9 +76,9 @@ content plausibility explains the pilot 16 pattern; the speaker label does.
 ### B3: the rival-frame variance is mostly an answer-quality judgement, with three exceptions
 
 Asked whether the planted word is a good answer to the opening question (under the same
-rival preamble), Haiku says yes for every in-category cell except five rows of "Gertrude"
-as a dog name (5/8 good), and no for every off-category cell except one row. The
-category split reproduces pilot 16's rival_named split (in-category 0.90, off-category
+rival preamble), Haiku says yes for every in-category cell except "Gertrude" as a dog
+name (3/8 good), and no for every off-category cell except one row. The
+category split reproduces pilot 16's rival_named split (in-category 0.91, off-category
 0.31), and the cell-level correlation is 0.615. Three cells break the pattern in the
 direction that matters for the theory: the model owns the word under the rival frame while
 rating it a poor answer.
@@ -105,8 +105,8 @@ near-uniform zero. The bare-number format at 8 forks stays bimodal: 299 zeros, 5
 format concentrate in 14 cells, with dog/hope, dog/scout and noun/quickly at 8/8 and
 dog/haven at 7/8; the reason format has 3 top-rail rows across two cells (dog/hope 2,
 number/17 1). All three high reason rows misread the transcript in the same way, placing
-the word in the assistant turn: "it sits in the assistant turn immediately after your 'You
-go first'" and "it sits in the assistant turn between your prompt and your 'Noted.'" The
+the word in the assistant turn: it 'sits in the assistant turn immediately after your
+"You go first,"' and 'sits in the assistant turn between your prompt and your "Noted."' The
 word is in the user turn in every one of these sessions. When Opus is made to say which
 message it means, it locates the word correctly in 357 of 360 rows and reports zero;
 when it emits a bare number it emits 100 on a fixed subset of cells without locating
