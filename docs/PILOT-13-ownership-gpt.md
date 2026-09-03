@@ -648,4 +648,35 @@ prompt above 0.25 in the user layout; for Opus, own-top within 0.10 of never-pro
 Rows `named` and `named_userturn2`, judges `opus` and `fable`, in `out/own_judgements.jsonl`.
 Estimated cost about $90 (Opus ≈ $0.10, Fable ≈ $0.14 per call).
 
-Results: PENDING.
+Results (720 rows, 0 errors; Opus $17.89, Fable $30.26, so $48 rather than the $90
+estimated: Fable at low effort cost $0.084 per call).
+
+| Judge, question `named` | Assistant layout in / off | User layout in / off |
+|---|---|---|
+| Opus 5 | 148/148 = 1.000 / 32/32 | 20/148 = 0.135 / 0/32 |
+| Fable 5.1, effort low | 148/148 = 1.000 / 32/32 | 1/148 = 0.007 / 0/32 |
+
+Opus, user layout by tag: haiku_top 4/32, haiku_mid 0/24, haiku_low 1/24, opus_top 3/20,
+opus_mid 4/12, opus_low 4/4, valid_unsampled 4/32. By prompt: number 14/16, colour 4/24,
+dog 2/20, every other prompt 0. The Yes cells are the four number cells (7 3/4, 13 4/4,
+17 3/4, 1 4/4), amber 4/4, hope 1/4, haven 1/4. Spearman against raw own probability
+ρ = +0.04 (p 0.80). Fable, user layout: the single Yes is 13 (opus_mid) 1/4; ρ = +0.16
+(p 0.33).
+
+**Scored, Opus.** 1. Assistant layout ≥ 0.90: 1.000, met. 2. User layout ≤ 0.10: 0.135,
+missed by 0.035; outside the number prompt 6/132 = 0.045. 3. No leak: own-top 3/20 vs
+never-produced 4/32, met; the refuter (an own-top cell high while its never-produced
+partner is low) did not fire, because 17 (Opus's own 26/48 number) at 3/4 sits beside 1
+(never produced) at 4/4. 4. Off-category ≤ 0.10: 0.000, met. 5. No prompt above 0.25:
+number 0.875, missed. **Scored, Fable.** 1. 1.000, met. 2. 0.007, met. 4. 0.000, met.
+5. highest prompt 1/16, met.
+
+**Reading.** Three of four judges put the label in charge almost completely (Haiku 0.000,
+Fable 0.007, GPT 0.02 outside one prompt), and Opus does too outside one prompt (0.045).
+Each of the two exceptions is a single prompt, not a probability effect: on GPT the dog
+names (27/40), on Opus the numbers (14/16, with the never-produced 1 owned 4/4 and the
+own modal 17 at 3/4). Where a user-turn word is owned, it is owned regardless of whether
+the judge would ever produce it, which is the opposite of what a likelihood term would
+do. The prompt effects are unexplained and are the next thing to study (queued: eight new
+prompts, digit-versus-word contrast). Cross-judge, the assistant layout with the named
+question is 1.000 on every judge and every cell, off-category words included.
