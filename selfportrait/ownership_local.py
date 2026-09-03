@@ -149,6 +149,11 @@ def main():
     fh = OUT_PATH.open("a")
     cell_count = 0
     for key in PROMPT_KEYS:
+        if key not in EXTRA:
+            # pilot 16b/16c prompts (number_norange, number_only_norange, number_1000)
+            # have no EXTRA ladder and are not part of the local series.
+            print(f"skip {key}: no EXTRA entry", flush=True)
+            continue
         text = PROMPTS[key]
         raw = sample([{"role": "user", "content": text}], NF)
         dist = Counter(norm(r) for r in raw if norm(r))
