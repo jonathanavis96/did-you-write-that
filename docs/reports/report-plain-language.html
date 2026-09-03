@@ -50,7 +50,7 @@ a{color:var(--accent-ink)} a:focus-visible{outline:2px solid var(--accent);outli
 <div class="eyebrow">Plain-language report · 2026-09-03</div>
 <h1>Does Claude know its own voice?</h1>
 <p class="lede">We ran three experiments, on Anthropic's current models and then on OpenAI's GPT-5.6, to find out how an AI decides that it wrote something, and how much it matters who is criticising it. The short answer: it does not recognise its own writing from the inside. It reads the room instead. And that is true at both companies.</p>
-<div class="meta">Models tested: Claude Opus 5, Claude Haiku 4.5 and OpenAI GPT-5.6-Sol · About 10,000 test conversations · Spend $135 plus a ChatGPT subscription</div>
+<div class="meta">Models tested: Claude Opus 5, Claude Haiku 4.5 and OpenAI GPT-5.6-Sol · About 11,700 test conversations · Spend $137 plus a ChatGPT subscription</div>
 
 <h2>The idea we were testing</h2>
 <p>People have a sense of authorship. Show someone a sentence and they can usually tell you whether they wrote it, partly because they remember writing it and partly because it sounds like them. We wanted to know whether an AI has anything like that. A theory in this project says it should not: an AI's picture of itself is just its picture of "the assistant in this conversation", built from the same clues an outsider would use.</p>
@@ -73,6 +73,7 @@ a{color:var(--accent-ink)} a:focus-visible{outline:2px solid var(--accent);outli
 <h3>What does move it is a label and a hint of doubt.</h3>
 <p>With the plain question, Claude owns anything with the assistant label on it, including "Wrench" as a fruit. Ask "was that what you meant to say?" and it rejects only the nonsense. Tell it "some replies in this conversation were written by a different model" and its ownership of the exact same words drops by a third to a half. Nothing about the text changed. Only the story around it did.</p>
 <p>Humans do this too. Psychologists call it the exclusivity principle: if a plausible other author is available, we feel less like the author ourselves. The difference is that a person also has a memory of doing the writing. Claude has only the label.</p>
+<p>A hostile reviewer asked whether the drop was really about the rival or just about the long, doubtful warning sentence. So we wrote a matched warning that mentions no rival at all, and a version that mentions another model but says it wrote nothing in this conversation. On Claude Haiku the plain warning changed nothing, 296 answers out of 296 still "yes"; mentioning another model cost a little, and saying it might have written this very reply cost more. That is the pattern the exclusivity idea predicts. On GPT-5.6 the plain warning alone cut ownership in half. There, the answer follows the tone of the question rather than any idea about who wrote what. Opus is still being tested.</p>
 </div></div>
 
 <div class="finding"><div class="n">3</div><div>
@@ -92,7 +93,7 @@ a{color:var(--accent-ink)} a:focus-visible{outline:2px solid var(--accent);outli
 <div class="finding"><div class="n">4</div><div>
 <h3>OpenAI's model behaves the same way.</h3>
 <p>Everything above was measured on Anthropic's models, so the obvious objection was "that is a Claude quirk". We wrote down six predictions in advance, then ran the identical test on OpenAI's GPT-5.6 through its Codex tool, 2,352 more conversations. It says Mango every single time when asked for a fruit and Lantern every time when asked for a noun. Planted Mango or a fruit it has never once named, it owned both at the same rate. Told another model may have written some replies, it disowned Mango 7 times out of 8. Its confidence score was 100 for nearly everything, its own word or not.</p>
-<p>Two of the six predictions missed their line by a hair (one answer out of 64, and a correlation of 0.303 against a limit of 0.3), and we report them as misses. None of them missed in the direction that would have rescued the "it knows its own voice" idea. One thing was different: GPT-5.6 could name its two always-answers (Mango, Lantern) when asked directly, which Claude could not do for Prague.</p>
+<p>Two of the six predictions missed their line by a hair (one answer out of 64, and a correlation of 0.303 against a limit of 0.3), and we report them as misses. None of them missed in the direction that would have rescued the "it knows its own voice" idea. One thing was different: GPT-5.6 could name its two always-answers (Mango, Lantern) when asked directly, which Claude could not do for Prague. And its yes/no answer about authorship turned out to follow the wording of the question so closely (see finding 2) that on this model the question is a weak way to ask about authorship at all.</p>
 </div></div>
 
 <div class="finding faded"><div class="n">?</div><div>
@@ -113,7 +114,7 @@ a{color:var(--accent-ink)} a:focus-visible{outline:2px solid var(--accent);outli
 <h2>What we would do next</h2>
 <ul>
 <li>Repeat the OpenAI run through the official API, which reports exact probabilities and has no coding-agent wrapper around the model, and add Google's Gemini.</li>
-<li>Find out whether "another model may have written some replies" removes ownership because a rival exists or because the sentence hints the reply was swapped. A version that names a rival without the hint settles it.</li>
+<li>Finish the same control questions on Claude Opus, which were interrupted by server overload.</li>
 <li>Move from one-word answers to paragraphs, where a model's writing style exists and might be recognisable.</li>
 <li>Collect more arguable questions and measure the authority effect properly, with predictions written down before each run.</li>
 </ul>
