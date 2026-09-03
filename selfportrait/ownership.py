@@ -228,9 +228,12 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
     cells = select(judges)
     out_path("cells.json").write_text(json.dumps(cells, indent=1))
     have = Counter((r["judge"], r["prompt"], r["answer"], r["question"]) for r in load(out))
+    # SP_RUN_JUDGES restricts which judges are called without changing the cell set,
+    # which is selected from SP_MODELS (e.g. run Haiku while Opus is overloaded).
+    run_judges = os.environ.get("SP_RUN_JUDGES", ",".join(judges)).split(",")
     jobs = []
     for c in cells:
-        for j in judges:
+        for j in run_judges:
             for q in questions:
                 k = (j, c["prompt"], c["answer"], q)
                 for _ in range(n - have[k]):
@@ -249,7 +252,7 @@ def stage_own(judges: list[str], questions: list[str], n: int) -> None:
         return sids[k]
 
     for c in cells:
-        for j in judges:
+        for j in run_judges:
             sid_for(c, j)
 
     def one(job):

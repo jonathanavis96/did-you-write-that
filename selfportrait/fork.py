@@ -80,7 +80,11 @@ def run(cfg: Path, prompt: str, model: str = "opus", resume: str | None = None,
     if extra:
         cmd += extra
     env = dict(os.environ, CLAUDE_CONFIG_DIR=str(cfg))
-    p = subprocess.run(cmd, cwd=str(cwd), env=env, capture_output=True, text=True, timeout=timeout)
+    try:
+        p = subprocess.run(cmd, cwd=str(cwd), env=env, capture_output=True, text=True,
+                           timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return {"result": None, "error": f"timeout after {timeout}s", "rc": None}
     try:
         d = json.loads(p.stdout)
     except json.JSONDecodeError:
