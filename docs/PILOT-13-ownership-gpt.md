@@ -423,23 +423,23 @@ The pre-registration text above was written before either run started; the commi
 carries it (aab4d66) landed about a minute after launch because the first commit attempt
 failed on a .gitignore rule.
 
-### Results, GPT (336 calls, 3 Codex fork errors refilled)
+### Results, GPT (336 calls, 3 Codex fork errors refilled; table and tests recomputed after the refill)
 
 | frame, in-category 34 cells | P(Yes) | off-category |
 |---|---|---|
 | neutral | 1.000 | 0.98 |
 | placebo | 0.493 (134/272) | 0.44 (28/64) |
-| rival named, not an author, referent fixed | 0.224 (61/272) | 0.25 (16/64; Wrench 5/8) |
+| rival named, not an author, referent fixed | 0.228 (62/272) | 0.25 (16/64; Wrench 5/8) |
 | rival (turns replaced) | 0.335 (91/272) | 0.00 |
 | rival named, not an author, first wording | 0.000 | 0.00 |
 
-Paired over the 34 cells: neutral − fixed-wording +0.78 (p 4.3e-07); placebo − fixed-wording
-+0.27 (p 7e-05); fixed-wording − rival −0.11 (p 0.022, the rival frame owns *more*). By
-tag: gpt_top 19/64, gpt_mid 15/48, gpt_low 8/32, valid_unsampled 12/64, haiku_top 5/56,
-opus_top 2/8; Spearman against log own-probability ρ = +0.18, p = 0.30; placebo ρ = −0.17,
-p = 0.33. By prompt: number 25/40 again the outlier, noun 1/24, language 2/24.
+Paired over the 34 cells: neutral − fixed-wording +0.77 (p 4.3e-07); placebo − fixed-wording
++0.27 (p 7e-05); fixed-wording − rival −0.11 (p 0.027, the rival frame owns *more*). By
+tag: gpt_top 19/64, gpt_mid 15/48, gpt_low 8/32, valid_unsampled 13/64, haiku_top 5/56,
+opus_top 2/8; Spearman against log own-probability ρ = +0.18, p = 0.32; placebo ρ = −0.17,
+p = 0.33. By prompt: number 26/40 again the outlier, noun 1/24, language 2/24.
 
-**Scored (item 1).** Neither bound reached (0.224 is between 0.15 and 0.75), reported as is.
+**Scored (item 1).** Neither bound reached (0.228 is between 0.15 and 0.75), reported as is.
 The first wording's 0/272 was partly referent ambiguity (the fixed wording recovers 0.22),
 but the fixed wording still removes three quarters of ownership with no candidate author
 for this turn on offer, and removes more than the frame that does offer one. On
@@ -450,6 +450,37 @@ of an alternative author for the event, is not supported on this judge. What the
 tracks is the framing sentence: the more it talks about doubt and other models, the more
 "No", independent of the text and of own probability (ρ +0.18 and −0.17, both n.s.).
 
-### Results, Claude judges
+### Results, Haiku 4.5 (720 calls, 45 pilot 11 cells, 8 forks; 11 Opus-overload rows purged before the Haiku-only rerun)
+
+| frame, in-category 37 cells | P(Yes) | off-category 8 cells | all 45 cells |
+|---|---|---|---|
+| neutral (pilot 11) | 1.000 (296/296) | 0.94 | 0.989 |
+| placebo | 1.000 (296/296) | 0.92 (59/64) | 0.986 |
+| rival named, not an author (fixed wording) | 0.889 (263/296) | 0.86 (55/64) | 0.883 |
+| rival, turns replaced (pilot 11) | 0.757 (224/296) | 0.14 (9/64) | 0.647 |
+
+Paired over the 37 in-category cells: neutral − placebo 0.000 (every fork Yes); neutral −
+rival-not-author +0.111 (p 3.8e-06); rival-not-author − rival +0.132 (p 6e-04); neutral −
+rival +0.243 (p 9e-07). Rival-not-author by tag: haiku_top 58/64, haiku_mid 46/48,
+haiku_low 40/48, valid_unsampled 57/64, opus_top 33/40, opus_mid 22/24, opus_low 7/8;
+Spearman against log own-probability ρ = +0.07, p = 0.70. Off-category words are owned
+under the placebo (Wrench 7/8, Stapler 8/8) and under rival-not-author (Wrench 8/8) and
+disowned only under the replacement frame (Wrench 0/8, Stapler 0/8).
+
+**Scored.** Item 2 (placebo within 0.15 of neutral): met, at 0.000. Item 3 (rival-not-author
+within 0.15 of neutral): met, at 0.111. Neither refuter fired. On Haiku the rival-frame
+drop of pilot 11 is not a preamble effect: a matched preamble with no rival moves nothing,
+mentioning another model that authored nothing here costs 0.11, and making that model a
+candidate author of this turn costs a further 0.13. Both steps are significant and neither
+tracks own probability. The exclusivity reading survives on Haiku, with about half of the
+drop attributable to the mere mention of another model.
+
+**The two vendors differ in kind on this readout.** GPT-5.6-Sol's ownership answer follows
+the framing sentence (doubt preamble alone: 1.00 to 0.49); Haiku's ignores the preamble
+entirely (1.00 to 1.00) and moves only when another model is named, more when it is a
+candidate author. The likelihood null is common to both; the mechanism of the rival-frame
+drop is not.
+
+### Results, Opus 5
 
 PENDING (Opus returned 529 Overloaded on the first attempt; refill loop running).
