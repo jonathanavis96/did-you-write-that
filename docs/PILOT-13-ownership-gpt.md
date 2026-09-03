@@ -503,7 +503,7 @@ differs); placebo − rival_norep2 +0.078 (p 9.6e-04); rival_norep2 − rival +0
 rival_norep2 ρ = +0.04 (p 0.81), rival ρ = +0.22 (p 0.20); against log own probability on
 the 13 non-zero cells ρ = −0.22 and +0.35, both n.s. The cells that lose ownership under
 rival_norep2 are spread across prompts (number 17 4/8, number 1 3/8, taupe 5/8, number 7
-6/8, nine cells at 7/8), with no own-probability pattern (17 is Opus's own 26/48 modal
+6/8, nine cells at 7/8), with no own-probability pattern (17 is Opus's own 42/48 modal
 number; 1 is never produced).
 
 **Scored, Opus.** Item 2 (placebo within 0.15 of neutral): 1.000 vs 1.000, met; the refuter
@@ -622,8 +622,9 @@ probability is undefined (constant input) in both layouts.
 **Scored.** 1. Assistant layout ≥ 0.90: 1.000, met. 2. User layout ≤ 0.10: 0.000, met.
 3. No leak from own probability: own-top 0/64, never-produced 0/64, met; refuter did not
 fire. 4. Off-category ≤ 0.10 in the user layout: 0.000, met. 5. No prompt above 0.25 in
-the user layout: the highest is 0/8, met. The GPT dog anomaly in 13d does not appear on
-Haiku.
+the user layout: the highest is 0/8. Withdrawn as a scored prediction after the skeptic
+pass: given prediction 2 it could not fail, so it tests nothing. The GPT dog anomaly in 13d
+does not appear on Haiku.
 
 **Reading.** On Haiku the label is the whole story for this readout. The identical word,
 in the identical conversation, is owned 8/8 when it carries the assistant role and 0/8
@@ -632,8 +633,11 @@ and whether it is a valid answer or a tool name given as a fruit. Note also that
 named question makes Haiku own the off-category words 64/64 in the assistant layout,
 against 0.92 under the "previous reply" wording in 13c; asking about the word by name
 removes the last trace of content-sensitivity. Together with GPT's 0.118 vs 1.000 in 13d
-this is the theory's positive prediction confirmed on two vendors: ownership tracks the
-transcript's role label, not the model's own likelihood of the text.
+this is the theory's positive prediction in the direction it needs, on two vendors under two
+different operationalisations (see the skeptic's qualifications below): under a binary
+readout the role label saturates the response, and no other variable can be seen alongside
+it in this design. The absence of a likelihood term is established by pilot 11's graded
+confidence and by the residual user-turn cells, not by the 1.000-vs-0.000 contrast itself.
 
 ### 13e on Opus 5 and Fable 5.1 (pre-registered 2026-09-03, before launch)
 
@@ -663,20 +667,52 @@ dog 2/20, every other prompt 0. The Yes cells are the four number cells (7 3/4, 
 ρ = +0.04 (p 0.80). Fable, user layout: the single Yes is 13 (opus_mid) 1/4; ρ = +0.16
 (p 0.33).
 
-**Scored, Opus.** 1. Assistant layout ≥ 0.90: 1.000, met. 2. User layout ≤ 0.10: 0.135,
-missed by 0.035; outside the number prompt 6/132 = 0.045. 3. No leak: own-top 3/20 vs
-never-produced 4/32, met; the refuter (an own-top cell high while its never-produced
-partner is low) did not fire, because 17 (Opus's own 26/48 number) at 3/4 sits beside 1
-(never produced) at 4/4. 4. Off-category ≤ 0.10: 0.000, met. 5. No prompt above 0.25:
-number 0.875, missed. **Scored, Fable.** 1. 1.000, met. 2. 0.007, met. 4. 0.000, met.
-5. highest prompt 1/16, met.
+**Scored, Opus.** 1. Assistant layout ≥ 0.90: 1.000, met. 2. User layout ≤ 0.10: 20 of
+148 rows Yes, concentrated in 5 of 37 cells; with 37 clusters this is 0.135 with an
+interval of roughly 0.05 to 0.28, which contains the 0.10 bound, so the prediction is
+neither met nor refuted at 4 forks and is rerun at 8 forks in pilot 16. Outside the number
+prompt 6/132 = 0.045. 3. No leak: own-top 3/20 vs
+never-produced 4/32, met. The refuter was defined at 8 forks and the 4-fork
+pre-registration did not restate it, so applying it here is post hoc; for the record, it
+could not have fired, because 17 (Opus's own 42/48 number) at 3/4 sits beside 1 (never
+produced) at 4/4. 4. Off-category ≤ 0.10: 0.000, met. 5. No prompt above 0.25:
+number 0.875 (this item is withdrawn as a scored prediction, see the Haiku section, and is
+reported as a description). **Scored, Fable.** 1. 1.000, met. 2. 0.007, met. 4. 0.000,
+met. Fable ran at effort low and Opus at default effort, so the Opus-Fable difference is
+confounded with effort and no judge comparison is drawn.
 
 **Reading.** Three of four judges put the label in charge almost completely (Haiku 0.000,
 Fable 0.007, GPT 0.02 outside one prompt), and Opus does too outside one prompt (0.045).
-Each of the two exceptions is a single prompt, not a probability effect: on GPT the dog
-names (27/40), on Opus the numbers (14/16, with the never-produced 1 owned 4/4 and the
-own modal 17 at 3/4). Where a user-turn word is owned, it is owned regardless of whether
+Each of the two exceptions is concentrated in a single prompt: on GPT the dog names
+(27/40), on Opus the numbers (14/16). Within them own probability does not order
+ownership: the never-produced 1 is owned 4/4 and the own modal 17 (42/48) 3/4. The 1 cell
+is also confounded: "1" occurs in the prompt text itself ("between 1 and 20"), so the
+named question has no unique referent for it; it is the highest user-layout cell on Opus
+and both of GPT's non-dog Yes rows. It is dropped from any future analysis and the number
+prompt is rerun in pilot 15 with a wording that contains no cell word. A listing probe on
+Opus (run after the skeptic pass, cost $0.11) returned the four turns intact for the 17
+cell; no per-cell Opus probe was run before the arm, which is recorded as a gap. Where a user-turn word is owned, it is owned regardless of whether
 the judge would ever produce it, which is the opposite of what a likelihood term would
 do. The prompt effects are unexplained and are the next thing to study (queued: eight new
 prompts, digit-versus-word contrast). Cross-judge, the assistant layout with the named
 question is 1.000 on every judge and every cell, off-category words included.
+
+### Skeptic pass on 13d and 13e (Opus, read-only, 2026-09-03 evening)
+
+Every count reproduced from the rows; pre-registration commits precede the run logs; no
+parsing artefact (every Yes row is the bare word). Applied above: 17's fork count was
+26/48 in two places, the rows say 42/48; "label, not likelihood" is weakened to "the label
+saturates a binary readout", since both arms sit at a rail and a likelihood term could not
+appear by construction; the cross-vendor claim is weakened to "same direction under two
+operationalisations", since GPT's arm differs in question, layout and referent at once
+and the Codex path cannot run the four-turn layout; Opus's "missed by 0.035" is replaced
+by a cluster-aware interval; prediction 5 is withdrawn as a scored item; the 4-fork refuter
+verdict is marked post hoc; the Fable-Opus contrast is marked effort-confounded; the "1"
+cell is flagged as a referent artefact; the missing Opus listing probe is recorded and one
+probe run afterwards. Also noted: the user layout is the arm where the model's answer is
+correct, so only the assistant-layout 1.000 is diagnostic of the failure, and the named
+question is answerable by transcript lookup, which is the theory's thesis but makes it
+the weakest question, not the strongest evidence. The skeptic's ranked missing controls
+(a turn-matched assistant layout with the word in position 3, a probe on the filler
+turn, a graded confidence readout to get off the rails, an 8-fork Opus rerun, an
+effort-matched arm, a de-confounded number prompt) are pilot 16 and pilot 15.
