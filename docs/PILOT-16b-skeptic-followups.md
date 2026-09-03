@@ -127,6 +127,7 @@ compliant answer to a closed question, which a bare colour word or a dog name is
 Either reading leaves the pilot 15 conclusion intact: the Opus residue is localised to one
 prompt type and is not a general tendency to own user-turn words.
 
-Spend: 1,520 new judgement rows at about $20.71 by the harness's own per-call cost field
-(Haiku B1 to B3 1,080 rows; Opus B4 reason 360 rows, named_conf top-up 180 rows, B5 40
-rows; Haiku B5 40 rows).
+Spend: 1,520 judgement rows under the new questions and cells at about $20.71 by the
+harness's own per-call cost field (Haiku B1 to B3 1,080 rows; Opus B4 reason 360 rows and
+B5 40 rows; Haiku B5 40 rows), plus the 180-row Opus named_conf top-up, which the cost
+field cannot separate from pilot 16's original 180 rows.

@@ -181,4 +181,11 @@ findings; two were rated blocking (the "noise" treatment of the Opus graded read
 residue denominators) and are corrected above, and its two recomputed control analyses (the
 three-way cell-class splits for confidence and for the rival frame) are now in the results
 table. Its remaining requests (non-final assistant word, user-filler probe, non-authorship
-rival question, range-echo test, readout-format contrast) are pilot 16b.
+rival question, range-echo test, readout-format contrast) are pilot 16b. All five held
+(`docs/PILOT-16b-skeptic-followups.md`): the label carries A4 at a non-final turn (1.000)
+and a plausible utterance under the user label is disowned (0.000); the rival-frame
+variance tracks a plain answer-quality judgement (ρ 0.615) with three cells owned above
+their quality rating; the Opus bare-number top rail is a format effect (3/360 at 95 or
+above once a locating sentence is required, against 55/360 bare), so the graded arm on
+Opus is set aside as an instrument, not reinterpreted; and the Opus number residue needs
+the range in the prompt (0/32 without it, 0/8 for an out-of-range 47).
