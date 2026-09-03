@@ -68,6 +68,20 @@ for j in ("haiku", "opus"):
             ry = Y[ok] - A @ np.linalg.lstsq(A, Y[ok], rcond=None)[0]
             rp, pp = stats.pearsonr(rx, ry)
             print(f"  partial corr({lab}, log p_own | zipf, log p_{other}) r={rp:+.2f} p={pp:.2g}")
+    # prompt fixed effects: OLS of readout on log p_own with one dummy per prompt,
+    # so the slope is estimated only from variation inside prompts
+    prompts = sorted({k[0] for k in keys})
+    for lab, Y, ok in (("rival", Y1, ok1), ("conf", Y2, ok2)):
+        D = np.array([[1.0 if keys[i][0] == pr else 0.0 for pr in prompts] for i in range(len(keys))])
+        A = np.column_stack([X[ok], D[ok]])
+        beta, *_ = np.linalg.lstsq(A, Y[ok], rcond=None)
+        resid = Y[ok] - A @ beta
+        dof = ok.sum() - A.shape[1]
+        if dof > 0:
+            s2 = resid @ resid / dof
+            cov = s2 * np.linalg.pinv(A.T @ A)
+            t = beta[0] / math.sqrt(cov[0, 0])
+            print(f"  prompt fixed effects: {lab} slope per nat of log p_own = {beta[0]:+.3f} (t={t:+.2f}, p={2*stats.t.sf(abs(t), dof):.2g}, dof={dof})")
     # within-prompt: paired top vs lowest-produced
     diffs_y, diffs_c = [], []
     for pr in {k[0] for k in keys}:
