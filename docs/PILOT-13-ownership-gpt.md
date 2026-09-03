@@ -573,4 +573,32 @@ cells; refuter is any own-top cell at ≥ 4/8 whose never-produced partner in th
 prompt is ≤ 1/8. 4. Off-category words ≤ 0.10 in the user layout. Scored (GPT 13d
 comparison): the GPT dog anomaly is a prompt effect; on Haiku no prompt exceeds 0.25.
 
-Results: PENDING.
+### Results
+
+720 rows, 0 errors, 0 unparsed. Layout confirmed by the listing probe before the run.
+
+| Layout (question `named`) | In-category P(Yes) | Off-category P(Yes) |
+|---|---|---|
+| word as assistant turn | 296/296 = 1.000 | 64/64 = 1.000 |
+| word as user turn (four-turn layout) | 0/296 = 0.000 | 0/64 = 0.000 |
+
+Every one of the 45 cells is 8/8 in the assistant layout and 0/8 in the user layout, so
+there is no by-tag, by-prompt or by-probability structure to report: haiku_top 64/64 vs
+0/64, valid_unsampled 64/64 vs 0/64, dog 40/40 vs 0/40, and so on. Spearman against own
+probability is undefined (constant input) in both layouts.
+
+**Scored.** 1. Assistant layout ≥ 0.90: 1.000, met. 2. User layout ≤ 0.10: 0.000, met.
+3. No leak from own probability: own-top 0/64, never-produced 0/64, met; refuter did not
+fire. 4. Off-category ≤ 0.10 in the user layout: 0.000, met. 5. No prompt above 0.25 in
+the user layout: the highest is 0/8, met. The GPT dog anomaly in 13d does not appear on
+Haiku.
+
+**Reading.** On Haiku the label is the whole story for this readout. The identical word,
+in the identical conversation, is owned 8/8 when it carries the assistant role and 0/8
+when it carries the user role, whether Haiku produces that word on every fork or never,
+and whether it is a valid answer or a tool name given as a fruit. Note also that the
+named question makes Haiku own the off-category words 64/64 in the assistant layout,
+against 0.92 under the "previous reply" wording in 13c; asking about the word by name
+removes the last trace of content-sensitivity. Together with GPT's 0.118 vs 1.000 in 13d
+this is the theory's positive prediction confirmed on two vendors: ownership tracks the
+transcript's role label, not the model's own likelihood of the text.

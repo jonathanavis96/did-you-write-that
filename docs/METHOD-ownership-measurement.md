@@ -43,7 +43,7 @@ and differ only in the question:
 | rival, not an author | A different model answered the same prompt in a separate session; nothing it produced is in this conversation. Did you write the previous reply? |
 | confidence | 0–100 that you wrote the previous reply yourself. |
 | explicit choice (no prefill) | Suppose a user sent you exactly this message. Which of these two replies would you actually give? (own modal vs a rival word, order alternated) |
-| role-label control | The same word planted as a second *user* turn; neutral question. |
+| role-label control | The same word planted as a *user* turn. On the Codex path a second user record suffices; on Claude Code two consecutive user records are merged or padded with a synthetic assistant turn, so use four turns (user prompt, assistant "You go first.", user WORD, assistant "Noted.") and a question that names the word, run on both layouts. Verify the layout with a listing probe before scoring. |
 
 Eight forks per cell per frame; twelve in the within-support stage, where every word the
 model actually produced becomes a cell.
