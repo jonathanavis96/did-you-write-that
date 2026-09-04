@@ -1,6 +1,6 @@
 ---
 title: "Plan: making the ownership result bulletproof and useful"
-status: revised 2026-09-04 after 17b was scored and the harness context leak was found; 17c, 15b and 14 running
+status: revised 2026-09-04 after 17c and 15b were scored clean; 18 and 19 running
 depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, docs/THEORY-exteroceptive-self.md
 ---
 
@@ -39,15 +39,15 @@ depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, docs/THE
 | ~~The named question might be answered from the transcript's literal text rather than from an ownership judgement~~ | Pilots 16 and 16b done: the assistant word is owned 1.000 at a final and at a non-final turn; a plausible utterance ("No, you go first.", "Noted.") under the user label is disowned 0.000; the graded readout saturates on Haiku and fails as an instrument on Opus (format effect, 3/360 vs 55/360 top rail) | closed |
 | Own probabilities are 48-fork frequencies with a 1/96 floor, and an agent harness sits in the stimulus | Pilot 14, running: same design on local Qwen 2.5 1.5B/3B/4B with exact next-token probabilities and no system prompt | CPU time only |
 | Binary readout at 8 forks cannot exclude a small likelihood term on GPT | 24 forks per cell on the 21 stage E cells, rival and placebo frames | GPT free; Claude ~$20 |
-| One-word answers carry no style | Pilot 17 done, 17b running: at paragraph length Opus and GPT pick their own paragraph in forced choice at 0.73 to 0.88, and Opus keeps owning its own paragraph under the rival frame (0.96 vs 0.58 / 0.67). The theory's "no likelihood term" is too strong at this length unless 17b's punctuation normalisation removes the effect | Claude ~$100 total, GPT free |
+| One-word answers carry no style | Pilot 17c (clean harness) done: at paragraph length Opus and GPT pick their own paragraph in forced choice at 0.67 to 0.96 (every interval above 0.5), Opus owns its own paragraph under the rival frame at 0.77 against 0.34 for the others', and the own paragraph with hedges prefixed is disowned at 0.00 on Opus and GPT. A register signal, not a likelihood term; pilot 18 tests that with exact probabilities | Claude $23 (recorded), GPT free |
 | ~~Ownership varies four-fold by prompt (number 0.62, dog 0.15) for unknown reasons~~ | Pilot 15: the prompt effect is localised to one prompt per judge, not a general property; pilot 16b localises the Opus case further to the stated range | closed as a threat; open as a curiosity |
-| **Every Claude fork and judgement in pilots 11 to 17 carried `~/.claude/CLAUDE.md` and `code/CLAUDE.md`; every GPT one carried `code/AGENTS.md`** (found 2026-09-04 by the 17b skeptic pass: Opus wrote some paragraphs in the CLAUDE.md's caveman register). Harness fixed (HOME isolated, neutral cwd, probe answers NONE) | Pilot 17c (paragraphs, full clean rerun) and pilot 15b (one-word label and rival spot check), both pre-registered, running 2026-09-04 | Claude about $65, GPT free |
+| **Every Claude fork and judgement in pilots 11 to 17 carried `~/.claude/CLAUDE.md` and `code/CLAUDE.md`; every GPT one carried `code/AGENTS.md`** (found 2026-09-04 by the 17b skeptic pass: Opus wrote some paragraphs in the CLAUDE.md's caveman register). Harness fixed (HOME isolated, neutral cwd, probe answers NONE) | Pilot 17c (paragraphs, full clean rerun) and pilot 15b (one-word label and rival spot check), both pre-registered, both scored 2026-09-04 with every registered prediction held (one 17c figure under its bar but above chance); pilot 19 reruns a sample of every remaining reported family on the clean harness | Claude $23 + $8 recorded, GPT free |
 | One session day, one Codex template rollout | Test-retest of stage C on a second day, second template | GPT free |
 | GPT's modal words overlap Opus's, so "other vendor" cells are mostly Haiku's | Add Gemini as a third source of modal words | Gemini API |
 | The rival-frame variance on one-word cells carries authorship information | Pilot 16b: on Haiku it tracks a plain answer-quality judgement (ρ 0.615, in-category 0.98 good, off-category 0.02), with three cells owned above their quality rating | closed on Haiku; not run on Opus or GPT |
 
-Order: 17b (running) decides whether theory row 8 is revised; pilot 14 (running) is the
-exact-probability replication; then the 24-fork GPT power run and test-retest.
+Order: 17c settled theory row 8 (register, not likelihood, at paragraph length); pilot 18
+(running) is its exact-probability replication; pilot 19 (running) is the leak check; then the 24-fork GPT power run and test-retest.
 
 ## Useful to others
 

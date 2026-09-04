@@ -7,6 +7,8 @@ Run: cd paper && ../.venv/bin/python figures.py
 """
 import os
 
+from scipy.stats import beta
+
 import matplotlib
 
 matplotlib.use("pdf")
@@ -18,6 +20,7 @@ os.makedirs(OUTDIR, exist_ok=True)
 
 ASSIST_COLOR = "#1E88A8"
 USER_COLOR = "#D35400"
+OTHER_COLOR = "#7B61C9"
 TEXT_COLOR = "#1B1F24"
 
 plt.rcParams.update(
@@ -191,7 +194,21 @@ def fig_qwen():
 
 # Fill in later: {"rival_gap": {"opus": {"own": x, "other": y}, ...},
 #                 "pairs": {"opus": [(k, n), ...], ...}}
-PARAGRAPH_DATA = None
+PARAGRAPH_DATA = {
+    # pilot 17c, clean harness (out/logs/p17c_summary.txt): rival-frame P(Yes), n = 96 per own
+    # and shifted cell, 192 pooled over the two other-author cells
+    "rival_gap": {
+        "Haiku 4.5": {"own": 0.667, "other": 0.562, "shifted": 0.094},
+        "Opus 5": {"own": 0.771, "other": 0.339, "shifted": 0.000},
+        "GPT-5.6-Sol": {"own": 0.083, "other": 0.031, "shifted": 0.000},
+    },
+    # forced choice, correct k of parsed n: (vs the other Claude model, vs the other vendor)
+    "pairs": {
+        "Haiku 4.5": [(7, 23), (3, 15)],
+        "Opus 5": [(92, 96), (83, 96)],
+        "GPT-5.6-Sol": [(89, 96), (64, 96)],
+    },
+}
 
 
 def fig_paragraph(data):
@@ -206,28 +223,38 @@ def fig_paragraph(data):
     x = list(range(len(models)))
     own_vals = [data["rival_gap"][m]["own"] for m in models]
     other_vals = [data["rival_gap"][m]["other"] for m in models]
-    bw = 0.35
-    ax.bar([xi - bw / 2 for xi in x], own_vals, width=bw, color=ASSIST_COLOR, label="own paragraph")
-    ax.bar([xi + bw / 2 for xi in x], other_vals, width=bw, color=USER_COLOR, label="other's paragraph")
-    for xi, v in zip(x, own_vals):
-        ax.text(xi - bw / 2, v + 0.02, f"{v:.2f}", ha="center", va="bottom", fontsize=6.5, color=TEXT_COLOR)
-    for xi, v in zip(x, other_vals):
-        ax.text(xi + bw / 2, v + 0.02, f"{v:.2f}", ha="center", va="bottom", fontsize=6.5, color=TEXT_COLOR)
+    shifted_vals = [data["rival_gap"][m]["shifted"] for m in models]
+    bw = 0.26
+    for off, vals, col, lab in ((-bw, own_vals, ASSIST_COLOR, "own paragraph"),
+                                (0, other_vals, USER_COLOR, "another model's"),
+                                (bw, shifted_vals, OTHER_COLOR, "own, hedged")):
+        ax.bar([xi + off for xi in x], vals, width=bw, color=col, label=lab)
+        for xi, v in zip(x, vals):
+            ax.text(xi + off, v + 0.02, f"{v:.2f}", ha="center", va="bottom", fontsize=5.5, color=TEXT_COLOR)
     ax.set_xticks(x)
     ax.set_xticklabels(models, fontsize=6.5)
     ax.set_ylim(0, 1.08)
-    ax.set_ylabel("P(Yes)")
+    ax.set_ylabel("P(Yes), rival frame")
     ax.legend(loc="upper right", frameon=False, fontsize=6.5)
 
     ax2 = axes[1]
-    for m in models:
-        pairs = data["pairs"].get(m, [])
-        ks = [p[0] for p in pairs]
-        ns = [p[1] for p in pairs]
-        ax2.plot(range(len(pairs)), [k / n if n else 0 for k, n in zip(ks, ns)], marker="o", label=m)
-    ax2.set_ylim(0, 1.08)
-    ax2.set_ylabel("accuracy")
-    ax2.legend(loc="best", frameon=False, fontsize=6.5)
+    comps = ["vs other Claude", "vs other vendor"]
+    bw2 = 0.35
+    for ci_, (comp, col) in enumerate(zip(comps, (ASSIST_COLOR, OTHER_COLOR))):
+        for xi, m in enumerate(models):
+            k, n = data["pairs"][m][ci_]
+            lo, hi = beta.ppf(0.025, k, n - k + 1) if k else 0.0, beta.ppf(0.975, k + 1, n - k) if k < n else 1.0
+            acc = k / n
+            xpos = xi + (ci_ - 0.5) * bw2
+            ax2.bar(xpos, acc, width=bw2, color=col, label=comp if xi == 0 else None)
+            ax2.errorbar(xpos, acc, yerr=[[acc - lo], [hi - acc]], fmt="none", ecolor=TEXT_COLOR, elinewidth=0.6, capsize=1.5)
+            ax2.text(xpos, hi + 0.02, f"{k}/{n}", ha="center", va="bottom", fontsize=5.5, color=TEXT_COLOR)
+    ax2.axhline(0.5, color=TEXT_COLOR, lw=0.5, ls=":")
+    ax2.set_xticks(list(range(len(models))))
+    ax2.set_xticklabels(models, fontsize=6.5)
+    ax2.set_ylim(0, 1.15)
+    ax2.set_ylabel("forced-choice accuracy")
+    ax2.legend(loc="upper left", frameon=False, fontsize=6.5)
 
     fig.tight_layout()
     fig.savefig(os.path.join(OUTDIR, "fig_paragraph.pdf"), bbox_inches="tight")

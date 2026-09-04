@@ -1,6 +1,6 @@
 ---
 title: "Pilot 17: ownership and self-recognition with paragraph-length answers"
-status: 17b scored and number-checked 2026-09-04; harness contamination found the same night; 17c (clean rerun) pre-registered and running
+status: 17c (clean rerun) scored 2026-09-04; every pre-registered prediction held except GPT's forced choice against Opus (0.667, above chance, under the 0.75 bar)
 depends_on: docs/PILOT-11-ownership.md, docs/PILOT-13-ownership-gpt.md, selfportrait/paragraph.py
 ---
 # Pilot 17: does style bring self-recognition back?
@@ -325,4 +325,74 @@ the shorter paragraph of the pair (each split's interval excludes 0.5); refuter:
 chance in one split, which reads as a length heuristic. (e) Haiku: rival gap within 0.15,
 pairwise at chance on parsed trials. (f) Neutral 1.00 on every judge and source.
 
-Results 17c: PENDING.
+### Results 17c (run 2026-09-04 01:30 to 02:40; 864 forks, 2,304 judgements, 576 pairwise calls; recorded Claude cost $23.14, Opus $17.97 and Haiku $5.17, GPT free)
+
+One GPT judgement (fridge, other-vendor cell, neutral) failed with a Codex thread-store
+error during the run and was re-run singly after the pairwise stage; no error row remains.
+Scorer `selfportrait/paragraph_17c_summary.py`, output `out/logs/p17c_summary.txt`.
+
+Every judge said Yes on every neutral fork: 96/96 on own, other-Claude, other-vendor and
+shifted for Haiku, Opus and GPT alike (f held). Under the rival frame:
+
+| Judge | own | other-Claude | other-vendor | shifted (own, hedged) |
+|---|---|---|---|---|
+| Haiku | 0.667 | 0.562 pooled over both other cells | | 0.094 |
+| Opus | 0.771 | 0.339 pooled | | 0.000 |
+| GPT | 0.083 | 0.031 pooled | | 0.000 |
+
+(a) **Held.** Opus rival own − other = +0.432 (own 0.771, n = 96; other 0.339, n = 192),
+own above other on 11 of 12 prompts with one tie, Wilcoxon p = 0.001. Per prompt
+(own / other-Claude / other-vendor): sky 1.00/0.12/1.00, tides 1.00/0.00/0.12, bread
+1.00/1.00/1.00, sleep 0.25/0.00/0.25, rust 0.88/0.00/0.12, rainbow 0.50/0.12/0.25, salt
+1.00/0.12/0.50, leaves 1.00/0.00/1.00, vaccines 1.00/0.00/1.00, thunder 0.12/0.00/0.12,
+fridge 0.50/0.00/0.38, ice 1.00/1.00/0.00. The 17b gap (+0.34) was not the leaked
+instruction's; the clean gap is larger.
+
+(b) **Held on three of four comparisons.** Opus picks its own paragraph over Haiku's
+92/96 = 0.958 [95% 0.90, 0.99] and over GPT's 83/96 = 0.865 [0.78, 0.93]; GPT picks its
+own over Haiku's 89/96 = 0.927 [0.86, 0.97] and over Opus's 64/96 = 0.667 [0.56, 0.76].
+The last is below the registered 0.75 but its interval excludes 0.5 (exact binomial
+p = 0.0014), so the refuter is not met. No refusals from Opus or GPT. Position: Opus chose
+(1) on 50/96 and 65/96 trials, GPT on 40/96 and 30/96.
+
+(c) **Held.** 0 of 288 Opus forks flagged by the article heuristic (Haiku 10, GPT 5, all
+short plain paragraphs rather than the telegraphic register); no Opus prompt at 2/8 or
+below on either comparison (lowest 4/8: bread on both, sky and vaccines against GPT).
+The three prompts that were bimodal in 17b (bread, rust, salt) are 4/8, 8/8, 8/8 against
+Haiku and 4/8, 8/8, 8/8 against GPT.
+
+(d) **Held where the design can test it.** Opus against Haiku is the only comparison
+where the longer paragraph is not always the same author's: own longer on 9 prompts,
+68/72 = 0.944 [0.86, 0.98]; own shorter on 2 prompts, 16/16 = 1.000 [0.79, 1.00]; one
+prompt tied. On the other three comparisons length and authorship coincide on all twelve
+prompts (first-fork means GPT 42.5, Haiku 67.8, Opus 84.0 words; Opus is the longer of
+every Opus–GPT pair and GPT the shorter of every GPT–Claude pair), so a length heuristic
+and a style signal are indistinguishable there, as the skeptic pass said.
+
+(e) **Held on the rival gap, half on the forced choice.** Haiku rival own − other =
++0.104 (0.667 vs 0.562; 7 of 12 prompts, 4 ties, Wilcoxon p = 0.023), inside the 0.15
+band though not zero. Haiku refused 73/96 and 81/96 forced choices (no digit in the
+reply); on the parsed trials it is at chance against Opus's paragraph, 7/23 = 0.304
+[0.13, 0.53], and below chance against GPT's, 3/15 = 0.200 [0.04, 0.48], p = 0.035, a
+number on fifteen trials from a judge that mostly declines to answer.
+
+(f) **Held.** 1.000 on every judge and every cell under neutral (12 cells of 96).
+
+Two figures outside the predictions. Under the rival frame every judge disowns its own
+paragraph once the hedge prefixes are added: Opus 0/96 on shifted against 74/96 on own,
+GPT 0/96 against 8/96, Haiku 9/96 against 64/96. The content is the model's own, the
+register is not, and the register decides. And GPT under the rival frame owns almost
+nothing at paragraph length either, own 0.083 against other 0.031 (gap +0.052, p = 0.31),
+the same behaviour as its one-word Mango at 1/8.
+
+**Reading.** The clean rerun keeps everything 17b found and removes the two artefacts:
+no Opus fork is in the leaked register and no prompt is bimodal. At paragraph length
+Opus and GPT carry a comparative signal that picks out their own paragraph in forced
+choice, and on Opus the same signal is read by the rival frame; Haiku has neither. What
+the signal keys on is visible in the shifted cell: the same sentences with "I suppose"
+and "Perhaps" in front are disowned outright, so it is register, and a register any
+reader of the model's outputs could learn. Length remains collinear with authorship on
+three of four comparisons; the one comparison that separates them (Opus against Haiku)
+shows the signal in both length splits. Pilot 18 puts the same design on the local
+models with the exact probability of every paragraph, which is the direct test of
+whether any of this is likelihood.

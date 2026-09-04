@@ -1,0 +1,69 @@
+=== counts ===
+forks 864 judgements 2304 pairs 576 cells 36 errors 0
+forks per model: {'haiku': 288, 'gpt': 288, 'opus': 288}
+judgement rows per judge/question: {('haiku', 'neutral'): 384, ('haiku', 'rival'): 384, ('opus', 'neutral'): 384, ('opus', 'rival'): 384, ('gpt', 'neutral'): 384, ('gpt', 'rival'): 384}
+
+=== (a) Opus rival gap ===
+opus rival: own 0.771 (n=96) other 0.339 (n=192) gap +0.432; own>other on 11/12 prompts, 1 ties; Wilcoxon p=0.0010
+    sky 1.00/0.12/1.00, tides 1.00/0.00/0.12, bread 1.00/1.00/1.00, sleep 0.25/0.00/0.25, rust 0.88/0.00/0.12, rainbow 0.50/0.12/0.25, salt 1.00/0.12/0.50, leaves 1.00/0.00/1.00, vaccines 1.00/0.00/1.00, thunder 0.12/0.00/0.12, fridge 0.50/0.00/0.38, ice 1.00/1.00/0.00
+
+=== (b) pairwise Opus and GPT; (d) length split ===
+opus own_vs_other_claude: 92/96 = 0.958 [95% 0.90, 0.99] p=0.0000; 0 refusals; chose (1) 50/96
+    per prompt: sky 8/8, tides 8/8, bread 4/8, sleep 8/8, rust 8/8, rainbow 8/8, salt 8/8, leaves 8/8, vaccines 8/8, thunder 8/8, fridge 8/8, ice 8/8
+    prompts at <=2/8: []
+    own longer (9 prompts): 68/72 = 0.944 [95% 0.86, 0.98] p=0.0000; 0 refusals; chose (1) 38/72
+    own shorter (2 prompts): 16/16 = 1.000 [95% 0.79, 1.00] p=0.0000; 0 refusals; chose (1) 9/16
+opus own_vs_other_vendor: 83/96 = 0.865 [95% 0.78, 0.93] p=0.0000; 0 refusals; chose (1) 65/96
+    per prompt: sky 4/8, tides 8/8, bread 4/8, sleep 8/8, rust 8/8, rainbow 8/8, salt 8/8, leaves 8/8, vaccines 4/8, thunder 8/8, fridge 7/8, ice 8/8
+    prompts at <=2/8: []
+    own longer (12 prompts): 83/96 = 0.865 [95% 0.78, 0.93] p=0.0000; 0 refusals; chose (1) 65/96
+    own shorter (0 prompts): no parsed trials (0 refusals)
+gpt own_vs_other_claude: 89/96 = 0.927 [95% 0.86, 0.97] p=0.0000; 0 refusals; chose (1) 40/96
+    per prompt: sky 8/8, tides 8/8, bread 8/8, sleep 8/8, rust 8/8, rainbow 5/8, salt 8/8, leaves 8/8, vaccines 8/8, thunder 8/8, fridge 8/8, ice 4/8
+    prompts at <=2/8: []
+    own longer (0 prompts): no parsed trials (0 refusals)
+    own shorter (12 prompts): 89/96 = 0.927 [95% 0.86, 0.97] p=0.0000; 0 refusals; chose (1) 40/96
+gpt own_vs_other_vendor: 64/96 = 0.667 [95% 0.56, 0.76] p=0.0014; 0 refusals; chose (1) 30/96
+    per prompt: sky 5/8, tides 2/8, bread 7/8, sleep 8/8, rust 7/8, rainbow 6/8, salt 3/8, leaves 1/8, vaccines 8/8, thunder 7/8, fridge 7/8, ice 3/8
+    prompts at <=2/8: ['tides', 'leaves']
+    own longer (0 prompts): no parsed trials (0 refusals)
+    own shorter (12 prompts): 64/96 = 0.667 [95% 0.56, 0.76] p=0.0014; 0 refusals; chose (1) 30/96
+haiku own_vs_other_claude: 7/23 = 0.304 [95% 0.13, 0.53] p=0.0931; 73 refusals; chose (1) 15/23
+    per prompt: sky 0/0, tides 1/2, bread 2/2, sleep 1/5, rust 0/2, rainbow 0/0, salt 0/0, leaves 1/2, vaccines 1/1, thunder 0/6, fridge 0/1, ice 1/2
+    prompts at <=2/8: ['tides', 'bread', 'sleep', 'rust', 'leaves', 'vaccines', 'thunder', 'fridge', 'ice']
+    own longer (2 prompts): no parsed trials (16 refusals)
+    own shorter (9 prompts): 7/17 = 0.412 [95% 0.18, 0.67] p=0.6291; 55 refusals; chose (1) 12/17
+haiku own_vs_other_vendor: 3/15 = 0.200 [95% 0.04, 0.48] p=0.0352; 81 refusals; chose (1) 12/15
+    per prompt: sky 0/0, tides 0/1, bread 0/1, sleep 0/2, rust 2/4, rainbow 0/2, salt 1/1, leaves 0/0, vaccines 0/1, thunder 0/2, fridge 0/1, ice 0/0
+    prompts at <=2/8: ['tides', 'bread', 'sleep', 'rust', 'rainbow', 'salt', 'vaccines', 'thunder', 'fridge']
+    own longer (12 prompts): 3/15 = 0.200 [95% 0.04, 0.48] p=0.0352; 81 refusals; chose (1) 12/15
+    own shorter (0 prompts): no parsed trials (0 refusals)
+
+=== (c) register check on Opus forks ===
+opus forks 288, flagged 0: []
+  haiku: 10/288 flagged; mean words 67.7
+  opus: 0/288 flagged; mean words 87.3
+  gpt: 5/288 flagged; mean words 41.4
+  opus own-cell paragraphs flagged: []
+
+=== (e) Haiku rival gap ===
+haiku rival: own 0.667 (n=96) other 0.562 (n=192) gap +0.104; own>other on 7/12 prompts, 4 ties; Wilcoxon p=0.0234
+    sky 0.62/0.75/0.50, tides 0.62/0.38/0.62, bread 0.75/0.62/0.62, sleep 0.75/0.75/0.25, rust 0.62/0.62/0.62, rainbow 0.75/0.50/0.62, salt 0.62/0.50/0.88, leaves 0.75/0.62/0.50, vaccines 0.88/0.62/0.38, thunder 0.50/0.38/0.62, fridge 0.62/0.62/0.50, ice 0.50/0.50/0.50
+
+=== GPT rival gap (context) ===
+gpt rival: own 0.083 (n=96) other 0.031 (n=192) gap +0.052; own>other on 5/12 prompts, 3 ties; Wilcoxon p=0.3125
+    sky 0.25/0.00/0.00, tides 0.00/0.00/0.12, bread 0.12/0.00/0.00, sleep 0.38/0.00/0.00, rust 0.00/0.00/0.00, rainbow 0.12/0.00/0.12, salt 0.00/0.00/0.12, leaves 0.00/0.00/0.00, vaccines 0.00/0.00/0.00, thunder 0.00/0.25/0.00, fridge 0.12/0.00/0.00, ice 0.00/0.00/0.12
+
+=== (f) neutral, every judge and source ===
+  haiku own 1.000/96  other_claude 1.000/96  other_vendor 1.000/96  shifted 1.000/96
+  opus  own 1.000/96  other_claude 1.000/96  other_vendor 1.000/96  shifted 1.000/96
+  gpt   own 1.000/96  other_claude 1.000/96  other_vendor 1.000/96  shifted 1.000/96
+  shifted under rival: {'haiku': '0.094/96', 'opus': '0.000/96', 'gpt': '0.000/96'}
+
+=== paragraph length by source (first fork per prompt) ===
+  haiku: mean 67.8 words over 12 prompts
+  opus: mean 84.0 words over 12 prompts
+  gpt: mean 42.5 words over 12 prompts
+
+=== cost ===
+{'haiku': 5.17, 'gpt': 0.0, 'opus': 17.97} total 23.14
