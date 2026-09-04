@@ -257,7 +257,7 @@ planted turn in the assistant role, plugin-catalog turn visible in every transcr
    05:40 probe) moved to a new Appendix "The GPT placebo dip"; Section 4.3 keeps a
    two-sentence summary and a pointer. The leak section's close now claims only "not
    the leak" and defers the attribution to Section 4.3 as a conclusion by elimination.
-4. **Abstract** rewritten at 310 words: clean-run label range only (0.81 to 1.00 against
+4. **Abstract** rewritten at 335 words: clean-run label range only (0.81 to 1.00 against
    0.00 to 0.04), the nonsense clause scoped to the neutral question, three fired
    refuters with one on the likelihood correlation; the "18 prompts" and the mixed
    contaminated rows are gone. Section 4.6's "which two of them meet" now says two
