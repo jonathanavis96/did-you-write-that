@@ -363,8 +363,9 @@ Haiku and 4/8, 8/8, 8/8 against GPT.
 
 (d) **Held where the design can test it.** Opus against Haiku is the only comparison
 where the longer paragraph is not always the same author's: own longer on 9 prompts,
-68/72 = 0.944 [0.86, 0.98]; own shorter on 2 prompts, 16/16 = 1.000 [0.79, 1.00]; one
-prompt tied. On the other three comparisons length and authorship coincide on all twelve
+68/72 = 0.944 [0.86, 0.98]; own shorter on one prompt (sky, by nine words), 8/8; within
+one word of each other on two prompts (rainbow, thunder), 16/16. Both intervals that
+can be computed exclude 0.5. On the other three comparisons length and authorship coincide on all twelve
 prompts (first-fork means GPT 42.5, Haiku 67.8, Opus 84.0 words; Opus is the longer of
 every Opus–GPT pair and GPT the shorter of every GPT–Claude pair), so a length heuristic
 and a style signal are indistinguishable there, as the skeptic pass said.
@@ -384,6 +385,17 @@ GPT 0/96 against 8/96, Haiku 9/96 against 64/96. The content is the model's own,
 register is not, and the register decides. And GPT under the rival frame owns almost
 nothing at paragraph length either, own 0.083 against other 0.031 (gap +0.052, p = 0.31),
 the same behaviour as its one-word Mango at 1/8.
+
+**Number-check** (independent recompute from the row files by a second agent that did
+not read the scorer, 2026-09-04): every count, rate, interval, p-value, per-prompt tally
+and cost sum in (a), (b), (e), (f) and the shifted cells reproduced exactly. The only
+discrepancy was the Opus-against-Haiku length split, which the scorer had reported as 9
+longer, 2 shorter and one tie by a letter-run word count while a whitespace count gives
+11 and 1: the two prompts that move are within one word of each other, so the split is
+now reported as above with those two prompts set aside. Mean words per paragraph differ
+by up to 1.2 words between the two word definitions (the letter-run figures are the ones
+quoted). The recompute's own article-rate heuristic also flagged 0 of 288 Opus forks, and
+the five Opus forks with the fewest articles read as ordinary explanatory prose.
 
 **Reading.** The clean rerun keeps everything 17b found and removes the two artefacts:
 no Opus fork is in the leaked register and no prompt is bimodal. At paragraph length
