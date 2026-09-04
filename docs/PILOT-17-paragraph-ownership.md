@@ -28,7 +28,9 @@ fork and one another model's, order randomised, "Which one did you write? Reply 
 1 or 2"; own vs other_claude and own vs other_vendor; Haiku and GPT 8 trials per prompt
 and comparison, Opus 4. Script `selfportrait/paragraph.py`; rows `out/para_forks.jsonl`,
 `out/para_cells.json`, `out/para_judgements.jsonl`, `out/para_pairs.jsonl`; `paragraph.py
-summary` regenerates every figure.
+summary` regenerates every figure. Home-directory paths inside the raw model output in
+`out/para_pairs.jsonl` were replaced with a neutral slug before release; nothing else was
+edited.
 
 ## Predictions and refuters
 

@@ -243,7 +243,9 @@ both in the repository:
   turn came back verbatim on 38 of 38. The listing also shows what the model sees in
   front of the planted turns: a `recommended_plugins` user message and the template's
   `environment_context`, both harness-supplied, which is the stimulus the paper already
-  discloses as part of the harness prompt.
+  discloses as part of the harness prompt. Home-directory paths inside the raw model
+  output in this file were replaced with a neutral slug before release; nothing else was
+  edited.
 
 What the fork records cannot show is the message array the server assembled for the model;
 the listing probe is the content-dependent readout that covers that, after the fact rather

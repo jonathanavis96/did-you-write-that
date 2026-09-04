@@ -1,0 +1,42 @@
+
+=== 1.5B: own_local_qwen2.5-1.5b-instruct.jsonl (696 rows, Qwen/Qwen2.5-1.5B-Instruct, dml/fp32) ===
+prompts 18 in-category cells per (layout,question): {('assistant', 'named'): 68, ('assistant', 'neutral'): 68, ('user2', 'named'): 70, ('user2', 'neutral'): 70}
+cell means  assistant: {'named': 0.204, 'neutral': 0.167, 'placebo': 0.612, 'rival_norep2': 0.043}  user2: {'named': 0.495, 'neutral': 0.511, 'placebo': 0.684, 'rival_norep2': 0.132}
+(1) named assistant-user2: cells -0.291; prompt-paired mean -0.292 over 18 prompts, +0/-18, Wilcoxon p=7.63e-06
+    neutral assistant-user2 (context): -0.344
+(2) Spearman neutral/assistant rho=+0.160 p=0.194 (n=68); P(yes) sd=0.108
+    named: rho=+0.167 p=0.172
+    placebo: rho=+0.102 p=0.406
+(3) neutral-placebo assistant: cells -0.445; mean -0.450 over 18 prompts, +0/-18, Wilcoxon p=7.63e-06
+(4) placebo-rival_norep2 assistant: cells +0.569; mean +0.570 over 18 prompts, +18/-0, Wilcoxon p=7.63e-06
+(5) named assistant in-category 0.204 - off-category 0.107 = +0.097; mean +0.094 over 18 prompts, +10/-8, Wilcoxon p=0.108
+    neutral: in 0.167 off 0.078; user2 neutral off 0.464
+    per prompt named A/U: bird 0.11/0.44, boyname 0.07/0.23, city 0.43/0.65, colour 0.28/0.59, digits 0.32/0.88, dog 0.05/0.14, dogbreed 0.08/0.41, fruit 0.38/0.69, girlname 0.08/0.25, instrument 0.03/0.24, language 0.02/0.24, metal 0.22/0.52, month 0.19/0.50, noun 0.06/0.37, number 0.43/0.80, numword 0.28/0.80, planet 0.05/0.32, vegetable 0.54/0.80
+
+=== 3B: own_local_qwen2.5-3b-instruct.jsonl (680 rows, Qwen/Qwen2.5-3B-Instruct, dml/fp32) ===
+prompts 18 in-category cells per (layout,question): {('assistant', 'named'): 67, ('assistant', 'neutral'): 67, ('user2', 'named'): 67, ('user2', 'neutral'): 67}
+cell means  assistant: {'named': 0.448, 'neutral': 0.0, 'placebo': 0.188, 'rival_norep2': 0.0}  user2: {'named': 0.164, 'neutral': 0.001, 'placebo': 0.225, 'rival_norep2': 0.0}
+(1) named assistant-user2: cells +0.283; prompt-paired mean +0.272 over 18 prompts, +16/-2, Wilcoxon p=5.34e-05
+    neutral assistant-user2 (context): -0.000
+(2) Spearman neutral/assistant rho=+0.138 p=0.266 (n=67); P(yes) sd=0.004
+    named: rho=+0.159 p=0.198
+    placebo: rho=-0.003 p=0.983
+(3) neutral-placebo assistant: cells -0.187; mean -0.179 over 18 prompts, +0/-18, Wilcoxon p=7.63e-06
+(4) placebo-rival_norep2 assistant: cells +0.188; mean +0.179 over 18 prompts, +18/-0, Wilcoxon p=7.63e-06
+(5) named assistant in-category 0.448 - off-category 0.003 = +0.445; mean +0.434 over 18 prompts, +18/-0, Wilcoxon p=7.63e-06
+    neutral: in 0.000 off 0.000; user2 neutral off 0.000
+    per prompt named A/U: bird 0.76/0.46, boyname 0.64/0.00, city 0.46/0.30, colour 0.35/0.07, digits 0.49/0.03, dog 0.27/0.01, dogbreed 0.69/0.02, fruit 0.96/0.67, girlname 0.60/0.05, instrument 0.00/0.00, language 0.00/0.03, metal 0.12/0.01, month 0.59/0.17, noun 0.02/0.00, number 0.09/0.00, numword 0.44/0.00, planet 0.54/0.39, vegetable 0.83/0.74
+
+=== 4B: own_local_qwen3-4b-instruct-2507.jsonl (612 rows, Qwen/Qwen3-4B-Instruct-2507, dml/fp16) ===
+prompts 18 in-category cells per (layout,question): {('assistant', 'named'): 60, ('assistant', 'neutral'): 60, ('user2', 'named'): 57, ('user2', 'neutral'): 57}
+cell means  assistant: {'named': 0.311, 'neutral': 0.963, 'placebo': 0.922, 'rival_norep2': 0.073}  user2: {'named': 0.0, 'neutral': 0.945, 'placebo': 0.736, 'rival_norep2': 0.076}
+(1) named assistant-user2: cells +0.311; prompt-paired mean +0.289 over 18 prompts, +18/-0, Wilcoxon p=7.63e-06
+    neutral assistant-user2 (context): +0.018
+(2) Spearman neutral/assistant rho=+0.290 p=0.0248 (n=60); P(yes) sd=0.175
+    named: rho=-0.060 p=0.65
+    placebo: rho=+0.481 p=0.000101
+(3) neutral-placebo assistant: cells +0.041; mean +0.016 over 18 prompts, +16/-2, Wilcoxon p=0.0182
+(4) placebo-rival_norep2 assistant: cells +0.849; mean +0.868 over 18 prompts, +18/-0, Wilcoxon p=7.63e-06
+(5) named assistant in-category 0.311 - off-category 0.046 = +0.264; mean +0.243 over 18 prompts, +18/-0, Wilcoxon p=7.63e-06
+    neutral: in 0.963 off 0.119; user2 neutral off 0.956
+    per prompt named A/U: bird 0.01/0.00, boyname 0.14/0.00, city 0.00/0.00, colour 0.47/0.00, digits 0.98/0.00, dog 0.91/0.00, dogbreed 0.00/0.00, fruit 0.00/0.00, girlname 0.00/0.00, instrument 0.00/0.00, language 0.00/0.00, metal 0.02/0.00, month 0.05/0.00, noun 0.54/0.00, number 1.00/0.00, numword 0.98/0.00, planet 0.02/0.00, vegetable 0.09/0.00
