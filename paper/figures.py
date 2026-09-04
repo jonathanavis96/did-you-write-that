@@ -135,7 +135,7 @@ def fig_label():
     ax.axhline(y_sep, color=TEXT_COLOR, linewidth=0.5, linestyle=":")
     ax.text(1.17, ys[0] + 0.55, "clean harness", ha="right", va="bottom", fontsize=6.5,
             color=TEXT_COLOR, style="italic")
-    ax.text(1.17, y_sep - 0.08, "contaminated harness (Appendix B)", ha="right", va="top", fontsize=6.5,
+    ax.text(1.17, y_sep - 0.08, "contaminated harness", ha="right", va="top", fontsize=6.5,
             color=TEXT_COLOR, style="italic")
     fig.tight_layout()
     fig.savefig(os.path.join(OUTDIR, "fig_label.pdf"), bbox_inches="tight")
