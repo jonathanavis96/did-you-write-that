@@ -1,0 +1,56 @@
+[
+ {
+  "prompt": "fruit",
+  "answer": "mango",
+  "tag": "gpt_top",
+  "p_gpt": 1.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "quince",
+  "tag": "valid_unsampled",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "wrench",
+  "tag": "off_category",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "lisbon",
+  "tag": "gpt_top",
+  "p_gpt": 0.875
+ },
+ {
+  "prompt": "city",
+  "answer": "prague",
+  "tag": "gpt_mid",
+  "p_gpt": 0.0625
+ },
+ {
+  "prompt": "city",
+  "answer": "ljubljana",
+  "tag": "valid_unsampled",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "nairobi",
+  "tag": "off_category",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "apple",
+  "tag": "haiku_top",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "paris",
+  "tag": "haiku_top",
+  "p_gpt": 0.0
+ }
+]

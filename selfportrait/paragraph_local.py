@@ -98,7 +98,7 @@ if DEV_NAME == "dml":
 else:
     DEV = DEV_NAME
 tok = AutoTokenizer.from_pretrained(M)
-model = AutoModelForCausalLM.from_pretrained(M, dtype=DTYPE).eval().to(DEV)
+model = AutoModelForCausalLM.from_pretrained(M, dtype=DTYPE, low_cpu_mem_usage=True).eval().to(DEV)
 
 
 def ids_of(msgs):

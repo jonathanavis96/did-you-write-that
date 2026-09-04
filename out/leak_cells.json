@@ -1,0 +1,58 @@
+[
+ {
+  "prompt": "fruit",
+  "answer": "apple",
+  "tag": "haiku_top",
+  "p_haiku": 0.7708333333333334,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "mango",
+  "tag": "haiku_mid",
+  "p_haiku": 0.1875,
+  "p_opus": 1.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "quince",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "wrench",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "paris",
+  "tag": "haiku_top",
+  "p_haiku": 0.7916666666666666,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "prague",
+  "tag": "opus_top",
+  "p_haiku": 0.0,
+  "p_opus": 0.9791666666666666
+ },
+ {
+  "prompt": "city",
+  "answer": "ljubljana",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "nairobi",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ }
+]
