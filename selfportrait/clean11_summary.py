@@ -249,8 +249,8 @@ if userturn2_file:
     user2_rows = [r for r in userturn2_file if r.get("yn") in ("yes", "no") and not r.get("error")]
     user2_source = f"{PREFIX}_judgements_userturn2.jsonl"
 elif judgements:
-    user2_rows = [r for r in judgements if r.get("question") == "named_userturn2" and r.get("yn") in ("yes", "no") and not r.get("error")]
-    user2_source = f"{PREFIX}_judgements.jsonl (question=named_userturn2)"
+    user2_rows = [r for r in judgements if r.get("question") in ("named_userturn2", "named_userturn") and r.get("yn") in ("yes", "no") and not r.get("error")]
+    user2_source = f"{PREFIX}_judgements.jsonl (question=named_userturn2 or named_userturn)"
 else:
     user2_rows = []
     user2_source = None
