@@ -274,7 +274,8 @@ Legend: C=clean rerun data (clean11/clean13/clean15b `clean_*`/p17c), K=contamin
   arm (pilot 18), and the self-description crossed-design subsection (§4.8)
   were not checked at all — see "Sections not reached" above for why.
 
-Findings file: `/tmp/claude-1000/-home-grafe-code-claude-self-portrait/d55c9b3e-d7b6-4ac7-90b9-88174c9c3c6a/scratchpad/paper_number_audit.md`
+Findings file: the auditing agent's scratchpad `paper_number_audit.md`, whose
+conclusions are reproduced in full below.
 
 **Mismatch count: 5** (4 are p-value-only discrepancies on already-matched
 magnitudes, likely a Wilcoxon tie-handling difference; 1 is a ~1-2% word-count
