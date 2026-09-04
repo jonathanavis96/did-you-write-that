@@ -312,7 +312,42 @@ session files) is not done.
   table in `docs/PILOT-19-leak-check.md`.
 - **Point 12 (self-portrait section).** Moved to Appendix A with a one-sentence pointer
   at the end of the Discussion.
-- **Point 6 (GPT dip versus harness).** Not addressed in this pass. The listing probe on
-  the dip-hour session files is the next item.
-- **Points 8 to 11 and the minor points.** Not addressed in this pass.
+- **Point 6 (GPT dip versus harness).** Answered from the files and by a live probe
+  (second pass, same day). `docs/AUDIT-codex-fork-replay-2026-09-04.md`: every one of the
+  10,264 Codex fork records on disk for 09-03 and 09-04, including all 1,930 clean13 forks
+  in the dip window, inherited the whole fifteen-item parent file with the planted turn as
+  its last item; the harness asks each cell's questions back to back, so the Yes-answering
+  neutral forks and the No-answering placebo forks of the city and fruit cells are forks of
+  the same file seconds apart; the two "paginated fork" failures aborted before any
+  request and produced no row. Because the fork record shows what the tool asked for and
+  not what the server assembled, a listing probe (`selfportrait/listing13.py`,
+  `out/listing13.jsonl`) forked the same 38 clean13 session files and asked for the
+  conversation verbatim: the planted turn came back intact, in the assistant role, on 38 of 38. The audit also
+  surfaced a disclosure the paper lacked: 648 clean13 fork calls failed on the usage limit
+  between 03:50 and 04:12 local and were re-run from 05:27, which the paper now states.
+- **Point 8 (length confound).** Section 4.6 now says the shorter-paragraph evidence is one
+  prompt and the near-equal evidence two, consistent with but not establishing a non-length
+  signal; a length-matched forced choice is listed in Limitations as not run.
+- **Point 9 (Haiku subset).** Refusal rate (154 of 192) stated in the text, the caption and
+  on the figure; the answered-subset accuracy is called exploratory.
+- **Point 10 (27 nats).** The production-model floor is 1/(N+1) = 1/49 at 48 forks, not
+  1/96; the paper now states that convention in Method, in the tab:rho caption, in the
+  Discussion (3.9 nats on the production models against 27 nats on the 1.5B exact arm) and
+  in Limitations. The reviewer's parenthetical about a 1e-6 clamp is half right: the clamp
+  is in the confidence-slope regression only, not in the Spearman path, and the paper
+  states no floor for the slopes.
+- **Point 11 (circularity).** Method and Acknowledgements now say which model did which
+  check (pilot-level: a second Claude agent, model not always recorded; paper-level audits:
+  Claude Sonnet 5 and Claude Opus 5; referee report: Claude Fable 5.1). Limitations says a
+  same-vendor checker may share the author model's blind spots. A cross-vendor
+  recomputation of Sections 4.1 to 4.3 by GPT-5.6-Sol through Codex (scoring scripts and
+  pilot documents withheld) reproduced every figure, about 130 items, with no mismatch:
+  `REVIEW-hostile-paper-2026-09-04-numbers-crossvendor.md`. The paper's Method,
+  Limitations and Acknowledgements now say so.
+- **Minor points.** All addressed: tab:label header and caption; the Fable row counted in
+  the abstract; Haiku's four rival rates defined by cell set; the two p-values named by
+  comparison; the self-prediction reading changed to a lagging self-model and softened to
+  what one 1/8 cell supports; regenerating scripts named in Reproducibility; plausibility
+  said to operate only under doubt; the Claude Code system-prompt size stated as not
+  measured.
 

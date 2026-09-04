@@ -253,6 +253,11 @@ def fig_paragraph(data):
             ax2.errorbar(xpos, acc, yerr=[[acc - lo], [hi - acc]], fmt="none", ecolor=TEXT_COLOR, elinewidth=0.6, capsize=1.5)
             ax2.text(xpos, hi + 0.02, f"{k}/{n}", ha="center", va="bottom", fontsize=5.5, color=TEXT_COLOR)
     ax2.axhline(0.5, color=TEXT_COLOR, lw=0.5, ls=":")
+    for xi, m in enumerate(models):
+        answered = sum(n for _, n in data["pairs"][m])
+        if answered < 192:
+            ax2.text(xi, 0.02, f"declined {192 - answered}/192", ha="center", va="bottom",
+                     fontsize=5.5, style="italic", color=TEXT_COLOR)
     ax2.set_xticks(list(range(len(models))))
     ax2.set_xticklabels(models, fontsize=6.5)
     ax2.set_ylim(0, 1.15)

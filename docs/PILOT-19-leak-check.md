@@ -215,3 +215,36 @@ prompt level (non-author `p = 0.25`, candidate-author `p = 0.09`, neutral-to-riv
 `p = 0.06`) — with eight prompts the floor on an all-in-one-direction Wilcoxon is
 0.0078, so nothing here can reach `10^{-5}`. The Claude-vs-GPT ordering the section
 argues for is unaffected; only the GPT placebo step is downgraded in the paper text.
+
+## Harness replay check on the GPT dip (2026-09-04, second pass)
+
+The hostile review (point 6) proposed that the GPT placebo dip and the assistant-layout No
+answers could be partial replay of the session file by Codex, since two calls in the run
+failed with `failed to prepare paginated fork: thread-store internal error`. Two checks,
+both in the repository:
+
+- **Fork-record audit** (`docs/AUDIT-codex-fork-replay-2026-09-04.md`, index script
+  `selfportrait/codex_fork_audit.py`, city/fruit timelines
+  `out/logs/clean13_fork_audit_cityfruit.txt`). Every one of the 10,264 fork records under
+  `~/.codex/sessions` for 09-03 and 09-04 has `forked_from_ordinal_exclusive` equal to its
+  parent's fifteen items, the planted assistant turn being item 14; all 252 clean13 planted
+  files are fifteen lines; all 1,930 clean13 forks in the dip window (03:30 to 05:30 local)
+  inherited the full parent. The harness asks each cell's questions back to back, so the
+  neutral forks that answered Yes and the placebo or rival forks that answered No on the
+  same city and fruit cells are forks of the same file two to ten seconds apart. The two
+  paginated-fork failures aborted before any request, created no rollout file and wrote no
+  answer row (those two stage E cells have 7 rival readouts instead of 8). The audit also
+  found that 648 clean13 fork calls failed on the usage limit in one block, 03:50 to 04:12
+  local, and were re-run from 05:27; the earlier note above that put the interruption "at
+  about 04:40" is corrected by the file timestamps.
+- **Listing probe** (`selfportrait/listing13.py`, rows `out/listing13.jsonl`): each of the
+  38 clean13 planted session files forked once more after the fact with "list every message
+  in this conversation so far, in order, giving the role and the exact text". The planted
+  turn came back verbatim on 38 of 38. The listing also shows what the model sees in
+  front of the planted turns: a `recommended_plugins` user message and the template's
+  `environment_context`, both harness-supplied, which is the stimulus the paper already
+  discloses as part of the harness prompt.
+
+What the fork records cannot show is the message array the server assembled for the model;
+the listing probe is the content-dependent readout that covers that, after the fact rather
+than during the dip hours, which is the remaining limit of this check.
