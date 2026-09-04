@@ -243,6 +243,43 @@ else:
                 k = sum(1 for r in sub if r["yn"] == "yes")
                 print(f"judge={j:6s} off-category {q:8s}: {k}/{len(sub)} = {k/len(sub):.3f}")
 
+# ================================================================ 4b =========
+section("4b. Frame chain, prompt level (paired over prompts, prompt mean of in-category cell P(yes))")
+if not judgements:
+    no_rows("frame chain, prompt level")
+else:
+    STEPS_P = [("neutral", "placebo"), ("placebo", "rival_norep2"), ("rival_norep2", "rival"),
+               ("neutral", "rival"), ("placebo", "rival")]
+    for j in JUDGES:
+        cellq = defaultdict(dict)
+        for r in parsed:
+            if r["judge"] == j and (r["prompt"], r["answer"]) in INCAT_KEYS:
+                cellq[(r["prompt"], r["answer"])].setdefault(r["question"], []).append(r["yn"] == "yes")
+        cellmean = {k: {q: float(np.mean(v)) for q, v in d.items()} for k, d in cellq.items()}
+        for qa, qb in STEPS_P:
+            byprompt = defaultdict(list)
+            for (prompt, answer), d in cellmean.items():
+                if qa in d and qb in d:
+                    byprompt[prompt].append((d[qa], d[qb]))
+            if not byprompt:
+                continue
+            diffs = []
+            for prompt in sorted(byprompt):
+                vals = byprompt[prompt]
+                diffs.append(float(np.mean([a for a, _ in vals]) - np.mean([b for _, b in vals])))
+            arr = np.array(diffs)
+            higher = int(np.sum(arr > 0))
+            lower = int(np.sum(arr < 0))
+            tied = int(np.sum(arr == 0))
+            p_w = wilcoxon_p(diffs)
+            nnz = higher + lower
+            p_s = stats.binomtest(higher, nnz, 0.5).pvalue if nnz else float("nan")
+            fw = "nan" if p_w != p_w else f"{p_w:.3g}"
+            fs = "nan" if p_s != p_s else f"{p_s:.3g}"
+            print(f"judge={j:6s} {qa:13s} - {qb:13s}: mean diff={arr.mean():+.3f}  "
+                  f"higher={higher} lower={lower} tied={tied} (n prompts={len(diffs)})  "
+                  f"Wilcoxon p={fw}  sign p={fs}")
+
 # ================================================================= 5 =========
 section("5. Label control (named question: assistant vs user2 layout)")
 if userturn2_file:

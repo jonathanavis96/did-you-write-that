@@ -104,7 +104,12 @@ the design was built to expose.
    (p < 10⁻⁶), 3B +0.19, 4B +0.44 (p = 0.002, on differences below 0.001 among cells all
    at 1.000, so not meaningful). The 1.5B correlation is negative: the more probable the
    paragraph under the model, the less it owns it, the opposite of a likelihood term. The
-   4B rival correlation is 0.01 under the registered refuter of +0.37. Exploratory splits
+   4B rival correlation is 0.01 under the registered refuter of +0.37. The refuter was
+   registered "under either question", and the 4B neutral value (+0.44, p = 0.002) meets
+   it as written; it is a rank correlation over 48 cells all at 1.000 that differ below
+   the third decimal, so it is recorded as the letter of the rule met and not acted on
+   (noted 2026-09-04 while answering the hostile review; the paper's Table tab:preds
+   states it). Exploratory splits
    at 4B under rival: within its own twelve paragraphs ρ = +0.73 (p = 0.007); within the
    24 Qwen-written cells (own and other local) +0.41 (p = 0.045); within the 24
    frontier-written cells −0.24 (p = 0.26); own and shifted together +0.89 (p < 10⁻⁸). At

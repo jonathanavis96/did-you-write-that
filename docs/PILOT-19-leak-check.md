@@ -179,3 +179,39 @@ of its own and is reported as such. The paper's one-word tables are now from `cl
 and `clean13`, with the contaminated value given wherever it differs by more than a fork
 per cell.
 
+
+## Prompt-level frame tests (2026-09-04)
+
+Cells nest in prompts, so the Section 4.3 cell-level tests over-count. New scorer
+section `4b. Frame chain, prompt level` in `selfportrait/clean11_summary.py` collapses
+in-category cells to a per-prompt mean (mean of cell means) and pairs over the eight
+prompts. Wilcoxon uses the same helper (zero diffs dropped, `nan` below five movers);
+the sign test is `binomtest(higher, non-tied, 0.5)`, exact and two-sided.
+
+| judge | step | mean diff | higher | lower | tied | Wilcoxon p | sign p |
+|---|---|---|---|---|---|---|---|
+| haiku | neutral - placebo | +0.000 | 0 | 0 | 8 | nan | nan |
+| haiku | placebo - rival_norep2 | +0.044 | 7 | 0 | 1 | 0.0156 | 0.0156 |
+| haiku | rival_norep2 - rival | +0.265 | 7 | 1 | 0 | 0.0156 | 0.0703 |
+| haiku | neutral - rival | +0.309 | 8 | 0 | 0 | 0.0078 | 0.0078 |
+| haiku | placebo - rival | +0.309 | 8 | 0 | 0 | 0.0078 | 0.0078 |
+| opus | neutral - placebo | +0.000 | 0 | 0 | 8 | nan | nan |
+| opus | placebo - rival_norep2 | +0.037 | 3 | 0 | 5 | nan | 0.25 |
+| opus | rival_norep2 - rival | +0.138 | 5 | 1 | 2 | 0.0938 | 0.219 |
+| opus | neutral - rival | +0.175 | 5 | 0 | 3 | 0.0625 | 0.0625 |
+| opus | placebo - rival | +0.175 | 5 | 0 | 3 | 0.0625 | 0.0625 |
+| gpt | neutral - placebo | +0.167 | 2 | 0 | 6 | nan | 0.5 |
+| gpt | placebo - rival_norep2 | +0.282 | 7 | 0 | 1 | 0.0156 | 0.0156 |
+| gpt | rival_norep2 - rival | +0.359 | 7 | 1 | 0 | 0.0234 | 0.0703 |
+| gpt | neutral - rival | +0.808 | 8 | 0 | 0 | 0.0078 | 0.0078 |
+| gpt | placebo - rival | +0.641 | 8 | 0 | 0 | 0.0078 | 0.0078 |
+
+The GPT placebo step is the one claim that does not survive: 8 of 30 cells at
+`p = 0.008` becomes 2 of 8 prompts at sign `p = 0.5`, with the whole 0.18 sitting on
+city (0.625) and fruit (0.708) and exactly zero on the other six prompts. Confirmed by
+hand from `out/clean13_judgements.jsonl` independently of the scorer. Everything else
+keeps its direction, but the Opus steps are no longer individually significant at the
+prompt level (non-author `p = 0.25`, candidate-author `p = 0.09`, neutral-to-rival
+`p = 0.06`) — with eight prompts the floor on an all-in-one-direction Wilcoxon is
+0.0078, so nothing here can reach `10^{-5}`. The Claude-vs-GPT ordering the section
+argues for is unaffected; only the GPT placebo step is downgraded in the paper text.

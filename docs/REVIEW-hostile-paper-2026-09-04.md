@@ -266,3 +266,53 @@ in Sections 4.1 to 4.7 from the row files. Its full table is in
   paragraph arm (pilot 18) and the self-portrait section (4.8). Each of those was
   independently recomputed at pilot level on the day it was scored (recorded in the
   pilot documents), but the paper's transcription of them has not been re-checked here.
+
+## Response (2026-09-04, same day)
+
+What the paper now does about each point, in the order of the "what would make the
+paper safe" list. Items 1, 2, 4 and 6 of that list are done; item 5 is answered by
+retitling rather than by a new run; item 3 (the listing probe on the GPT dip-hour
+session files) is not done.
+
+- **Point 1 (abstract overstates a bound).** Abstract, Introduction, Section 4.2
+  (retitled "Own probability: a bound on one-word answers"), Discussion and Limitations
+  now say: the production-model readouts are flat and sit at ceiling, which bounds a
+  likelihood term rather than excluding one; the graded confidence readout occupies four
+  points at the top of its scale and is a ceiling of its own; the exact arm shows small
+  positive correlations at every scale, significant at 4B, below the registered refuter.
+- **Points 2 and 3 (failed predictions; omitted +0.48).** New Table tab:preds lists all
+  ten registered predictions of pilots 14 and 18 with refuter, observed values and
+  outcome. Pilot 14 prediction 2 is reported as failed; the 4B placebo correlation +0.48
+  (p = 1e-4) is in the table and in Section 4.2. Pilot 18 prediction 2 is reported as
+  failed at 1.5B (negative) and 4B (positive). Writing the table surfaced one more item
+  the review did not catch: the pilot 18 refuter was registered "under either question",
+  and the 4B neutral value +0.44 (p = 0.002) meets it as written. The paper records it
+  and does not act on it, since the 48 cells are all at 1.000 and differ below the third
+  decimal, and the pilot document now says the same.
+- **Point 2, asymmetry.** The one-word 4B values (+0.29, +0.48) and the paragraph 4B
+  value (+0.36) are now described in the same words in both sections: positive, at or
+  below the refuter, on a readout the design cannot decompose.
+- **Point 4 (1.5B negative sign).** Section 4.6 now uses it: a likelihood account predicts
+  a positive sign at every scale, so two significant coefficients of opposite sign say the
+  readout tracks something other than likelihood at one scale at least.
+- **Point 5 (shifted paragraph confounded with quality).** Not re-run. The finding is
+  retitled: Section 4.6, the abstract and the Discussion say the hedged copy is a change
+  of register and of answer quality, that the report follows one or the other, and that a
+  quality-matched register shift is the run that would separate them. Limitations lists
+  it as not run.
+- **Point 7 (cells nest in prompts).** `selfportrait/clean11_summary.py` has a new
+  section 4b that collapses in-category cells to prompt means and runs a paired test
+  over the eight prompts (Wilcoxon where at least five prompts move, exact sign test
+  otherwise). Every frame step in Section 4.3 now quotes the prompt count and the
+  prompt-level p beside the cell-level p, and the Method statistics paragraph states the
+  rule. Outcome: the neutral-to-rival step holds on 8 of 8 prompts on Haiku and GPT
+  (p = 0.008) and 5 of 8 with 3 tied on Opus (p = 0.06); the GPT placebo step is the one
+  step significant over cells and not over prompts (2 of 8, p = 0.5); the Opus steps are
+  directionally consistent and not individually significant at the prompt level. Full
+  table in `docs/PILOT-19-leak-check.md`.
+- **Point 12 (self-portrait section).** Moved to Appendix A with a one-sentence pointer
+  at the end of the Discussion.
+- **Point 6 (GPT dip versus harness).** Not addressed in this pass. The listing probe on
+  the dip-hour session files is the next item.
+- **Points 8 to 11 and the minor points.** Not addressed in this pass.
+
