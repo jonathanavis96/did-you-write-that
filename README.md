@@ -11,7 +11,7 @@ genuine prefill on closed production models: we write the session file that
 Claude Code and Codex each replay as their own, so from the model's side the
 planted turn is something it already said.
 
-**Paper:** [`paper/main.pdf`](paper/main.pdf) — the academic write-up. arXiv: (link to follow)
+**Paper:** [`paper/main.pdf`](paper/main.pdf) — the academic write-up. Archived on Zenodo with DOI [10.5281/zenodo.22307355](https://doi.org/10.5281/zenodo.22307355) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22307355.svg)](https://doi.org/10.5281/zenodo.22307355). arXiv: (link to follow)
 
 ## Method in one paragraph
 

@@ -1,11 +1,26 @@
 cff-version: 1.2.0
-message: "If you use this work, please cite it as below."
+message: "If you use this work, please cite the paper below."
 title: "Ownership by label: what production language models use to decide whether they wrote a turn"
 authors:
   - family-names: Avis
     given-names: Jonathan
+    affiliation: "Independent researcher"
 type: software
 year: 2026
 url: "https://github.com/jonathanavis96/did-you-write-that"
 repository-code: "https://github.com/jonathanavis96/did-you-write-that"
 license: MIT
+preferred-citation:
+  type: article
+  title: "Ownership by label: what production language models use to decide whether they wrote a turn"
+  authors:
+    - family-names: Avis
+      given-names: Jonathan
+      affiliation: "Independent researcher"
+  year: 2026
+  month: 9
+  doi: "10.5281/zenodo.22307355"
+  url: "https://doi.org/10.5281/zenodo.22307355"
+  publisher:
+    name: Zenodo
+  notes: "Preprint. Concept DOI for all versions: 10.5281/zenodo.22307354"
