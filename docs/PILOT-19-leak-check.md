@@ -166,7 +166,7 @@ cells at 1/8 to 4/8, and 6/8, 7/8 and 8/8 on Mango, Lisbon and Indigo in a probe
 05:40 (`out/gptprobe_judgements.jsonl`); the rival frame did not move (0.153, 0.208,
 0.179). The Codex usage limit interrupted the user-layout, confidence, explicit and
 within stages at about 04:40 (every row an error); `out/logs/p19f.sh` purged those rows
-and refilled them from 05:27. GPT confidence, explicit and stage E: PENDING_GPT_TAIL.
+and refilled them from 05:27. GPT confidence after the refill: 221 of 228 rows exactly 100 and 7 exactly 0 (contaminated 247/252 at 100), in-category mean 97.8, off-category 93.8, produced 98.0 against never-produced 97.4; no cell below 83.3. Explicit self-prediction: 0.76 of 132 in-category pairs pick the modal word (0.77 of 156 contaminated); Mango 5/6, Lantern over Telescope 6/6 but over Thimble 3/6, Lisbon 3/6 against each of Ljubljana, Paris, Prague and Vienna, and Teal over Indigo 6/6 while producing Indigo 30/48 and Teal 3/48. GPT stage E: PENDING_GPT_STAGE_E.
 
 **Conclusion.** The leaked instruction file cannot be dropped from the paper. On the
 Claude judges it changed which word Opus gives on three of eight prompts, and with it
