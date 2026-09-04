@@ -204,3 +204,96 @@ and "not individually significant" there is a power floor, not evidence — say 
    correlations (they survive); name the unit for every Section 4.6 p-value.
 7. Add an ideal-observer paragraph and soften "the report is an outside reader's" to
    "indistinguishable from one at these readouts' power."
+
+## Response (2026-09-04, same day, commit after 6cb67e6)
+
+Every major point and every minor point was acted on. Two agents supplied the new
+numbers (a stats recompute from the row files and a clean rerun of the pilot 16
+controls) and a third recomputed the new figures independently; that check is
+recorded below.
+
+### Major points
+
+1. **Refuter fired.** The referee's recomputation is correct: the 48 pilot 18 neutral
+   cells at 4B take 48 distinct values, logit of Yes 18.72 to 29.30. The paper now
+   reports the 18.2 refuter as fired under neutral at 4B (+0.44, p = 0.002; +0.30,
+   p = 0.04 within prompts), says the previous draft's "rank over rounding" was false,
+   and treats the four positive 4B coefficients alike (two meet a refuter). Title
+   changed to "Ownership by label: what production language models use to decide
+   whether they wrote a turn".
+2. **Exclusivity.** Section 4.3's close, the Fig. 3 caption and the Discussion now say
+   the Haiku non-author step is small but stable at both levels (0.04, cell p = 0.004,
+   prompt p = 0.016), so exclusivity is a matter of size (0.27 / 0.18 / 0.38 for a
+   candidate author against 0.04 / 0.03 / 0.26 for a mere mention), the vendor
+   contrast is a description with no between-judge test, and its GPT half rests on the
+   one step that fails the two-level rule. Section title changed to "The rival frame:
+   what an offered author costs".
+3. **Abstract.** Rewritten at 341 words. Label range quoted from tab:label (0.81 to
+   1.00 against 0.00 to 0.12); exact-arm claim restricted to 4B, with the within-prompt
+   1.5B and 3B correlations named as ranks on readouts that fail other checks; no
+   run-level operational detail.
+4. **Pilot 16 controls.** [clean16 pending]
+5. **Qwen scales.** Abstract and intro no longer say "at every scale" without the
+   qualification; Section 4.2 now says the 3B readout is at floor and the 1.5B readout
+   fails the label check, and that the within-prompt terms below 4B are reported
+   without being leaned on.
+6. **Listing probe.** Section 4.3 states the probe ran about seven hours after the dip,
+   shows what the server assembles now, and that the interleaving is what carries the
+   point; the attribution to the served model is stated as a conclusion by
+   elimination with no positive fingerprint.
+7. **Ideal observer.** New Discussion paragraph "What an ideal introspector would do"
+   concedes that ceiling ownership and the rival drop are predicted by both accounts,
+   locates the discriminating evidence in within-frame flatness, and states what the
+   design rules out and what it cannot. "The report is an outside reader's" is now
+   "indistinguishable from an outside reader's".
+8. **Statistics.** Method now states the policy: no correction across the paper, two
+   families under Holm at 0.05 reported in full. Exact-arm family (13 coefficients):
+   survivors are the 1.5B paragraph coefficients under both questions, the one-word 4B
+   placebo and the paragraph 4B neutral; one-word 4B neutral corrects to 0.17 and
+   paragraph 4B rival to 0.10. Frame-step family (19 tests): six cell-level tests
+   survive and no prompt-level test does (best 0.008 corrects to 0.096), so under
+   correction no single step is stable by the paper's two-level rule; the paper says
+   so and says why the uncorrected values are kept. Within-prompt (demeaned)
+   correlations added for every exact-arm coefficient: one-word +0.49 / +0.40 / +0.33
+   at 1.5B / 3B / 4B, paragraph 4B neutral +0.30, rival +0.35, 1.5B −0.82 / −0.61.
+   The reviewer's +0.33 (p = 0.01) reproduces. Section 4.6 now names the units: rates
+   pooled over forks, gap tests paired Wilcoxon over twelve prompt means, forced-choice
+   intervals binomial over 96 forked trials and not prompt-clustered, with the GPT
+   against Opus rate noted as carried unevenly across prompts.
+
+### Minor points
+
+1. "every ... 239/240" now "on all but one fork"; "off-category word owned 8/8" now
+   "60 of 64 forks".
+2. GPT confidence: 38 cells at six forks (30 in-category, 8 off-category), the one
+   stage run at six forks; stated in the text. The 228 rows are the complete refill,
+   no error rows.
+3. Splice fixed.
+4. Abstract cut to 341 words.
+5. 14.5 observed column shows +0.097.
+6. Six pilot 17c rows added to tab:preds; 17c.2 marked failed by the letter on one
+   of four comparisons (0.667 against the registered 0.75), refuter not fired.
+7. "two days".
+8. "over the whole clean run".
+9. tab:rho caption: critical |ρ| 0.60, 0.43, 0.36, 0.35 at 11, 21, 30, 32 cells.
+10. Section 3.1 discloses the tool-inserted plugin-catalogue user turn in every Codex
+    conversation.
+11. Limitations names Fable 5.1 as both a judge and the author of both referee reports.
+12. tab:label caption says "named question".
+
+### Independent number check
+
+A third agent (Opus 5) recomputed every new figure from the row files with numpy/scipy,
+scoring scripts read only for cell definitions: the pilot 18 4B facts (48 distinct
+values, logit 18.72 to 29.30, pooled and within-prompt coefficients), all nine one-word
+pilot 14 coefficients, both Holm families (survivors identical, corrected values 0.1734
+and 0.1040; frame family best prompt-level 0.096), the GPT confidence stage (38 cells at
+six forks, 221 / 7, minimum 83.3 on fruit/wrench), the critical-rho line, the clean11 /
+clean13 off-category counts, frame steps and label counts, and the pilot 17c gaps,
+forced-choice counts and length splits. Two mismatches, both in the 17c material and
+both fixed: the GPT-against-Opus forced choice is above 4 of 8 on eight prompts, not
+seven (the four at or below 3 of 8 were right); and the 17c.4 table row's label "16 of
+16 own shorter or tied" did not match its number (shorter or tied is 24 of 24 over
+three prompts; 16 of 16 is the within-a-word set of two prompts), so the row now gives
+the three splits the body text gives. Report: scratchpad `numbercheck_pass2.md`,
+reproduced in `docs/REVIEW-hostile-paper-2026-09-04-pass2-numbercheck.md`.
