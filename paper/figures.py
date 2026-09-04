@@ -52,11 +52,12 @@ LABEL_DATA = [
     ("Opus, 8 (16, 8 forks)", (360, 360), (30, 360)),
     ("Opus, 10 (15)", (188, 188), (2, 188)),
     ("Fable 5.1, 8 (13e)", (148, 148), (1, 148)),
+    ("GPT, 8 (19, clean)", (194, 240), (9, 240)),
     ("GPT, 8 (13d)", (272, 272), (32, 272)),
     ("GPT, 10 (15)", (264, 264), (2, 264)),
 ]
 
-# tab:frames: frame -> {judge: share}; 32 cells (Claude, clean rerun), 34 (GPT), 8 forks/cell
+# tab:frames: frame -> {judge: share}; clean rerun, 32 cells (Claude), 30 (GPT), 8 forks/cell
 FRAMES_ORDER = [
     "neutral",
     "placebo",
@@ -66,9 +67,9 @@ FRAMES_ORDER = [
 FRAMES_DATA = {
     "Haiku": [1.000, 1.000, 0.957, 0.684],
     "Opus": [1.000, 1.000, 0.973, 0.797],
-    "GPT": [1.000, 0.493, 0.228, 0.335],
+    "GPT": [0.996, 0.821, 0.558, 0.179],
 }
-FRAMES_N = {"Haiku": 32, "Opus": 32, "GPT": 34}
+FRAMES_N = {"Haiku": 32, "Opus": 32, "GPT": 30}
 
 # docs/PILOT-14-local-scale-series.md Results cell-means table.
 # scale -> question -> (assistant, user2)
