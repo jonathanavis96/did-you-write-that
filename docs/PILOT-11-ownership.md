@@ -1,10 +1,19 @@
 ---
 title: "Pilot 11: does a model's sense of having written a text track the text's probability under its own distribution?"
-status: run 2026-09-03, stages A-E plus local arm, adversarially reviewed, numbers cross-checked against the data
+status: run 2026-09-03 on the contaminated harness (docs/PILOT-19-leak-check.md); replicated clean 2026-09-04 as prefix clean11, and the paper quotes the clean figures
 depends_on: docs/THEORY-exteroceptive-self.md (prediction 8), docs/EXPERIMENT-fork-isolated-measurements.md (Survivor 2), docs/lit-sweeps/ownership-prior-art.md
 ---
 
 # Pilot 11: ownership versus own probability
+
+> **Correction (2026-09-04).** Every Claude call in this pilot carried the experimenter's
+> user-level instruction file (the harness leak described in `docs/PILOT-19-leak-check.md`).
+> The design was replicated on the clean harness as prefix `clean11` (scorer
+> `selfportrait/clean11_summary.py`, output `out/logs/clean11_summary.txt`). The label
+> control, the frame ordering and the flat readouts against own probability reproduced;
+> Opus's own distributions did not (Lisbon 46/48 where this document has Prague 47/48,
+> Piano 48/48 for Cello 37/48, 13 for 17), so the cells and every example word below are
+> specific to the contaminated run. `paper/main.tex` quotes the clean figures.
 
 ## Question
 
