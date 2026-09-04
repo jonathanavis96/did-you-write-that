@@ -132,7 +132,7 @@ judge & readout & cells & $\rho$ ($p$) \\
 \opus{} & rival $\pyes$ & 37 & $+0.22$ (0.20) \\
 \opus{} & confidence & 37 & $-0.02$ (0.92) \\
 \opus{} & stage E, rival & 13 & $0.00$ (1.0) \\
-\haiku{} & rival $\pyes$ & 37 & $-0.21$ (0.21) \\
+\haiku{} & rival $\pyes$ (clean) & 37 & $+0.21$ (0.21) \\
 \haiku{} & confidence & 37 & $-0.22$ (0.20) \\
 \haiku{} & stage E, rival & 36 & $+0.06$ (0.74) \\
 \gpt{} & rival $\pyes$ & 34 & $+0.12$ (0.50) \\
@@ -158,7 +158,7 @@ The binary readouts are flat across own probability (Table~\ref{tab:rho}); at th
 
 \begin{table}[t]
 \centering\small
-\caption{In-category $\pyes$ under four frames with the planted word byte-identical. 37 cells (Claude), 34 (\gpt{}); 8 forks per cell.}
+\caption{In-category $\pyes$ under four frames with the planted word byte-identical. 37 cells (Claude), 34 (\gpt{}); 8 forks per cell. $^\dagger$From the full clean-harness rerun of pilot 19 (Section~\ref{sec:leak}); the contaminated values were 0.889 and 0.757.}
 \label{tab:frames}\footnotesize\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lrrr}
 \toprule
@@ -166,8 +166,8 @@ frame & Haiku & Opus & GPT \\
 \midrule
 neutral & 1.000 & 1.000 & 1.000 \\
 placebo preamble & 1.000 & 1.000 & 0.493 \\
-rival named, not author & 0.889 & 0.922 & 0.228 \\
-rival, turns replaced & 0.757 & 0.662 & 0.335 \\
+rival named, not author & 0.963$^\dagger$ & 0.922 & 0.228 \\
+rival, turns replaced & 0.666$^\dagger$ & 0.662 & 0.335 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -179,7 +179,7 @@ rival, turns replaced & 0.757 & 0.662 & 0.335 \\
 \label{fig:frames}
 \end{figure*}
 
-Naming a rival author lowers ownership on every judge with the text fixed (Table~\ref{tab:frames} and Figure~\ref{fig:frames}; paired Wilcoxon over cells, $p<10^{-4}$ in every case). The controls separate two mechanisms. On the Claude judges a preamble matched to the rival frame in length and hedging but naming no rival moves nothing (296/296 Yes on both); mentioning another model that authored nothing in the conversation costs 0.11 (\haiku{}) and 0.08 (\opus{}); making that model a candidate author of this very turn costs a further 0.13 and 0.26 ($p=6\times10^{-4}$ and $2\times10^{-4}$). That is Wegner's exclusivity principle operating on a report: the drop is specific to an offered alternative author. On \gpt{} the doubt preamble alone removes half of ownership (1.000 to 0.493), naming a non-author model a further 0.27, and making it a candidate author adds nothing (the rival frame owns \emph{more}, 0.335, $p=0.027$). \gpt{}'s answer follows the framing sentence; the more it talks about doubt and other models, the more No, whatever it says about the text. On neither vendor does the drop act along own probability (Table~\ref{tab:rho}): \gpt{} disowns Mango, its 48/48 word, 7 of 8 times under the rival frame, and under the placebo Mango and Quince (never produced) are both 7/8. Under the rival frame the variance that does appear tracks whether the word is a plausible answer to the prompt, a judgement any reader could make: on \haiku{} the same cells under the same preamble asked ``Is \textit{word} a good answer to the question?'' correlate with rival-frame ownership at $\rho=0.615$ ($p=7\times10^{-6}$), and off-category words go from owned (0.94 neutral) to disowned (0.14).
+Naming a rival author lowers ownership on every judge with the text fixed (Table~\ref{tab:frames} and Figure~\ref{fig:frames}; paired Wilcoxon over cells, $p<10^{-4}$ in every case). The controls separate two mechanisms. On the Claude judges a preamble matched to the rival frame in length and hedging but naming no rival moves nothing (296/296 Yes on both); mentioning another model that authored nothing in the conversation costs 0.04 (\haiku{}, 11 of 37 cells below 8/8, $p=0.001$) and 0.08 (\opus{}); making that model a candidate author of this very turn costs a further 0.30 and 0.26 ($p<10^{-4}$ and $2\times10^{-4}$). The \haiku{} figures are from the full clean-harness rerun; on the contaminated rows they were 0.11 and 0.13, the same ordering with the candidate-author step smaller. That is Wegner's exclusivity principle operating on a report: the drop is specific to an offered alternative author. On \gpt{} the doubt preamble alone removes half of ownership (1.000 to 0.493), naming a non-author model a further 0.27, and making it a candidate author adds nothing (the rival frame owns \emph{more}, 0.335, $p=0.027$). \gpt{}'s answer follows the framing sentence; the more it talks about doubt and other models, the more No, whatever it says about the text. On neither vendor does the drop act along own probability (Table~\ref{tab:rho}): \gpt{} disowns Mango, its 48/48 word, 7 of 8 times under the rival frame, and under the placebo Mango and Quince (never produced) are both 7/8. Under the rival frame the variance that does appear tracks whether the word is a plausible answer to the prompt, a judgement any reader could make: on \haiku{} the same cells under the same preamble asked ``Is \textit{word} a good answer to the question?'' correlate with rival-frame ownership at $\rho=0.615$ ($p=7\times10^{-6}$), and off-category words go from owned (0.94 neutral) to disowned (0.03 on the clean rerun, 0.14 contaminated).
 
 \subsection{Explicit self-prediction}
 
