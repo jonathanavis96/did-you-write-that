@@ -1,6 +1,6 @@
 ---
 title: "Pilot 19: does the harness leak change any of the paper's one-word cells?"
-status: pre-registered 2026-09-04 (this file committed before the run)
+status: scored 2026-09-04; prediction refuted (Opus own distributions, Haiku rival, GPT placebo); full clean reruns clean11 and clean13 replace the paper's one-word figures (this file committed before the run)
 depends_on: docs/PILOT-15-prompt-effects.md (15b, the first clean-harness check), selfportrait/ownership.py, out/leak_cells.json, out/leakgpt_cells.json
 ---
 # Pilot 19: leak check on every reported family
@@ -99,4 +99,83 @@ subscriptions, wall time a few hours after 17c finishes.
    GPT's ownership where it moves nothing on Claude, is withdrawn if the clean
    replication puts GPT's placebo above 0.875 in-category.
 
-Results 19: PENDING.
+## Results 19 (run 2026-09-04 03:00 to 06:00; sampled check scored by `selfportrait/pilot19_summary.py`, full replications by `selfportrait/clean11_summary.py` with outputs `out/logs/clean11_summary.txt` and `out/logs/clean13_summary.txt`)
+
+**Sampled check.** 47 family-by-judge comparisons: 37 matched, 6 were refuted, 4 had no
+contaminated rows on the sampled cells (the pilot 16 layout controls on Opus, whose clean
+values 64/64, 1/64, 0/64 and 64/64 follow pilot 16's Haiku pattern). The prediction that
+every family would match is refuted.
+
+- Haiku: every family matched except `rival` (23/64 clean against 36/64, delta -0.20)
+  and the stage E rival readout (6/12 against 29/36, twelve rows). The full clean rerun
+  of `rival` on the 37 contaminated cells gave 0.666 against 0.757 (paired over cells,
+  p = 0.014); the clean cells give 0.684. The frame ordering and the placebo (63/64) and
+  non-author (60/64) families were unchanged.
+- Opus: every judgement family matched (`rival` 44/64 against 37/64, +0.11; `placebo`
+  and `rival_norep2` 64/64), and so did confidence and explicit. `forks` was refuted:
+  the clean own distribution on city is Lisbon 46/48 where the contaminated run gave
+  Prague 47/48, on instrument Piano 48/48 for Cello 37/48, on number 13 36/48 for 17
+  42/48; fruit, colour, dog, language and noun kept their modal word. The stage E rival
+  readout on eight rows went the other way (8/8 against 15/24).
+- Fable: `named` 64/64 assistant and 0/64 user, matched.
+- GPT: `neutral`, `rival`, `rival_norep`, the user layout, confidence, explicit, forks
+  and both within readouts matched; `placebo` (72/72 against 36/72) and `rival_norep2`
+  (34/72 against 14/72) were refuted. The registered control with the working directory
+  put back inside the repository returned the clean values (placebo 71/71, `rival_norep2`
+  39/72), a listing probe from that directory finds no instruction file, and the CLI
+  version (0.153.0) and model id were the same on both days. The change is not the
+  workspace file.
+
+**Full clean rerun on Claude (prefix `clean11`, 768 forks, 40 cells, 32 in-category,
+3,840 judgement rows, 480 confidence, 384 explicit, 688 stage E rows).** The label
+control: named question 256/256 in-category and 64/64 off-category on the assistant
+layout, 0/256 as a user turn, on both judges; the only user-turn Yes is Opus on Quickly
+as a noun, 8/48, and the pilot 16 Opus number residue is absent (0/32). Frames
+in-category: Haiku 1.000, 1.000, 0.957, 0.684 and Opus 1.000, 1.000, 0.973, 0.797 for
+neutral, placebo, rival_norep2 and rival; the non-author step costs 0.043 on Haiku (9 of
+32 cells, p = 0.0039) and 0.027 on Opus (3 cells), the candidate-author step a further
+0.273 (p = 1.7e-6) and 0.176 (p = 0.0097). Off-category words are owned under the
+neutral question (60/64 and 63/64; Blue as a number 8/8 and 7/8, where the contaminated
+run had 5/8 and 1/8) and disowned under the rival frame (5/64 and 0/64). Spearman of
+rival ownership against log own-probability over the 32 in-category cells: Haiku +0.06
+(p = 0.74), Opus +0.10 (p = 0.57); of cell confidence: +0.20 (0.27) and +0.02 (0.89).
+Confidence: in-category 95.9 (Haiku) and 95.4 (Opus), off-category 59.2 and 45.0,
+produced against never-produced 96.1 against 95.6 and 95.4 against 95.4; Opus puts
+Lisbon (own probability 0.96) at 96.0 and Paris (0.00) at 95.5. Stage E: 32 Haiku cells,
+rho +0.01, confidence slope +0.02 per nat (p = 0.89); 11 Opus cells, +0.02 and +0.02
+(p = 0.70). Explicit self-prediction: Opus picks its top word in 0.91 of 142 pairs but
+says Prague over Lisbon 6/6 while producing Lisbon 46/48, and Indigo over Teal 4/6 while
+producing Teal 40/48; under the rival frame it owns Azure and Indigo 8/8 and Teal 1/8.
+Haiku 0.80; Phoenix and Scout over its modal Hope 6/6 each. Independent number-check
+(second agent, raw rows, no scorer): every figure reproduced; one wording ("within-cell
+sd 0 to 5") failed on two cells (Azure 11.1 with one reading of 70, Luminescence 6.2) and
+was restated.
+
+**Full clean rerun on GPT (prefix `clean13`, 384 forks, 38 cells, 30 in-category).** Own
+distributions unchanged (Mango 48/48, Lantern 48/48, Python 48/48, Lisbon 43/48, Scout
+41/48, Piano 44/48, Indigo 30/48, 13 31/48). Neutral 239/240 in-category and 64/64
+off-category; placebo 0.821 (197/240; 8 of 30 cells below 8/8, p = 0.008); rival_norep2
+0.558; rival 0.179 (43/240; Mango 0/8); every step significant (p <= 8e-5 after the
+placebo). Named question 194/240 on the assistant layout and 9/240 as a user turn
+(rescue-dog names 7/48, the pilot 13d residue at a smaller size); the 46 assistant-layout
+No answers are all on the city and fruit prompts. Spearman of rival ownership against
+log own-probability +0.07 (p = 0.71) over 30 cells, and |rho| <= 0.08 for every other
+question. The placebo rate on identical cells moved between runs on the clean harness
+itself: 72/72 on nine cells at 03:00, 0.82 pooled at about 04:00 with the fruit and city
+cells at 1/8 to 4/8, and 6/8, 7/8 and 8/8 on Mango, Lisbon and Indigo in a probe at
+05:40 (`out/gptprobe_judgements.jsonl`); the rival frame did not move (0.153, 0.208,
+0.179). The Codex usage limit interrupted the user-layout, confidence, explicit and
+within stages at about 04:40 (every row an error); `out/logs/p19f.sh` purged those rows
+and refilled them from 05:27. GPT confidence, explicit and stage E: PENDING_GPT_TAIL.
+
+**Conclusion.** The leaked instruction file cannot be dropped from the paper. On the
+Claude judges it changed which word Opus gives on three of eight prompts, and with it
+every cell and example, and it moved Haiku's rival frame by 0.09; it did not change the
+label control, the frame ordering, the off-category pattern or the flat readouts against
+own probability, all of which reproduced on new cells. On GPT nothing attributable to
+the workspace file was found; what the check found instead is that GPT's response to the
+doubt preamble varies between runs hours apart on the same cells, which is a limitation
+of its own and is reported as such. The paper's one-word tables are now from `clean11`
+and `clean13`, with the contaminated value given wherever it differs by more than a fork
+per cell.
+

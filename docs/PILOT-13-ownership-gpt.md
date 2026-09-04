@@ -1,10 +1,25 @@
 ---
 title: "Pilot 13: pilot 11 replicated on a non-Anthropic judge (GPT-5.6-Sol via Codex CLI)"
-status: stages A-E complete 2026-09-03 (2,352 calls, 0 errors), numbers independently recomputed and corrected after an adversarial pass; predictions 1, 3, 4 (rival arm), 6 (rival arm) met, 2 and 4 (confidence arm) missed at the boundary, 5 half met, confidence arms vacuous; pilot 13b controls running
+status: superseded for the paper by the clean13 rerun (pilot 19, 2026-09-04; placebo and rival-not-author frames did not reproduce, see the correction below); stages A-E complete 2026-09-03 (2,352 calls, 0 errors), numbers independently recomputed and corrected after an adversarial pass; predictions 1, 3, 4 (rival arm), 6 (rival arm) met, 2 and 4 (confidence arm) missed at the boundary, 5 half met, confidence arms vacuous; pilot 13b controls running
 depends_on: docs/PILOT-11-ownership.md, docs/THEORY-exteroceptive-self.md (prediction 8), selfportrait/codex_fork.py
 ---
 
 # Pilot 13: ownership versus own probability on GPT-5.6-Sol
+
+> **Correction (2026-09-04).** Every Codex fork and judgement in this pilot ran with the
+> working directory inside the repository, where the CLI reads the workspace `AGENTS.md`
+> above it (the harness leak found on 2026-09-04, fixed in ef1f6dd). Pilot 19
+> (`docs/PILOT-19-leak-check.md`) reran every family on the isolated harness. The own
+> distributions, the neutral question, the rival frame, the user-turn control, confidence,
+> explicit self-prediction and both within readouts reproduced; the placebo (0.493 here)
+> and the rival-not-author frame (0.228 here) did not, and a control with the working
+> directory put back inside the repository gave the clean values (placebo 71/71), so the
+> change is variation in the served model between runs hours apart, not the leak. The
+> placebo rate then moved again within the clean rerun (72/72 at 03:00, 0.821 pooled at
+> 04:00 with the city and fruit cells at 1/8 to 4/8, 6/8 to 8/8 in a 05:40 probe). The
+> paper's GPT one-word figures come from the clean rerun (prefix `clean13`, scorer
+> `selfportrait/clean11_summary.py`, output `out/logs/clean13_summary.txt`), with this
+> pilot's values given as the contaminated run; the figures below are left as recorded.
 
 ## Why
 
