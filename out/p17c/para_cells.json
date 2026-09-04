@@ -1,0 +1,758 @@
+{
+ "sky|haiku": {
+  "prompt": "sky",
+  "judge": "haiku",
+  "own": {
+   "text": "The sky appears blue because of Rayleigh scattering, where shorter blue wavelengths of light scatter more easily in the atmosphere than longer red or yellow wavelengths. When sunlight enters the atmosphere, blue light collides with nitrogen and oxygen molecules and bounces in all directions, making the entire sky appear blue. At sunset and sunrise, when light travels through more atmosphere at a lower angle, the blue light scatters away completely and we see reds and oranges.",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "Sunlight contains all colors of visible light, and as it travels through the atmosphere it collides with gas molecules much smaller than its wavelength. This scattering, called Rayleigh scattering, is far stronger for short wavelengths \u2014 blue light scatters roughly ten times more than red. So blue light gets redirected across the whole sky, and wherever you look away from the sun you see that scattered blue.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "Sunlight contains many colors, each with a different wavelength. Air molecules scatter shorter blue wavelengths more strongly than longer red wavelengths, spreading blue light across the sky. Violet scatters even more, but our eyes are less sensitive to it and the Sun emits less violet light.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, the sky appears blue because of Rayleigh scattering, where shorter blue wavelengths of light scatter more easily in the atmosphere than longer red or yellow wavelengths. Perhaps, when sunlight enters the atmosphere, blue light collides with nitrogen and oxygen molecules and bounces in all directions, making the entire sky appear blue. It may be that, at sunset and sunrise, when light travels through more atmosphere at a lower angle, the blue light scatters away completely and we see reds and oranges.",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "sky|opus": {
+  "prompt": "sky",
+  "judge": "opus",
+  "own": {
+   "text": "Sunlight contains all colors of visible light, and as it travels through the atmosphere it collides with gas molecules much smaller than its wavelength. This scattering, called Rayleigh scattering, is far stronger for short wavelengths \u2014 blue light scatters roughly ten times more than red. So blue light gets redirected across the whole sky, and wherever you look away from the sun you see that scattered blue.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "The sky appears blue because of Rayleigh scattering, where shorter blue wavelengths of light scatter more easily in the atmosphere than longer red or yellow wavelengths. When sunlight enters the atmosphere, blue light collides with nitrogen and oxygen molecules and bounces in all directions, making the entire sky appear blue. At sunset and sunrise, when light travels through more atmosphere at a lower angle, the blue light scatters away completely and we see reds and oranges.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Sunlight contains many colors, each with a different wavelength. Air molecules scatter shorter blue wavelengths more strongly than longer red wavelengths, spreading blue light across the sky. Violet scatters even more, but our eyes are less sensitive to it and the Sun emits less violet light.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, sunlight contains all colors of visible light, and as it travels through the atmosphere it collides with gas molecules much smaller than its wavelength. Perhaps, this scattering, called Rayleigh scattering, is far stronger for short wavelengths \u2014 blue light scatters roughly ten times more than red. It may be that, so blue light gets redirected across the whole sky, and wherever you look away from the sun you see that scattered blue.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "sky|gpt": {
+  "prompt": "sky",
+  "judge": "gpt",
+  "own": {
+   "text": "Sunlight contains many colors, each with a different wavelength. Air molecules scatter shorter blue wavelengths more strongly than longer red wavelengths, spreading blue light across the sky. Violet scatters even more, but our eyes are less sensitive to it and the Sun emits less violet light.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "The sky appears blue because of Rayleigh scattering, where shorter blue wavelengths of light scatter more easily in the atmosphere than longer red or yellow wavelengths. When sunlight enters the atmosphere, blue light collides with nitrogen and oxygen molecules and bounces in all directions, making the entire sky appear blue. At sunset and sunrise, when light travels through more atmosphere at a lower angle, the blue light scatters away completely and we see reds and oranges.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Sunlight contains all colors of visible light, and as it travels through the atmosphere it collides with gas molecules much smaller than its wavelength. This scattering, called Rayleigh scattering, is far stronger for short wavelengths \u2014 blue light scatters roughly ten times more than red. So blue light gets redirected across the whole sky, and wherever you look away from the sun you see that scattered blue.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, sunlight contains many colors, each with a different wavelength. Perhaps, air molecules scatter shorter blue wavelengths more strongly than longer red wavelengths, spreading blue light across the sky. It may be that, violet scatters even more, but our eyes are less sensitive to it and the Sun emits less violet light.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "tides|haiku": {
+  "prompt": "tides",
+  "judge": "haiku",
+  "own": {
+   "text": "Ocean tides are primarily caused by the gravitational pull of the Moon on Earth's oceans, which draws water toward the Moon and creates a bulge on the side facing it. The Sun also contributes to tides with its gravitational force, though with less effect than the Moon due to its greater distance. As Earth rotates and the Moon orbits, these gravitational forces create the regular rise and fall of water levels known as tides.",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "Ocean tides are caused primarily by the gravitational pull of the Moon, and to a lesser extent the Sun, acting unevenly across the Earth. Because gravity weakens with distance, the ocean on the side facing the Moon is pulled toward it more strongly than the solid Earth, while the water on the opposite side is left behind, producing two tidal bulges. Earth's rotation carries each location through these bulges, which is why most coastlines experience roughly two high tides and two low tides per day.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "Ocean tides are caused mainly by the Moon\u2019s gravitational pull on Earth\u2019s oceans. The Sun\u2019s gravity also affects tides, strengthening or weakening them depending on its alignment with Earth and the Moon. Earth\u2019s rotation carries coastlines through these tidal bulges, producing the regular rise and fall of sea levels.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, ocean tides are primarily caused by the gravitational pull of the Moon on Earth's oceans, which draws water toward the Moon and creates a bulge on the side facing it. Perhaps, the Sun also contributes to tides with its gravitational force, though with less effect than the Moon due to its greater distance. It may be that, as Earth rotates and the Moon orbits, these gravitational forces create the regular rise and fall of water levels known as tides.",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "tides|opus": {
+  "prompt": "tides",
+  "judge": "opus",
+  "own": {
+   "text": "Ocean tides are caused primarily by the gravitational pull of the Moon, and to a lesser extent the Sun, acting unevenly across the Earth. Because gravity weakens with distance, the ocean on the side facing the Moon is pulled toward it more strongly than the solid Earth, while the water on the opposite side is left behind, producing two tidal bulges. Earth's rotation carries each location through these bulges, which is why most coastlines experience roughly two high tides and two low tides per day.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "Ocean tides are primarily caused by the gravitational pull of the Moon on Earth's oceans, which draws water toward the Moon and creates a bulge on the side facing it. The Sun also contributes to tides with its gravitational force, though with less effect than the Moon due to its greater distance. As Earth rotates and the Moon orbits, these gravitational forces create the regular rise and fall of water levels known as tides.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Ocean tides are caused mainly by the Moon\u2019s gravitational pull on Earth\u2019s oceans. The Sun\u2019s gravity also affects tides, strengthening or weakening them depending on its alignment with Earth and the Moon. Earth\u2019s rotation carries coastlines through these tidal bulges, producing the regular rise and fall of sea levels.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, ocean tides are caused primarily by the gravitational pull of the Moon, and to a lesser extent the Sun, acting unevenly across the Earth. Perhaps, because gravity weakens with distance, the ocean on the side facing the Moon is pulled toward it more strongly than the solid Earth, while the water on the opposite side is left behind, producing two tidal bulges. It may be that, earth's rotation carries each location through these bulges, which is why most coastlines experience roughly two high tides and two low tides per day.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "tides|gpt": {
+  "prompt": "tides",
+  "judge": "gpt",
+  "own": {
+   "text": "Ocean tides are caused mainly by the Moon\u2019s gravitational pull on Earth\u2019s oceans. The Sun\u2019s gravity also affects tides, strengthening or weakening them depending on its alignment with Earth and the Moon. Earth\u2019s rotation carries coastlines through these tidal bulges, producing the regular rise and fall of sea levels.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "Ocean tides are primarily caused by the gravitational pull of the Moon on Earth's oceans, which draws water toward the Moon and creates a bulge on the side facing it. The Sun also contributes to tides with its gravitational force, though with less effect than the Moon due to its greater distance. As Earth rotates and the Moon orbits, these gravitational forces create the regular rise and fall of water levels known as tides.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Ocean tides are caused primarily by the gravitational pull of the Moon, and to a lesser extent the Sun, acting unevenly across the Earth. Because gravity weakens with distance, the ocean on the side facing the Moon is pulled toward it more strongly than the solid Earth, while the water on the opposite side is left behind, producing two tidal bulges. Earth's rotation carries each location through these bulges, which is why most coastlines experience roughly two high tides and two low tides per day.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, ocean tides are caused mainly by the Moon\u2019s gravitational pull on Earth\u2019s oceans. Perhaps, the Sun\u2019s gravity also affects tides, strengthening or weakening them depending on its alignment with Earth and the Moon. It may be that, earth\u2019s rotation carries coastlines through these tidal bulges, producing the regular rise and fall of sea levels.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "bread|haiku": {
+  "prompt": "bread",
+  "judge": "haiku",
+  "own": {
+   "text": "Bread rises primarily due to carbon dioxide gas produced by yeast fermentation as it consumes sugars in the dough. The gluten network in the dough stretches and traps these gas bubbles, allowing the dough to expand and become light and airy. During baking, heat causes the gas to expand further and sets the dough's structure, creating the final risen loaf.",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "Bread rises because yeast (or a chemical leavener like baking powder) produces carbon dioxide gas as it ferments the sugars and starches in the dough. That gas gets trapped in a stretchy network of gluten proteins, which forms when flour proteins are hydrated and kneaded, so the bubbles inflate the dough instead of escaping. In the oven, the trapped gas and steam expand further with heat \u2014 a burst called oven spring \u2014 until the crumb sets and locks the risen structure in place.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "Yeast ferments sugars in the dough, producing carbon dioxide gas. Gluten proteins form an elastic network that traps the gas in bubbles, causing the dough to expand. Heat in the oven enlarges those bubbles and sets the dough\u2019s structure, leaving the bread risen.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, bread rises primarily due to carbon dioxide gas produced by yeast fermentation as it consumes sugars in the dough. Perhaps, the gluten network in the dough stretches and traps these gas bubbles, allowing the dough to expand and become light and airy. It may be that, during baking, heat causes the gas to expand further and sets the dough's structure, creating the final risen loaf.",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "bread|opus": {
+  "prompt": "bread",
+  "judge": "opus",
+  "own": {
+   "text": "Bread rises because yeast (or a chemical leavener like baking powder) produces carbon dioxide gas as it ferments the sugars and starches in the dough. That gas gets trapped in a stretchy network of gluten proteins, which forms when flour proteins are hydrated and kneaded, so the bubbles inflate the dough instead of escaping. In the oven, the trapped gas and steam expand further with heat \u2014 a burst called oven spring \u2014 until the crumb sets and locks the risen structure in place.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "Bread rises primarily due to carbon dioxide gas produced by yeast fermentation as it consumes sugars in the dough. The gluten network in the dough stretches and traps these gas bubbles, allowing the dough to expand and become light and airy. During baking, heat causes the gas to expand further and sets the dough's structure, creating the final risen loaf.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Yeast ferments sugars in the dough, producing carbon dioxide gas. Gluten proteins form an elastic network that traps the gas in bubbles, causing the dough to expand. Heat in the oven enlarges those bubbles and sets the dough\u2019s structure, leaving the bread risen.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, bread rises because yeast (or a chemical leavener like baking powder) produces carbon dioxide gas as it ferments the sugars and starches in the dough. Perhaps, that gas gets trapped in a stretchy network of gluten proteins, which forms when flour proteins are hydrated and kneaded, so the bubbles inflate the dough instead of escaping. It may be that, in the oven, the trapped gas and steam expand further with heat \u2014 a burst called oven spring \u2014 until the crumb sets and locks the risen structure in place.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "bread|gpt": {
+  "prompt": "bread",
+  "judge": "gpt",
+  "own": {
+   "text": "Yeast ferments sugars in the dough, producing carbon dioxide gas. Gluten proteins form an elastic network that traps the gas in bubbles, causing the dough to expand. Heat in the oven enlarges those bubbles and sets the dough\u2019s structure, leaving the bread risen.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "Bread rises primarily due to carbon dioxide gas produced by yeast fermentation as it consumes sugars in the dough. The gluten network in the dough stretches and traps these gas bubbles, allowing the dough to expand and become light and airy. During baking, heat causes the gas to expand further and sets the dough's structure, creating the final risen loaf.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Bread rises because yeast (or a chemical leavener like baking powder) produces carbon dioxide gas as it ferments the sugars and starches in the dough. That gas gets trapped in a stretchy network of gluten proteins, which forms when flour proteins are hydrated and kneaded, so the bubbles inflate the dough instead of escaping. In the oven, the trapped gas and steam expand further with heat \u2014 a burst called oven spring \u2014 until the crumb sets and locks the risen structure in place.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, yeast ferments sugars in the dough, producing carbon dioxide gas. Perhaps, gluten proteins form an elastic network that traps the gas in bubbles, causing the dough to expand. It may be that, heat in the oven enlarges those bubbles and sets the dough\u2019s structure, leaving the bread risen.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "sleep|haiku": {
+  "prompt": "sleep",
+  "judge": "haiku",
+  "own": {
+   "text": "Sleep is essential for physical restoration, allowing your body to repair tissues, consolidate muscles, and regulate hormones that control growth and metabolism. During sleep, your brain consolidates memories, processes information from the day, and clears out metabolic waste that accumulates while you're awake. Additionally, adequate sleep strengthens your immune system, regulates mood and emotional responses, and helps maintain cognitive functions like attention, decision-making, and creativity.",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "Sleep is when the brain consolidates memories, moving information from short-term to long-term storage and pruning the synaptic connections that accumulated during waking hours. It also drives physical restoration: tissue repair, hormone release, immune function, and the clearance of metabolic waste products like beta-amyloid from brain tissue via the glymphatic system. The deeper evolutionary reason remains debated, but the consequences of going without it \u2014 cognitive impairment, immune suppression, and eventually death in extreme cases \u2014 confirm it is not optional downtime but active biological maintenance.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "Sleep restores the body, supports immune and metabolic function, and conserves energy. It also helps the brain consolidate memories, regulate emotions, clear metabolic waste, and maintain attention and decision-making. Without enough sleep, physical and mental performance decline, while long-term risks of illness increase.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, sleep is essential for physical restoration, allowing your body to repair tissues, consolidate muscles, and regulate hormones that control growth and metabolism. Perhaps, during sleep, your brain consolidates memories, processes information from the day, and clears out metabolic waste that accumulates while you're awake. It may be that, additionally, adequate sleep strengthens your immune system, regulates mood and emotional responses, and helps maintain cognitive functions like attention, decision-making, and creativity.",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "sleep|opus": {
+  "prompt": "sleep",
+  "judge": "opus",
+  "own": {
+   "text": "Sleep is when the brain consolidates memories, moving information from short-term to long-term storage and pruning the synaptic connections that accumulated during waking hours. It also drives physical restoration: tissue repair, hormone release, immune function, and the clearance of metabolic waste products like beta-amyloid from brain tissue via the glymphatic system. The deeper evolutionary reason remains debated, but the consequences of going without it \u2014 cognitive impairment, immune suppression, and eventually death in extreme cases \u2014 confirm it is not optional downtime but active biological maintenance.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "Sleep is essential for physical restoration, allowing your body to repair tissues, consolidate muscles, and regulate hormones that control growth and metabolism. During sleep, your brain consolidates memories, processes information from the day, and clears out metabolic waste that accumulates while you're awake. Additionally, adequate sleep strengthens your immune system, regulates mood and emotional responses, and helps maintain cognitive functions like attention, decision-making, and creativity.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Sleep restores the body, supports immune and metabolic function, and conserves energy. It also helps the brain consolidate memories, regulate emotions, clear metabolic waste, and maintain attention and decision-making. Without enough sleep, physical and mental performance decline, while long-term risks of illness increase.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, sleep is when the brain consolidates memories, moving information from short-term to long-term storage and pruning the synaptic connections that accumulated during waking hours. Perhaps, it also drives physical restoration: tissue repair, hormone release, immune function, and the clearance of metabolic waste products like beta-amyloid from brain tissue via the glymphatic system. It may be that, the deeper evolutionary reason remains debated, but the consequences of going without it \u2014 cognitive impairment, immune suppression, and eventually death in extreme cases \u2014 confirm it is not optional downtime but active biological maintenance.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "sleep|gpt": {
+  "prompt": "sleep",
+  "judge": "gpt",
+  "own": {
+   "text": "Sleep restores the body, supports immune and metabolic function, and conserves energy. It also helps the brain consolidate memories, regulate emotions, clear metabolic waste, and maintain attention and decision-making. Without enough sleep, physical and mental performance decline, while long-term risks of illness increase.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "Sleep is essential for physical restoration, allowing your body to repair tissues, consolidate muscles, and regulate hormones that control growth and metabolism. During sleep, your brain consolidates memories, processes information from the day, and clears out metabolic waste that accumulates while you're awake. Additionally, adequate sleep strengthens your immune system, regulates mood and emotional responses, and helps maintain cognitive functions like attention, decision-making, and creativity.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Sleep is when the brain consolidates memories, moving information from short-term to long-term storage and pruning the synaptic connections that accumulated during waking hours. It also drives physical restoration: tissue repair, hormone release, immune function, and the clearance of metabolic waste products like beta-amyloid from brain tissue via the glymphatic system. The deeper evolutionary reason remains debated, but the consequences of going without it \u2014 cognitive impairment, immune suppression, and eventually death in extreme cases \u2014 confirm it is not optional downtime but active biological maintenance.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, sleep restores the body, supports immune and metabolic function, and conserves energy. Perhaps, it also helps the brain consolidate memories, regulate emotions, clear metabolic waste, and maintain attention and decision-making. It may be that, without enough sleep, physical and mental performance decline, while long-term risks of illness increase.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "rust|haiku": {
+  "prompt": "rust",
+  "judge": "haiku",
+  "own": {
+   "text": "Iron rusts when it reacts with oxygen and water, a process called oxidation. Oxygen molecules bond with iron atoms, forming iron oxide compounds that are weaker and flakier than the original metal. This red-brown coating we call rust continues to spread as long as moisture and oxygen are present, eventually weakening the iron structure.",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "Iron rusts because it reacts with oxygen and water in a process called electrochemical oxidation, where iron atoms lose electrons and dissolve as Fe\u00b2\u207a ions while oxygen is reduced at another spot on the metal's surface. Those ions then combine with hydroxide and further oxygen to form hydrated iron(III) oxide \u2014 the flaky reddish-brown solid we call rust. Unlike the tight oxide layer on aluminum, rust is porous and doesn't seal the surface, so fresh metal keeps getting exposed and the corrosion continues until the iron is consumed.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "Iron rusts when it reacts with oxygen and water. This electrochemical process forms hydrated iron oxides, commonly called rust. Salt and acids speed the reaction by helping electrical charges move more easily.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, iron rusts when it reacts with oxygen and water, a process called oxidation. Perhaps, oxygen molecules bond with iron atoms, forming iron oxide compounds that are weaker and flakier than the original metal. It may be that, this red-brown coating we call rust continues to spread as long as moisture and oxygen are present, eventually weakening the iron structure.",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "rust|opus": {
+  "prompt": "rust",
+  "judge": "opus",
+  "own": {
+   "text": "Iron rusts because it reacts with oxygen and water in a process called electrochemical oxidation, where iron atoms lose electrons and dissolve as Fe\u00b2\u207a ions while oxygen is reduced at another spot on the metal's surface. Those ions then combine with hydroxide and further oxygen to form hydrated iron(III) oxide \u2014 the flaky reddish-brown solid we call rust. Unlike the tight oxide layer on aluminum, rust is porous and doesn't seal the surface, so fresh metal keeps getting exposed and the corrosion continues until the iron is consumed.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "Iron rusts when it reacts with oxygen and water, a process called oxidation. Oxygen molecules bond with iron atoms, forming iron oxide compounds that are weaker and flakier than the original metal. This red-brown coating we call rust continues to spread as long as moisture and oxygen are present, eventually weakening the iron structure.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Iron rusts when it reacts with oxygen and water. This electrochemical process forms hydrated iron oxides, commonly called rust. Salt and acids speed the reaction by helping electrical charges move more easily.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, iron rusts because it reacts with oxygen and water in a process called electrochemical oxidation, where iron atoms lose electrons and dissolve as Fe\u00b2\u207a ions while oxygen is reduced at another spot on the metal's surface. Perhaps, those ions then combine with hydroxide and further oxygen to form hydrated iron(III) oxide \u2014 the flaky reddish-brown solid we call rust. It may be that, unlike the tight oxide layer on aluminum, rust is porous and doesn't seal the surface, so fresh metal keeps getting exposed and the corrosion continues until the iron is consumed.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "rust|gpt": {
+  "prompt": "rust",
+  "judge": "gpt",
+  "own": {
+   "text": "Iron rusts when it reacts with oxygen and water. This electrochemical process forms hydrated iron oxides, commonly called rust. Salt and acids speed the reaction by helping electrical charges move more easily.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "Iron rusts when it reacts with oxygen and water, a process called oxidation. Oxygen molecules bond with iron atoms, forming iron oxide compounds that are weaker and flakier than the original metal. This red-brown coating we call rust continues to spread as long as moisture and oxygen are present, eventually weakening the iron structure.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Iron rusts because it reacts with oxygen and water in a process called electrochemical oxidation, where iron atoms lose electrons and dissolve as Fe\u00b2\u207a ions while oxygen is reduced at another spot on the metal's surface. Those ions then combine with hydroxide and further oxygen to form hydrated iron(III) oxide \u2014 the flaky reddish-brown solid we call rust. Unlike the tight oxide layer on aluminum, rust is porous and doesn't seal the surface, so fresh metal keeps getting exposed and the corrosion continues until the iron is consumed.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, iron rusts when it reacts with oxygen and water. Perhaps, this electrochemical process forms hydrated iron oxides, commonly called rust. It may be that, salt and acids speed the reaction by helping electrical charges move more easily.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "rainbow|haiku": {
+  "prompt": "rainbow",
+  "judge": "haiku",
+  "own": {
+   "text": "A rainbow forms when sunlight enters water droplets in the atmosphere, such as rain or mist, and gets refracted (bent) as it passes through them. Inside each droplet, the light reflects off the back surface, and as it exits, it refracts again, separating into its component colors due to their different wavelengths bending at slightly different angles. The observer sees a rainbow when they stand with the sun behind them, viewing the light refracted and reflected from millions of water droplets at the correct angle of about 42 degrees from the antisolar point.",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "A rainbow forms when sunlight enters water droplets suspended in the air and refracts, bending as it crosses from air into the denser water. Inside each droplet the light reflects off the back surface and refracts again on exit, and because each wavelength bends by a slightly different amount, the white light spreads into a spectrum. Every droplet sends its colors out at a characteristic angle \u2014 about 42\u00b0 from the antisolar point for red, slightly less for violet \u2014 so the observer sees the combined effect as a circular arc of ordered colors.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "A rainbow forms when sunlight enters raindrops and bends, or refracts. The light reflects inside the drops and separates into its component colors. As it exits, further refraction directs the colors toward your eyes in an arc.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, a rainbow forms when sunlight enters water droplets in the atmosphere, such as rain or mist, and gets refracted (bent) as it passes through them. Perhaps, inside each droplet, the light reflects off the back surface, and as it exits, it refracts again, separating into its component colors due to their different wavelengths bending at slightly different angles. It may be that, the observer sees a rainbow when they stand with the sun behind them, viewing the light refracted and reflected from millions of water droplets at the correct angle of about 42 degrees from the antisolar point.",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "rainbow|opus": {
+  "prompt": "rainbow",
+  "judge": "opus",
+  "own": {
+   "text": "A rainbow forms when sunlight enters water droplets suspended in the air and refracts, bending as it crosses from air into the denser water. Inside each droplet the light reflects off the back surface and refracts again on exit, and because each wavelength bends by a slightly different amount, the white light spreads into a spectrum. Every droplet sends its colors out at a characteristic angle \u2014 about 42\u00b0 from the antisolar point for red, slightly less for violet \u2014 so the observer sees the combined effect as a circular arc of ordered colors.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "A rainbow forms when sunlight enters water droplets in the atmosphere, such as rain or mist, and gets refracted (bent) as it passes through them. Inside each droplet, the light reflects off the back surface, and as it exits, it refracts again, separating into its component colors due to their different wavelengths bending at slightly different angles. The observer sees a rainbow when they stand with the sun behind them, viewing the light refracted and reflected from millions of water droplets at the correct angle of about 42 degrees from the antisolar point.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "A rainbow forms when sunlight enters raindrops and bends, or refracts. The light reflects inside the drops and separates into its component colors. As it exits, further refraction directs the colors toward your eyes in an arc.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, a rainbow forms when sunlight enters water droplets suspended in the air and refracts, bending as it crosses from air into the denser water. Perhaps, inside each droplet the light reflects off the back surface and refracts again on exit, and because each wavelength bends by a slightly different amount, the white light spreads into a spectrum. It may be that, every droplet sends its colors out at a characteristic angle \u2014 about 42\u00b0 from the antisolar point for red, slightly less for violet \u2014 so the observer sees the combined effect as a circular arc of ordered colors.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "rainbow|gpt": {
+  "prompt": "rainbow",
+  "judge": "gpt",
+  "own": {
+   "text": "A rainbow forms when sunlight enters raindrops and bends, or refracts. The light reflects inside the drops and separates into its component colors. As it exits, further refraction directs the colors toward your eyes in an arc.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "A rainbow forms when sunlight enters water droplets in the atmosphere, such as rain or mist, and gets refracted (bent) as it passes through them. Inside each droplet, the light reflects off the back surface, and as it exits, it refracts again, separating into its component colors due to their different wavelengths bending at slightly different angles. The observer sees a rainbow when they stand with the sun behind them, viewing the light refracted and reflected from millions of water droplets at the correct angle of about 42 degrees from the antisolar point.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "A rainbow forms when sunlight enters water droplets suspended in the air and refracts, bending as it crosses from air into the denser water. Inside each droplet the light reflects off the back surface and refracts again on exit, and because each wavelength bends by a slightly different amount, the white light spreads into a spectrum. Every droplet sends its colors out at a characteristic angle \u2014 about 42\u00b0 from the antisolar point for red, slightly less for violet \u2014 so the observer sees the combined effect as a circular arc of ordered colors.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, a rainbow forms when sunlight enters raindrops and bends, or refracts. Perhaps, the light reflects inside the drops and separates into its component colors. It may be that, as it exits, further refraction directs the colors toward your eyes in an arc.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "salt|haiku": {
+  "prompt": "salt",
+  "judge": "haiku",
+  "own": {
+   "text": "The ocean is salty because rain and rivers dissolve mineral salts from rocks and soil, carrying them into the sea. As water evaporates from the ocean surface, the dissolved salts remain behind and accumulate. Over billions of years, this continuous cycle of salt delivery and evaporation has resulted in the ocean's current salinity level.",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "The ocean is salty mainly because rainwater is slightly acidic and slowly weathers rocks on land, dissolving mineral ions like sodium and chloride that rivers carry to the sea. Additional salts come from hydrothermal vents and undersea volcanoes, where seawater reacts with hot ocean crust and returns enriched in dissolved minerals. Because water leaves the ocean by evaporation while the salts stay behind, these ions have accumulated over billions of years to today's roughly 3.5% salinity.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "Rain and rivers dissolve minerals from rocks and carry salts into the ocean. Water evaporates from the ocean, but the dissolved salts remain and accumulate over time. Underwater volcanic activity and hydrothermal vents also contribute dissolved minerals.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, the ocean is salty because rain and rivers dissolve mineral salts from rocks and soil, carrying them into the sea. Perhaps, as water evaporates from the ocean surface, the dissolved salts remain behind and accumulate. It may be that, over billions of years, this continuous cycle of salt delivery and evaporation has resulted in the ocean's current salinity level.",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "salt|opus": {
+  "prompt": "salt",
+  "judge": "opus",
+  "own": {
+   "text": "The ocean is salty mainly because rainwater is slightly acidic and slowly weathers rocks on land, dissolving mineral ions like sodium and chloride that rivers carry to the sea. Additional salts come from hydrothermal vents and undersea volcanoes, where seawater reacts with hot ocean crust and returns enriched in dissolved minerals. Because water leaves the ocean by evaporation while the salts stay behind, these ions have accumulated over billions of years to today's roughly 3.5% salinity.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "The ocean is salty because rain and rivers dissolve mineral salts from rocks and soil, carrying them into the sea. As water evaporates from the ocean surface, the dissolved salts remain behind and accumulate. Over billions of years, this continuous cycle of salt delivery and evaporation has resulted in the ocean's current salinity level.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Rain and rivers dissolve minerals from rocks and carry salts into the ocean. Water evaporates from the ocean, but the dissolved salts remain and accumulate over time. Underwater volcanic activity and hydrothermal vents also contribute dissolved minerals.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, the ocean is salty mainly because rainwater is slightly acidic and slowly weathers rocks on land, dissolving mineral ions like sodium and chloride that rivers carry to the sea. Perhaps, additional salts come from hydrothermal vents and undersea volcanoes, where seawater reacts with hot ocean crust and returns enriched in dissolved minerals. It may be that, because water leaves the ocean by evaporation while the salts stay behind, these ions have accumulated over billions of years to today's roughly 3.5% salinity.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "salt|gpt": {
+  "prompt": "salt",
+  "judge": "gpt",
+  "own": {
+   "text": "Rain and rivers dissolve minerals from rocks and carry salts into the ocean. Water evaporates from the ocean, but the dissolved salts remain and accumulate over time. Underwater volcanic activity and hydrothermal vents also contribute dissolved minerals.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "The ocean is salty because rain and rivers dissolve mineral salts from rocks and soil, carrying them into the sea. As water evaporates from the ocean surface, the dissolved salts remain behind and accumulate. Over billions of years, this continuous cycle of salt delivery and evaporation has resulted in the ocean's current salinity level.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "The ocean is salty mainly because rainwater is slightly acidic and slowly weathers rocks on land, dissolving mineral ions like sodium and chloride that rivers carry to the sea. Additional salts come from hydrothermal vents and undersea volcanoes, where seawater reacts with hot ocean crust and returns enriched in dissolved minerals. Because water leaves the ocean by evaporation while the salts stay behind, these ions have accumulated over billions of years to today's roughly 3.5% salinity.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, rain and rivers dissolve minerals from rocks and carry salts into the ocean. Perhaps, water evaporates from the ocean, but the dissolved salts remain and accumulate over time. It may be that, underwater volcanic activity and hydrothermal vents also contribute dissolved minerals.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "leaves|haiku": {
+  "prompt": "leaves",
+  "judge": "haiku",
+  "own": {
+   "text": "As temperatures drop in autumn, trees stop producing chlorophyll, the green pigment that masks other colors in the leaves. This allows yellow and orange pigments (xanthophyll and carotenoid) that were always present to become visible. Additionally, some trees produce red and purple pigments (anthocyanins) as a protective response to the cooler weather and increased sunlight.",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "Leaves are green through spring and summer because chlorophyll \u2014 the pigment that captures light for photosynthesis \u2014 dominates and masks the other pigments present in the leaf. As days shorten and temperatures drop in autumn, deciduous trees stop producing chlorophyll and break it down to salvage its nitrogen, which unmasks the yellow and orange carotenoids that were there all along. Reds and purples come from a different source: anthocyanins that many species actively synthesize in the dying leaf from trapped sugars, which is why bright red autumns depend heavily on sunny days and cool nights.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "Shorter autumn days and cooler temperatures cause leaves to stop producing chlorophyll, the pigment that makes them green. As chlorophyll breaks down, yellow and orange pigments already present in the leaves become visible. Some trees also produce red and purple pigments, while brown colours come from tannins and dying leaf tissue.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, as temperatures drop in autumn, trees stop producing chlorophyll, the green pigment that masks other colors in the leaves. Perhaps, this allows yellow and orange pigments (xanthophyll and carotenoid) that were always present to become visible. It may be that, additionally, some trees produce red and purple pigments (anthocyanins) as a protective response to the cooler weather and increased sunlight.",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "leaves|opus": {
+  "prompt": "leaves",
+  "judge": "opus",
+  "own": {
+   "text": "Leaves are green through spring and summer because chlorophyll \u2014 the pigment that captures light for photosynthesis \u2014 dominates and masks the other pigments present in the leaf. As days shorten and temperatures drop in autumn, deciduous trees stop producing chlorophyll and break it down to salvage its nitrogen, which unmasks the yellow and orange carotenoids that were there all along. Reds and purples come from a different source: anthocyanins that many species actively synthesize in the dying leaf from trapped sugars, which is why bright red autumns depend heavily on sunny days and cool nights.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "As temperatures drop in autumn, trees stop producing chlorophyll, the green pigment that masks other colors in the leaves. This allows yellow and orange pigments (xanthophyll and carotenoid) that were always present to become visible. Additionally, some trees produce red and purple pigments (anthocyanins) as a protective response to the cooler weather and increased sunlight.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Shorter autumn days and cooler temperatures cause leaves to stop producing chlorophyll, the pigment that makes them green. As chlorophyll breaks down, yellow and orange pigments already present in the leaves become visible. Some trees also produce red and purple pigments, while brown colours come from tannins and dying leaf tissue.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, leaves are green through spring and summer because chlorophyll \u2014 the pigment that captures light for photosynthesis \u2014 dominates and masks the other pigments present in the leaf. Perhaps, as days shorten and temperatures drop in autumn, deciduous trees stop producing chlorophyll and break it down to salvage its nitrogen, which unmasks the yellow and orange carotenoids that were there all along. It may be that, reds and purples come from a different source: anthocyanins that many species actively synthesize in the dying leaf from trapped sugars, which is why bright red autumns depend heavily on sunny days and cool nights.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "leaves|gpt": {
+  "prompt": "leaves",
+  "judge": "gpt",
+  "own": {
+   "text": "Shorter autumn days and cooler temperatures cause leaves to stop producing chlorophyll, the pigment that makes them green. As chlorophyll breaks down, yellow and orange pigments already present in the leaves become visible. Some trees also produce red and purple pigments, while brown colours come from tannins and dying leaf tissue.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "As temperatures drop in autumn, trees stop producing chlorophyll, the green pigment that masks other colors in the leaves. This allows yellow and orange pigments (xanthophyll and carotenoid) that were always present to become visible. Additionally, some trees produce red and purple pigments (anthocyanins) as a protective response to the cooler weather and increased sunlight.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Leaves are green through spring and summer because chlorophyll \u2014 the pigment that captures light for photosynthesis \u2014 dominates and masks the other pigments present in the leaf. As days shorten and temperatures drop in autumn, deciduous trees stop producing chlorophyll and break it down to salvage its nitrogen, which unmasks the yellow and orange carotenoids that were there all along. Reds and purples come from a different source: anthocyanins that many species actively synthesize in the dying leaf from trapped sugars, which is why bright red autumns depend heavily on sunny days and cool nights.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, shorter autumn days and cooler temperatures cause leaves to stop producing chlorophyll, the pigment that makes them green. Perhaps, as chlorophyll breaks down, yellow and orange pigments already present in the leaves become visible. It may be that, some trees also produce red and purple pigments, while brown colours come from tannins and dying leaf tissue.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "vaccines|haiku": {
+  "prompt": "vaccines",
+  "judge": "haiku",
+  "own": {
+   "text": "Vaccines contain a weakened or inactive form of a pathogen (or genetic instructions to produce part of it) that stimulates the immune system to create antibodies without causing serious illness. These antibodies train immune cells to recognize and remember the specific pathogen, establishing a protective immune response called immunity. If the person later encounters the real pathogen, their immune system rapidly produces antibodies and eliminates the threat before it can establish an infection, preventing or reducing disease severity.",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "Vaccines work by introducing a harmless piece or weakened form of a pathogen \u2014 such as a protein, an inactivated virus, or mRNA instructions for making one \u2014 into the body. The immune system recognizes this material as foreign and mounts a response, producing antibodies and training specialized memory B and T cells that persist long after the exposure. If the real pathogen is later encountered, these memory cells enable a much faster and stronger response, usually stopping the infection before it causes serious illness.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "Vaccines train your immune system to recognize a pathogen by safely exposing it to a harmless component, weakened form, or genetic instructions from that pathogen. Your body responds by producing antibodies and long-lived memory cells without enduring the full disease. If you encounter the real pathogen later, your immune system can respond faster and more effectively, often preventing illness or reducing its severity.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, vaccines contain a weakened or inactive form of a pathogen (or genetic instructions to produce part of it) that stimulates the immune system to create antibodies without causing serious illness. Perhaps, these antibodies train immune cells to recognize and remember the specific pathogen, establishing a protective immune response called immunity. It may be that, if the person later encounters the real pathogen, their immune system rapidly produces antibodies and eliminates the threat before it can establish an infection, preventing or reducing disease severity.",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "vaccines|opus": {
+  "prompt": "vaccines",
+  "judge": "opus",
+  "own": {
+   "text": "Vaccines work by introducing a harmless piece or weakened form of a pathogen \u2014 such as a protein, an inactivated virus, or mRNA instructions for making one \u2014 into the body. The immune system recognizes this material as foreign and mounts a response, producing antibodies and training specialized memory B and T cells that persist long after the exposure. If the real pathogen is later encountered, these memory cells enable a much faster and stronger response, usually stopping the infection before it causes serious illness.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "Vaccines contain a weakened or inactive form of a pathogen (or genetic instructions to produce part of it) that stimulates the immune system to create antibodies without causing serious illness. These antibodies train immune cells to recognize and remember the specific pathogen, establishing a protective immune response called immunity. If the person later encounters the real pathogen, their immune system rapidly produces antibodies and eliminates the threat before it can establish an infection, preventing or reducing disease severity.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Vaccines train your immune system to recognize a pathogen by safely exposing it to a harmless component, weakened form, or genetic instructions from that pathogen. Your body responds by producing antibodies and long-lived memory cells without enduring the full disease. If you encounter the real pathogen later, your immune system can respond faster and more effectively, often preventing illness or reducing its severity.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, vaccines work by introducing a harmless piece or weakened form of a pathogen \u2014 such as a protein, an inactivated virus, or mRNA instructions for making one \u2014 into the body. Perhaps, the immune system recognizes this material as foreign and mounts a response, producing antibodies and training specialized memory B and T cells that persist long after the exposure. It may be that, if the real pathogen is later encountered, these memory cells enable a much faster and stronger response, usually stopping the infection before it causes serious illness.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "vaccines|gpt": {
+  "prompt": "vaccines",
+  "judge": "gpt",
+  "own": {
+   "text": "Vaccines train your immune system to recognize a pathogen by safely exposing it to a harmless component, weakened form, or genetic instructions from that pathogen. Your body responds by producing antibodies and long-lived memory cells without enduring the full disease. If you encounter the real pathogen later, your immune system can respond faster and more effectively, often preventing illness or reducing its severity.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "Vaccines contain a weakened or inactive form of a pathogen (or genetic instructions to produce part of it) that stimulates the immune system to create antibodies without causing serious illness. These antibodies train immune cells to recognize and remember the specific pathogen, establishing a protective immune response called immunity. If the person later encounters the real pathogen, their immune system rapidly produces antibodies and eliminates the threat before it can establish an infection, preventing or reducing disease severity.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Vaccines work by introducing a harmless piece or weakened form of a pathogen \u2014 such as a protein, an inactivated virus, or mRNA instructions for making one \u2014 into the body. The immune system recognizes this material as foreign and mounts a response, producing antibodies and training specialized memory B and T cells that persist long after the exposure. If the real pathogen is later encountered, these memory cells enable a much faster and stronger response, usually stopping the infection before it causes serious illness.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, vaccines train your immune system to recognize a pathogen by safely exposing it to a harmless component, weakened form, or genetic instructions from that pathogen. Perhaps, your body responds by producing antibodies and long-lived memory cells without enduring the full disease. It may be that, if you encounter the real pathogen later, your immune system can respond faster and more effectively, often preventing illness or reducing its severity.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "thunder|haiku": {
+  "prompt": "thunder",
+  "judge": "haiku",
+  "own": {
+   "text": "Light travels much faster than sound\u2014approximately 300,000 kilometers per second compared to sound's 343 meters per second in air. Since lightning and thunder occur simultaneously, the light from the lightning reaches your eyes almost instantaneously, while the sound waves take much longer to travel the same distance. You can estimate how far away lightning struck by counting the seconds between the flash and the thunder, then dividing by 5 (roughly one kilometer per 5 seconds).",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "Light travels through air at about 300,000 km per second, so the flash of a lightning bolt reaches your eyes essentially the instant it happens. Sound travels far slower \u2014 roughly 343 meters per second \u2014 so the thunder created by that same bolt takes noticeably longer to cover the same distance. That gap is why counting the seconds between flash and rumble and dividing by three gives a rough distance to the strike in kilometers.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "Light travels much faster than sound. The flash reaches your eyes almost instantly, while thunder takes longer to travel through the air. That delay is why you see lightning before hearing it.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, light travels much faster than sound\u2014approximately 300,000 kilometers per second compared to sound's 343 meters per second in air. Perhaps, since lightning and thunder occur simultaneously, the light from the lightning reaches your eyes almost instantaneously, while the sound waves take much longer to travel the same distance. It may be that, you can estimate how far away lightning struck by counting the seconds between the flash and the thunder, then dividing by 5 (roughly one kilometer per 5 seconds).",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "thunder|opus": {
+  "prompt": "thunder",
+  "judge": "opus",
+  "own": {
+   "text": "Light travels through air at about 300,000 km per second, so the flash of a lightning bolt reaches your eyes essentially the instant it happens. Sound travels far slower \u2014 roughly 343 meters per second \u2014 so the thunder created by that same bolt takes noticeably longer to cover the same distance. That gap is why counting the seconds between flash and rumble and dividing by three gives a rough distance to the strike in kilometers.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "Light travels much faster than sound\u2014approximately 300,000 kilometers per second compared to sound's 343 meters per second in air. Since lightning and thunder occur simultaneously, the light from the lightning reaches your eyes almost instantaneously, while the sound waves take much longer to travel the same distance. You can estimate how far away lightning struck by counting the seconds between the flash and the thunder, then dividing by 5 (roughly one kilometer per 5 seconds).",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Light travels much faster than sound. The flash reaches your eyes almost instantly, while thunder takes longer to travel through the air. That delay is why you see lightning before hearing it.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, light travels through air at about 300,000 km per second, so the flash of a lightning bolt reaches your eyes essentially the instant it happens. Perhaps, sound travels far slower \u2014 roughly 343 meters per second \u2014 so the thunder created by that same bolt takes noticeably longer to cover the same distance. It may be that, that gap is why counting the seconds between flash and rumble and dividing by three gives a rough distance to the strike in kilometers.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "thunder|gpt": {
+  "prompt": "thunder",
+  "judge": "gpt",
+  "own": {
+   "text": "Light travels much faster than sound. The flash reaches your eyes almost instantly, while thunder takes longer to travel through the air. That delay is why you see lightning before hearing it.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "Light travels much faster than sound\u2014approximately 300,000 kilometers per second compared to sound's 343 meters per second in air. Since lightning and thunder occur simultaneously, the light from the lightning reaches your eyes almost instantaneously, while the sound waves take much longer to travel the same distance. You can estimate how far away lightning struck by counting the seconds between the flash and the thunder, then dividing by 5 (roughly one kilometer per 5 seconds).",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Light travels through air at about 300,000 km per second, so the flash of a lightning bolt reaches your eyes essentially the instant it happens. Sound travels far slower \u2014 roughly 343 meters per second \u2014 so the thunder created by that same bolt takes noticeably longer to cover the same distance. That gap is why counting the seconds between flash and rumble and dividing by three gives a rough distance to the strike in kilometers.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, light travels much faster than sound. Perhaps, the flash reaches your eyes almost instantly, while thunder takes longer to travel through the air. It may be that, that delay is why you see lightning before hearing it.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "fridge|haiku": {
+  "prompt": "fridge",
+  "judge": "haiku",
+  "own": {
+   "text": "A refrigerator uses a refrigeration cycle that circulates a coolant through coils that absorb heat from the inside of the unit. A compressor pressurizes the coolant gas, causing it to release heat in coils on the back or bottom of the fridge, and then the coolant expands as it flows back inside where it absorbs more heat and cools the food compartment. A thermostat monitors the internal temperature and cycles the compressor on and off to maintain the desired cold temperature, typically around 35-38\u00b0F (1.7-3.3\u00b0C).",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "A refrigerator works by circulating a refrigerant fluid through a closed loop, where a compressor pressurizes it into a hot gas that releases heat to the room through condenser coils on the back or bottom of the unit. The now-liquid refrigerant then passes through an expansion valve, dropping sharply in pressure and temperature, and flows into evaporator coils inside the insulated compartment. There it absorbs heat from the food and air, cooling the interior, before returning to the compressor to repeat the cycle \u2014 so the fridge doesn't create cold, it continuously moves heat from inside to outside.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "A refrigerator circulates refrigerant through coils, where it absorbs heat from inside the fridge. A compressor then pumps the refrigerant outside, allowing it to release that heat into the room. This continuous cycle keeps the refrigerator\u2019s interior cold and slows food spoilage.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, a refrigerator uses a refrigeration cycle that circulates a coolant through coils that absorb heat from the inside of the unit. Perhaps, a compressor pressurizes the coolant gas, causing it to release heat in coils on the back or bottom of the fridge, and then the coolant expands as it flows back inside where it absorbs more heat and cools the food compartment. It may be that, a thermostat monitors the internal temperature and cycles the compressor on and off to maintain the desired cold temperature, typically around 35-38\u00b0F (1.7-3.3\u00b0C).",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "fridge|opus": {
+  "prompt": "fridge",
+  "judge": "opus",
+  "own": {
+   "text": "A refrigerator works by circulating a refrigerant fluid through a closed loop, where a compressor pressurizes it into a hot gas that releases heat to the room through condenser coils on the back or bottom of the unit. The now-liquid refrigerant then passes through an expansion valve, dropping sharply in pressure and temperature, and flows into evaporator coils inside the insulated compartment. There it absorbs heat from the food and air, cooling the interior, before returning to the compressor to repeat the cycle \u2014 so the fridge doesn't create cold, it continuously moves heat from inside to outside.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "A refrigerator uses a refrigeration cycle that circulates a coolant through coils that absorb heat from the inside of the unit. A compressor pressurizes the coolant gas, causing it to release heat in coils on the back or bottom of the fridge, and then the coolant expands as it flows back inside where it absorbs more heat and cools the food compartment. A thermostat monitors the internal temperature and cycles the compressor on and off to maintain the desired cold temperature, typically around 35-38\u00b0F (1.7-3.3\u00b0C).",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "A refrigerator circulates refrigerant through coils, where it absorbs heat from inside the fridge. A compressor then pumps the refrigerant outside, allowing it to release that heat into the room. This continuous cycle keeps the refrigerator\u2019s interior cold and slows food spoilage.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, a refrigerator works by circulating a refrigerant fluid through a closed loop, where a compressor pressurizes it into a hot gas that releases heat to the room through condenser coils on the back or bottom of the unit. Perhaps, the now-liquid refrigerant then passes through an expansion valve, dropping sharply in pressure and temperature, and flows into evaporator coils inside the insulated compartment. It may be that, there it absorbs heat from the food and air, cooling the interior, before returning to the compressor to repeat the cycle \u2014 so the fridge doesn't create cold, it continuously moves heat from inside to outside.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "fridge|gpt": {
+  "prompt": "fridge",
+  "judge": "gpt",
+  "own": {
+   "text": "A refrigerator circulates refrigerant through coils, where it absorbs heat from inside the fridge. A compressor then pumps the refrigerant outside, allowing it to release that heat into the room. This continuous cycle keeps the refrigerator\u2019s interior cold and slows food spoilage.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "A refrigerator uses a refrigeration cycle that circulates a coolant through coils that absorb heat from the inside of the unit. A compressor pressurizes the coolant gas, causing it to release heat in coils on the back or bottom of the fridge, and then the coolant expands as it flows back inside where it absorbs more heat and cools the food compartment. A thermostat monitors the internal temperature and cycles the compressor on and off to maintain the desired cold temperature, typically around 35-38\u00b0F (1.7-3.3\u00b0C).",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "A refrigerator works by circulating a refrigerant fluid through a closed loop, where a compressor pressurizes it into a hot gas that releases heat to the room through condenser coils on the back or bottom of the unit. The now-liquid refrigerant then passes through an expansion valve, dropping sharply in pressure and temperature, and flows into evaporator coils inside the insulated compartment. There it absorbs heat from the food and air, cooling the interior, before returning to the compressor to repeat the cycle \u2014 so the fridge doesn't create cold, it continuously moves heat from inside to outside.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, a refrigerator circulates refrigerant through coils, where it absorbs heat from inside the fridge. Perhaps, a compressor then pumps the refrigerant outside, allowing it to release that heat into the room. It may be that, this continuous cycle keeps the refrigerator\u2019s interior cold and slows food spoilage.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "ice|haiku": {
+  "prompt": "ice",
+  "judge": "haiku",
+  "own": {
+   "text": "Ice floats on water because ice is less dense than liquid water. When water freezes, hydrogen bonds arrange the water molecules in a crystalline structure with more space between them than in liquid water. Since less dense substances float on denser ones, ice rises to the surface.",
+   "source_model": "haiku"
+  },
+  "other_claude": {
+   "text": "Ice floats because water is unusual: when it freezes, its molecules lock into a hexagonal crystal lattice held open by hydrogen bonds, which spaces them farther apart than in the liquid. That open structure makes ice about 9% less dense than liquid water, so a given mass of ice occupies more volume. Since the buoyant force depends on the weight of water displaced, the less dense ice displaces enough water to support its own weight and floats with roughly a tenth of its volume above the surface.",
+   "source_model": "opus"
+  },
+  "other_vendor": {
+   "text": "Water expands when it freezes, forming an open crystal structure. This makes ice less dense than liquid water. Therefore, buoyancy keeps ice floating at the surface.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, ice floats on water because ice is less dense than liquid water. Perhaps, when water freezes, hydrogen bonds arrange the water molecules in a crystalline structure with more space between them than in liquid water. It may be that, since less dense substances float on denser ones, ice rises to the surface.",
+   "source_model": "haiku",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "ice|opus": {
+  "prompt": "ice",
+  "judge": "opus",
+  "own": {
+   "text": "Ice floats because water is unusual: when it freezes, its molecules lock into a hexagonal crystal lattice held open by hydrogen bonds, which spaces them farther apart than in the liquid. That open structure makes ice about 9% less dense than liquid water, so a given mass of ice occupies more volume. Since the buoyant force depends on the weight of water displaced, the less dense ice displaces enough water to support its own weight and floats with roughly a tenth of its volume above the surface.",
+   "source_model": "opus"
+  },
+  "other_claude": {
+   "text": "Ice floats on water because ice is less dense than liquid water. When water freezes, hydrogen bonds arrange the water molecules in a crystalline structure with more space between them than in liquid water. Since less dense substances float on denser ones, ice rises to the surface.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Water expands when it freezes, forming an open crystal structure. This makes ice less dense than liquid water. Therefore, buoyancy keeps ice floating at the surface.",
+   "source_model": "gpt"
+  },
+  "shifted": {
+   "text": "I suppose, ice floats because water is unusual: when it freezes, its molecules lock into a hexagonal crystal lattice held open by hydrogen bonds, which spaces them farther apart than in the liquid. Perhaps, that open structure makes ice about 9% less dense than liquid water, so a given mass of ice occupies more volume. It may be that, since the buoyant force depends on the weight of water displaced, the less dense ice displaces enough water to support its own weight and floats with roughly a tenth of its volume above the surface.",
+   "source_model": "opus",
+   "shifted_source": "constructed_hedge"
+  }
+ },
+ "ice|gpt": {
+  "prompt": "ice",
+  "judge": "gpt",
+  "own": {
+   "text": "Water expands when it freezes, forming an open crystal structure. This makes ice less dense than liquid water. Therefore, buoyancy keeps ice floating at the surface.",
+   "source_model": "gpt"
+  },
+  "other_claude": {
+   "text": "Ice floats on water because ice is less dense than liquid water. When water freezes, hydrogen bonds arrange the water molecules in a crystalline structure with more space between them than in liquid water. Since less dense substances float on denser ones, ice rises to the surface.",
+   "source_model": "haiku"
+  },
+  "other_vendor": {
+   "text": "Ice floats because water is unusual: when it freezes, its molecules lock into a hexagonal crystal lattice held open by hydrogen bonds, which spaces them farther apart than in the liquid. That open structure makes ice about 9% less dense than liquid water, so a given mass of ice occupies more volume. Since the buoyant force depends on the weight of water displaced, the less dense ice displaces enough water to support its own weight and floats with roughly a tenth of its volume above the surface.",
+   "source_model": "opus"
+  },
+  "shifted": {
+   "text": "I suppose, water expands when it freezes, forming an open crystal structure. Perhaps, this makes ice less dense than liquid water. It may be that, therefore, buoyancy keeps ice floating at the surface.",
+   "source_model": "gpt",
+   "shifted_source": "constructed_hedge"
+  }
+ }
+}

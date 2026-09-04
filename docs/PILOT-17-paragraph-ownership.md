@@ -260,11 +260,11 @@ register ("Yeast eat sugar in dough, fart out gas"; "Rain hit rock, break rock s
 fork 0, which `stage_cells` takes as `own`, on all three. Reading the forks identified the
 register: it is the "caveman" reply style described in Jonathan's personal
 `~/.claude/CLAUDE.md`. A probe through the fork harness ("list every CLAUDE.md, AGENTS.md
-or memory file in your context") named `/home/grafe/.claude/CLAUDE.md` and
-`/home/grafe/code/CLAUDE.md` and quoted the "Reply style — caveman full" heading: `claude
+or memory file in your context") named `~/.claude/CLAUDE.md` and the
+workspace `CLAUDE.md` and quoted the "Reply style — caveman full" heading: `claude
 -p` reads the user-level CLAUDE.md through HOME regardless of CLAUDE_CONFIG_DIR, and the
 workspace CLAUDE.md from the parent of the working directory. The same probe through the
-Codex harness named `/home/grafe/code/AGENTS.md`. **Every Claude fork and judgement in
+Codex harness named the workspace `AGENTS.md`. **Every Claude fork and judgement in
 pilots 11 to 17, and every GPT one, carried these files as context.** Fixed in
 `selfportrait/fork.py` and `codex_fork.py` (HOME inside the isolated config dir, neutral
 working directory); both probes now answer NONE. The one-word pilots are unlikely to be

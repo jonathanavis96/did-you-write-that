@@ -7,7 +7,7 @@
 # cells selected by the same ladder; neutral, placebo, non-author rival, rival and the
 # named label question on the assistant layout, named on the user layout; confidence,
 # explicit self-prediction and within-model stages.
-cd /home/grafe/code/claude-self-portrait || exit 1
+cd "$(git rev-parse --show-toplevel)" || exit 1
 export SP_OUT_PREFIX=clean11 SP_MODELS=haiku,opus SP_PROMPTS=fruit,city,colour,dog,noun,instrument,language,number
 P=.venv/bin/python
 SP_N=48 $P selfportrait/ownership.py forks

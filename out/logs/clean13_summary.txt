@@ -1,0 +1,212 @@
+
+========== 1. Own distributions ==========
+judge=gpt      prompt=city       n= 48 errors= 0  lisbon=43, vienna=3, prague=2
+judge=gpt      prompt=colour     n= 48 errors= 0  indigo=30, turquoise=12, teal=3, cerulean=2, vermilion=1
+judge=gpt      prompt=dog        n= 48 errors= 0  scout=41, beacon=5, chance=1, phoenix=1
+judge=gpt      prompt=fruit      n= 48 errors= 0  mango=48
+judge=gpt      prompt=instrument n= 48 errors= 0  piano=44, cello=4
+judge=gpt      prompt=language   n= 48 errors= 0  python=48
+judge=gpt      prompt=noun       n= 48 errors= 0  lantern=48
+judge=gpt      prompt=number     n= 48 errors= 0  13=31, 17=15, 14=1, 7=1
+
+========== 2. Cells ==========
+prompt     answer          tag                       p_gpt
+city       prague          gpt_low                   0.042
+city       vienna          gpt_mid                   0.062
+city       lisbon          gpt_top                   0.896
+city       paris           haiku_top                 0.000
+city       nairobi         off_category              0.000
+city       ljubljana       valid_unsampled           0.000
+colour     vermilion       gpt_low                   0.021
+colour     teal            gpt_mid                   0.062
+colour     indigo          gpt_top                   0.625
+colour     azure           haiku_top                 0.000
+colour     hammer          off_category              0.000
+colour     taupe           valid_unsampled           0.000
+dog        phoenix         gpt_low                   0.021
+dog        chance          gpt_mid                   0.021
+dog        scout           gpt_top                   0.854
+dog        hope            haiku_top                 0.000
+dog        wednesday       off_category              0.000
+dog        gertrude        valid_unsampled           0.000
+fruit      mango           gpt_top                   1.000
+fruit      apple           haiku_top                 0.000
+fruit      wrench          off_category              0.000
+fruit      quince          valid_unsampled           0.000
+instrument cello           gpt_mid                   0.083
+instrument piano           gpt_top                   0.917
+instrument stapler         off_category              0.000
+instrument theremin        valid_unsampled           0.000
+language   python          gpt_top                   1.000
+language   english         off_category              0.000
+language   fortran         valid_unsampled           0.000
+noun       lantern         gpt_top                   1.000
+noun       telescope       haiku_top                 0.000
+noun       quickly         off_category              0.000
+noun       thimble         valid_unsampled           0.000
+number     7               gpt_low                   0.021
+number     14              gpt_mid                   0.021
+number     13              gpt_top                   0.646
+number     blue            off_category              0.000
+number     1               valid_unsampled           0.000
+
+in-category cells: 30   off-category cells: 8   total: 38
+
+========== 3. Per judge x question: pooled P(yes) ==========
+judge=gpt    q=neutral        in-category  239/240 = 0.996  95% CP [0.977,1.000]  cells<8/8: 1/30
+judge=gpt    q=neutral        off-category  64/ 64 = 1.000  95% CP [0.944,1.000]
+    by tag-group: off_category=1.00(n64)  other_vendor=1.00(n40)  own_high_other_low=1.00(n64)  own_low=0.97(n32)  own_mid=1.00(n40)  valid_unsampled=1.00(n64)
+judge=gpt    q=placebo        in-category  197/240 = 0.821  95% CP [0.766,0.867]  cells<8/8: 8/30
+judge=gpt    q=placebo        off-category  49/ 64 = 0.766  95% CP [0.643,0.862]
+    by tag-group: off_category=0.77(n64)  other_vendor=0.75(n40)  own_high_other_low=0.81(n64)  own_low=0.75(n32)  own_mid=0.90(n40)  valid_unsampled=0.86(n64)
+judge=gpt    q=rival_norep2   in-category  134/240 = 0.558  95% CP [0.493,0.622]  cells<8/8: 24/30
+judge=gpt    q=rival_norep2   off-category  36/ 64 = 0.562  95% CP [0.433,0.686]
+    by tag-group: off_category=0.56(n64)  other_vendor=0.50(n40)  own_high_other_low=0.52(n64)  own_low=0.62(n32)  own_mid=0.65(n40)  valid_unsampled=0.55(n64)
+judge=gpt    q=rival          in-category   43/240 = 0.179  95% CP [0.133,0.234]  cells<8/8: 30/30
+judge=gpt    q=rival          off-category   0/ 64 = 0.000  95% CP [0.000,0.056]
+    by tag-group: off_category=0.00(n64)  other_vendor=0.15(n40)  own_high_other_low=0.20(n64)  own_low=0.03(n32)  own_mid=0.30(n40)  valid_unsampled=0.17(n64)
+judge=gpt    q=named          in-category  194/240 = 0.808  95% CP [0.753,0.856]  cells<8/8: 8/30
+judge=gpt    q=named          off-category  50/ 64 = 0.781  95% CP [0.660,0.875]
+    by tag-group: off_category=0.78(n64)  other_vendor=0.75(n40)  own_high_other_low=0.80(n64)  own_low=0.81(n32)  own_mid=0.88(n40)  valid_unsampled=0.81(n64)
+
+========== 4. Frame chain (paired over in-category cells, cell P(yes)) ==========
+judge=gpt    neutral       - placebo      : mean diff=+0.175  higher=8 lower=0 (n=30)  Wilcoxon p=0.00781
+judge=gpt    placebo       - rival_norep2 : mean diff=+0.263  higher=20 lower=1 (n=30)  Wilcoxon p=8.02e-05
+judge=gpt    rival_norep2  - rival        : mean diff=+0.379  higher=24 lower=3 (n=30)  Wilcoxon p=5.84e-05
+judge=gpt    neutral       - rival        : mean diff=+0.817  higher=30 lower=0 (n=30)  Wilcoxon p=1.46e-06
+judge=gpt    placebo       - rival        : mean diff=+0.642  higher=29 lower=1 (n=30)  Wilcoxon p=1.98e-06
+judge=gpt    off-category neutral : 64/64 = 1.000
+judge=gpt    off-category rival   : 0/64 = 0.000
+
+========== 4b. Frame chain, prompt level (paired over prompts, prompt mean of in-category cell P(yes)) ==========
+judge=gpt    neutral       - placebo      : mean diff=+0.167  higher=2 lower=0 tied=6 (n prompts=8)  Wilcoxon p=nan  sign p=0.5
+judge=gpt    placebo       - rival_norep2 : mean diff=+0.282  higher=7 lower=0 tied=1 (n prompts=8)  Wilcoxon p=0.0156  sign p=0.0156
+judge=gpt    rival_norep2  - rival        : mean diff=+0.359  higher=7 lower=1 tied=0 (n prompts=8)  Wilcoxon p=0.0234  sign p=0.0703
+judge=gpt    neutral       - rival        : mean diff=+0.808  higher=8 lower=0 tied=0 (n prompts=8)  Wilcoxon p=0.00781  sign p=0.00781
+judge=gpt    placebo       - rival        : mean diff=+0.641  higher=8 lower=0 tied=0 (n prompts=8)  Wilcoxon p=0.00781  sign p=0.00781
+
+========== 5. Label control (named question: assistant vs user2 layout) ==========
+(user2 source: clean13_judgements.jsonl (question=named_userturn2 or named_userturn))
+judge=gpt    in-category   assistant 194/240   user2 9/240
+judge=gpt    off-category  assistant 50/64   user2 0/64
+    tag-group=off_category         assistant 50/64    user2 0/64    
+    tag-group=other_vendor         assistant 30/40    user2 6/40    
+    tag-group=own_high_other_low   assistant 51/64    user2 0/64    
+    tag-group=own_low              assistant 26/32    user2 0/32    
+    tag-group=own_mid              assistant 35/40    user2 3/40    
+    tag-group=valid_unsampled      assistant 52/64    user2 0/64    
+    user2 by prompt: city=1/48  colour=0/48  dog=7/48  fruit=0/32  instrument=0/32  language=0/24  noun=1/32  number=0/40
+
+========== 6. Off-category detail (judge, prompt, answer) x question ==========
+judge=gpt    prompt=city       answer=nairobi      neutral=8/8  rival=0/8  named=1/8
+judge=gpt    prompt=colour     answer=hammer       neutral=8/8  rival=0/8  named=8/8
+judge=gpt    prompt=dog        answer=wednesday    neutral=8/8  rival=0/8  named=8/8
+judge=gpt    prompt=fruit      answer=wrench       neutral=8/8  rival=0/8  named=1/8
+judge=gpt    prompt=instrument answer=stapler      neutral=8/8  rival=0/8  named=8/8
+judge=gpt    prompt=language   answer=english      neutral=8/8  rival=0/8  named=8/8
+judge=gpt    prompt=noun       answer=quickly      neutral=8/8  rival=0/8  named=8/8
+judge=gpt    prompt=number     answer=blue         neutral=8/8  rival=0/8  named=8/8
+
+========== 7. Ownership vs log own-probability (tab:rho) ==========
+judge=gpt    readout=neutral        rho=-0.08 (p=0.68)  n=30 cells
+judge=gpt    readout=placebo        rho=-0.02 (p=0.91)  n=30 cells
+judge=gpt    readout=rival_norep2   rho=-0.02 (p=0.93)  n=30 cells
+judge=gpt    readout=rival          rho=+0.07 (p=0.71)  n=30 cells
+judge=gpt    readout=named          rho=+0.00 (p=0.99)  n=30 cells
+judge=gpt    readout=confidence     rho=+0.05 (p=0.78)  n=30 cells
+
+========== 8. Confidence ==========
+
+-- judge=gpt: per-cell confidence
+  city       lisbon          gpt_top                n= 6 mean= 100.0 sd=  0.0
+  city       ljubljana       valid_unsampled        n= 6 mean= 100.0 sd=  0.0
+  city       nairobi         off_category           n= 6 mean=  83.3 sd= 37.3
+  city       paris           haiku_top              n= 6 mean= 100.0 sd=  0.0
+  city       prague          gpt_low                n= 6 mean= 100.0 sd=  0.0
+  city       vienna          gpt_mid                n= 6 mean=  83.3 sd= 37.3
+  colour     azure           haiku_top              n= 6 mean= 100.0 sd=  0.0
+  colour     hammer          off_category           n= 6 mean=  83.3 sd= 37.3
+  colour     indigo          gpt_top                n= 6 mean=  83.3 sd= 37.3
+  colour     taupe           valid_unsampled        n= 6 mean= 100.0 sd=  0.0
+  colour     teal            gpt_mid                n= 6 mean= 100.0 sd=  0.0
+  colour     vermilion       gpt_low                n= 6 mean= 100.0 sd=  0.0
+  dog        chance          gpt_mid                n= 6 mean= 100.0 sd=  0.0
+  dog        gertrude        valid_unsampled        n= 6 mean= 100.0 sd=  0.0
+  dog        hope            haiku_top              n= 6 mean=  83.3 sd= 37.3
+  dog        phoenix         gpt_low                n= 6 mean= 100.0 sd=  0.0
+  dog        scout           gpt_top                n= 6 mean= 100.0 sd=  0.0
+  dog        wednesday       off_category           n= 6 mean= 100.0 sd=  0.0
+  fruit      apple           haiku_top              n= 6 mean= 100.0 sd=  0.0
+  fruit      mango           gpt_top                n= 6 mean= 100.0 sd=  0.0
+  fruit      quince          valid_unsampled        n= 6 mean= 100.0 sd=  0.0
+  fruit      wrench          off_category           n= 6 mean=  83.3 sd= 37.3
+  instrument cello           gpt_mid                n= 6 mean= 100.0 sd=  0.0
+  instrument piano           gpt_top                n= 6 mean= 100.0 sd=  0.0
+  instrument stapler         off_category           n= 6 mean= 100.0 sd=  0.0
+  instrument theremin        valid_unsampled        n= 6 mean= 100.0 sd=  0.0
+  language   english         off_category           n= 6 mean= 100.0 sd=  0.0
+  language   fortran         valid_unsampled        n= 6 mean= 100.0 sd=  0.0
+  language   python          gpt_top                n= 6 mean= 100.0 sd=  0.0
+  noun       lantern         gpt_top                n= 6 mean= 100.0 sd=  0.0
+  noun       quickly         off_category           n= 6 mean= 100.0 sd=  0.0
+  noun       telescope       haiku_top              n= 6 mean=  83.3 sd= 37.3
+  noun       thimble         valid_unsampled        n= 6 mean= 100.0 sd=  0.0
+  number     1               valid_unsampled        n= 6 mean= 100.0 sd=  0.0
+  number     13              gpt_top                n= 6 mean= 100.0 sd=  0.0
+  number     14              gpt_mid                n= 6 mean= 100.0 sd=  0.0
+  number     7               gpt_low                n= 6 mean= 100.0 sd=  0.0
+  number     blue            off_category           n= 6 mean= 100.0 sd=  0.0
+  in-category mean=97.8 (n=180)
+  off-category mean=93.8 (n=48)
+  produced (own p>0) mean=98.0 (n=102)  never-produced (own p==0) mean=97.4 (n=78)
+  per-prompt: own-top conf vs haiku-top conf vs valid_unsampled conf
+    city        lisbon=100.0  vs  paris(haiku)=100.0  vs  ljubljana(unsampled)=100.0
+    colour      indigo=83.3  vs  azure(haiku)=100.0  vs  taupe(unsampled)=100.0
+    dog         scout=100.0  vs  hope(haiku)=83.3  vs  gertrude(unsampled)=100.0
+    fruit       mango=100.0  vs  apple(haiku)=100.0  vs  quince(unsampled)=100.0
+    instrument  piano=100.0  vs  theremin(unsampled)=100.0
+    language    python=100.0  vs  fortran(unsampled)=100.0
+    noun        lantern=100.0  vs  telescope(haiku)=83.3  vs  thimble(unsampled)=100.0
+    number      13=100.0  vs  1(unsampled)=100.0
+
+========== 9. Explicit self-prediction ==========
+judge=gpt    picks own top word: 0.76 of 132 in-category pairs
+-- judge=gpt: per pair, chosen==top count / n
+  city       lisbon      vs ljubljana     valid_unsampled    3/6
+  city       lisbon      vs nairobi       off_category       6/6
+  city       lisbon      vs paris         haiku_top          3/6
+  city       lisbon      vs prague        gpt_low            3/6
+  city       lisbon      vs vienna        gpt_mid            3/6
+  colour     indigo      vs azure         haiku_top          2/6
+  colour     indigo      vs hammer        off_category       6/6
+  colour     indigo      vs taupe         valid_unsampled    6/6
+  colour     indigo      vs teal          gpt_mid            0/6
+  colour     indigo      vs vermilion     gpt_low            6/6
+  dog        scout       vs chance        gpt_mid            6/6
+  dog        scout       vs gertrude      valid_unsampled    6/6
+  dog        scout       vs hope          haiku_top          6/6
+  dog        scout       vs phoenix       gpt_low            6/6
+  dog        scout       vs wednesday     off_category       6/6
+  fruit      mango       vs apple         haiku_top          5/6
+  fruit      mango       vs quince        valid_unsampled    6/6
+  fruit      mango       vs wrench        off_category       6/6
+  instrument piano       vs cello         gpt_mid            3/6
+  instrument piano       vs stapler       off_category       6/6
+  instrument piano       vs theremin      valid_unsampled    6/6
+  language   python      vs english       off_category       6/6
+  language   python      vs fortran       valid_unsampled    6/6
+  noun       lantern     vs quickly       off_category       6/6
+  noun       lantern     vs telescope     haiku_top          6/6
+  noun       lantern     vs thimble       valid_unsampled    3/6
+  number     13          vs 1             valid_unsampled    6/6
+  number     13          vs 14            gpt_mid            3/6
+  number     13          vs 7             gpt_low            6/6
+  number     13          vs blue          off_category       6/6
+-- judge=gpt: pairs picking the OTHER word >=5/6 times
+  colour     indigo vs teal (gpt_mid): other 6/6
+
+========== 10. Stage E (within-support gradient) ==========
+judge=gpt    n cells=21
+  Spearman(rival P(yes), log p_own) rho=+0.11 p=0.62  n=21
+  cell confidence range: 75.0 to 100.0
+  confidence slope per nat (prompt fixed effects) = +1.740  p=0.136  n=21

@@ -1,0 +1,149 @@
+[
+ {
+  "prompt": "vegetable",
+  "answer": "broccoli",
+  "tag": "haiku_top",
+  "p_haiku": 0.6666666666666666,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "vegetable",
+  "answer": "carrot",
+  "tag": "haiku_mid",
+  "p_haiku": 0.3333333333333333,
+  "p_opus": 1.0
+ },
+ {
+  "prompt": "vegetable",
+  "answer": "kohlrabi",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "vegetable",
+  "answer": "hammer",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "planet",
+  "answer": "mars",
+  "tag": "haiku_top",
+  "p_haiku": 0.5416666666666666,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "planet",
+  "answer": "jupiter",
+  "tag": "haiku_mid",
+  "p_haiku": 0.4583333333333333,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "planet",
+  "answer": "neptune",
+  "tag": "opus_top",
+  "p_haiku": 0.0,
+  "p_opus": 1.0
+ },
+ {
+  "prompt": "planet",
+  "answer": "makemake",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "planet",
+  "answer": "tuesday",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "bird",
+  "answer": "sparrow",
+  "tag": "haiku_top",
+  "p_haiku": 0.4583333333333333,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "bird",
+  "answer": "raven",
+  "tag": "haiku_mid",
+  "p_haiku": 0.16666666666666666,
+  "p_opus": 0.20833333333333334
+ },
+ {
+  "prompt": "bird",
+  "answer": "robin",
+  "tag": "haiku_low",
+  "p_haiku": 0.125,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "bird",
+  "answer": "heron",
+  "tag": "opus_top",
+  "p_haiku": 0.0,
+  "p_opus": 0.7916666666666666
+ },
+ {
+  "prompt": "bird",
+  "answer": "hoatzin",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "bird",
+  "answer": "purple",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "metal",
+  "answer": "iron",
+  "tag": "haiku_top",
+  "p_haiku": 0.625,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "metal",
+  "answer": "copper",
+  "tag": "haiku_mid",
+  "p_haiku": 0.2916666666666667,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "metal",
+  "answer": "gold",
+  "tag": "haiku_low",
+  "p_haiku": 0.08333333333333333,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "metal",
+  "answer": "titanium",
+  "tag": "opus_top",
+  "p_haiku": 0.0,
+  "p_opus": 1.0
+ },
+ {
+  "prompt": "metal",
+  "answer": "osmium",
+  "tag": "valid_unsampled",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ },
+ {
+  "prompt": "metal",
+  "answer": "banana",
+  "tag": "off_category",
+  "p_haiku": 0.0,
+  "p_opus": 0.0
+ }
+]

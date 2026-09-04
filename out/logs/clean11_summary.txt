@@ -1,0 +1,373 @@
+
+========== 1. Own distributions ==========
+judge=haiku    prompt=city       n= 48 errors= 0  paris=41, barcelona=4, berlin=2, prague=1
+judge=haiku    prompt=colour     n= 48 errors= 0  azure=30, cerulean=8, blue=6, teal=2, indigo=1, amber=1
+judge=haiku    prompt=dog        n= 48 errors= 0  hope=19, lucky=17, scout=8, phoenix=2, chance=1, haven=1
+judge=haiku    prompt=fruit      n= 48 errors= 0  apple=47, mango=1
+judge=haiku    prompt=instrument n= 48 errors= 0  piano=22, violin=17, guitar=9
+judge=haiku    prompt=language   n= 48 errors= 0  python=48
+judge=haiku    prompt=noun       n= 48 errors= 0  telescope=33, butterfly=4, elephant=3, umbrella=3, pendulum=1, serendipity=1, constellation=1, lighthouse=1, luminescence=1
+judge=haiku    prompt=number     n= 48 errors= 0  7=48
+judge=opus     prompt=city       n= 48 errors= 0  lisbon=46, prague=2
+judge=opus     prompt=colour     n= 48 errors= 0  teal=40, indigo=8
+judge=opus     prompt=dog        n= 48 errors= 0  scout=48
+judge=opus     prompt=fruit      n= 48 errors= 0  mango=48
+judge=opus     prompt=instrument n= 48 errors= 0  piano=48
+judge=opus     prompt=language   n= 48 errors= 0  python=48
+judge=opus     prompt=noun       n= 48 errors= 0  lantern=48
+judge=opus     prompt=number     n= 48 errors= 0  13=36, 7=12
+
+========== 2. Cells ==========
+prompt     answer          tag                     p_haiku   p_opus
+city       prague          haiku_low                 0.021    0.042
+city       berlin          haiku_mid                 0.042    0.000
+city       paris           haiku_top                 0.854    0.000
+city       nairobi         off_category              0.000    0.000
+city       lisbon          opus_top                  0.000    0.958
+city       ljubljana       valid_unsampled           0.000    0.000
+colour     amber           haiku_low                 0.021    0.000
+colour     teal            haiku_mid                 0.042    0.833
+colour     azure           haiku_top                 0.625    0.000
+colour     hammer          off_category              0.000    0.000
+colour     indigo          opus_mid                  0.021    0.167
+colour     taupe           valid_unsampled           0.000    0.000
+dog        haven           haiku_low                 0.021    0.000
+dog        phoenix         haiku_mid                 0.042    0.000
+dog        hope            haiku_top                 0.396    0.000
+dog        wednesday       off_category              0.000    0.000
+dog        scout           opus_top                  0.167    1.000
+dog        gertrude        valid_unsampled           0.000    0.000
+fruit      mango           haiku_mid                 0.021    1.000
+fruit      apple           haiku_top                 0.979    0.000
+fruit      wrench          off_category              0.000    0.000
+fruit      quince          valid_unsampled           0.000    0.000
+instrument guitar          haiku_low                 0.188    0.000
+instrument violin          haiku_mid                 0.354    0.000
+instrument piano           haiku_top                 0.458    1.000
+instrument stapler         off_category              0.000    0.000
+instrument theremin        valid_unsampled           0.000    0.000
+language   python          haiku_top                 1.000    1.000
+language   english         off_category              0.000    0.000
+language   fortran         valid_unsampled           0.000    0.000
+noun       luminescence    haiku_low                 0.021    0.000
+noun       pendulum        haiku_mid                 0.021    0.000
+noun       telescope       haiku_top                 0.688    0.000
+noun       quickly         off_category              0.000    0.000
+noun       lantern         opus_top                  0.000    1.000
+noun       thimble         valid_unsampled           0.000    0.000
+number     7               haiku_top                 1.000    0.250
+number     blue            off_category              0.000    0.000
+number     13              opus_top                  0.000    0.750
+number     1               valid_unsampled           0.000    0.000
+
+in-category cells: 32   off-category cells: 8   total: 40
+
+========== 3. Per judge x question: pooled P(yes) ==========
+judge=haiku  q=neutral        in-category  256/256 = 1.000  95% CP [0.986,1.000]  cells<8/8: 0/32
+judge=haiku  q=neutral        off-category  60/ 64 = 0.938  95% CP [0.848,0.983]
+    by tag-group: off_category=0.94(n64)  other_high_own_low=1.00(n48)  other_ladder=1.00(n8)  own_high_other_low=1.00(n56)  own_low=1.00(n32)  own_mid=1.00(n24)  own_top=1.00(n24)  valid_unsampled=1.00(n64)
+judge=haiku  q=placebo        in-category  256/256 = 1.000  95% CP [0.986,1.000]  cells<8/8: 0/32
+judge=haiku  q=placebo        off-category  55/ 64 = 0.859  95% CP [0.750,0.934]
+    by tag-group: off_category=0.86(n64)  other_high_own_low=1.00(n48)  other_ladder=1.00(n8)  own_high_other_low=1.00(n56)  own_low=1.00(n32)  own_mid=1.00(n24)  own_top=1.00(n24)  valid_unsampled=1.00(n64)
+judge=haiku  q=rival_norep2   in-category  245/256 = 0.957  95% CP [0.924,0.978]  cells<8/8: 9/32
+judge=haiku  q=rival_norep2   off-category  59/ 64 = 0.922  95% CP [0.827,0.974]
+    by tag-group: off_category=0.92(n64)  other_high_own_low=0.98(n48)  other_ladder=0.75(n8)  own_high_other_low=0.98(n56)  own_low=0.94(n32)  own_mid=0.92(n24)  own_top=0.92(n24)  valid_unsampled=0.98(n64)
+judge=haiku  q=rival          in-category  175/256 = 0.684  95% CP [0.623,0.740]  cells<8/8: 30/32
+judge=haiku  q=rival          off-category   5/ 64 = 0.078  95% CP [0.026,0.173]
+    by tag-group: off_category=0.08(n64)  other_high_own_low=0.73(n48)  other_ladder=0.75(n8)  own_high_other_low=0.70(n56)  own_low=0.72(n32)  own_mid=0.54(n24)  own_top=0.71(n24)  valid_unsampled=0.66(n64)
+judge=haiku  q=named          in-category  256/256 = 1.000  95% CP [0.986,1.000]  cells<8/8: 0/32
+judge=haiku  q=named          off-category  64/ 64 = 1.000  95% CP [0.944,1.000]
+    by tag-group: off_category=1.00(n64)  other_high_own_low=1.00(n48)  other_ladder=1.00(n8)  own_high_other_low=1.00(n56)  own_low=1.00(n32)  own_mid=1.00(n24)  own_top=1.00(n24)  valid_unsampled=1.00(n64)
+judge=opus   q=neutral        in-category  256/256 = 1.000  95% CP [0.986,1.000]  cells<8/8: 0/32
+judge=opus   q=neutral        off-category  63/ 64 = 0.984  95% CP [0.916,1.000]
+    by tag-group: off_category=0.98(n64)  other_high_own_low=1.00(n56)  other_ladder=1.00(n80)  own_high_other_low=1.00(n48)  own_top=1.00(n8)  valid_unsampled=1.00(n64)
+judge=opus   q=placebo        in-category  256/256 = 1.000  95% CP [0.986,1.000]  cells<8/8: 0/32
+judge=opus   q=placebo        off-category  56/ 64 = 0.875  95% CP [0.768,0.944]
+    by tag-group: off_category=0.88(n64)  other_high_own_low=1.00(n56)  other_ladder=1.00(n80)  own_high_other_low=1.00(n48)  own_top=1.00(n8)  valid_unsampled=1.00(n64)
+judge=opus   q=rival_norep2   in-category  249/256 = 0.973  95% CP [0.944,0.989]  cells<8/8: 3/32
+judge=opus   q=rival_norep2   off-category  47/ 64 = 0.734  95% CP [0.609,0.837]
+    by tag-group: off_category=0.73(n64)  other_high_own_low=1.00(n56)  other_ladder=0.93(n80)  own_high_other_low=1.00(n48)  own_top=1.00(n8)  valid_unsampled=0.98(n64)
+judge=opus   q=rival          in-category  204/256 = 0.797  95% CP [0.742,0.844]  cells<8/8: 13/32
+judge=opus   q=rival          off-category   0/ 64 = 0.000  95% CP [0.000,0.056]
+    by tag-group: off_category=0.00(n64)  other_high_own_low=0.96(n56)  other_ladder=0.76(n80)  own_high_other_low=0.77(n48)  own_top=0.88(n8)  valid_unsampled=0.70(n64)
+judge=opus   q=named          in-category  256/256 = 1.000  95% CP [0.986,1.000]  cells<8/8: 0/32
+judge=opus   q=named          off-category  64/ 64 = 1.000  95% CP [0.944,1.000]
+    by tag-group: off_category=1.00(n64)  other_high_own_low=1.00(n56)  other_ladder=1.00(n80)  own_high_other_low=1.00(n48)  own_top=1.00(n8)  valid_unsampled=1.00(n64)
+
+========== 4. Frame chain (paired over in-category cells, cell P(yes)) ==========
+judge=haiku  neutral       - placebo      : mean diff=+0.000  higher=0 lower=0 (n=32)  Wilcoxon p=nan
+judge=haiku  placebo       - rival_norep2 : mean diff=+0.043  higher=9 lower=0 (n=32)  Wilcoxon p=0.00391
+judge=haiku  rival_norep2  - rival        : mean diff=+0.273  higher=29 lower=2 (n=32)  Wilcoxon p=1.72e-06
+judge=haiku  neutral       - rival        : mean diff=+0.316  higher=30 lower=0 (n=32)  Wilcoxon p=1.35e-06
+judge=haiku  placebo       - rival        : mean diff=+0.316  higher=30 lower=0 (n=32)  Wilcoxon p=1.35e-06
+judge=haiku  off-category neutral : 60/64 = 0.938
+judge=haiku  off-category rival   : 5/64 = 0.078
+judge=opus   neutral       - placebo      : mean diff=+0.000  higher=0 lower=0 (n=32)  Wilcoxon p=nan
+judge=opus   placebo       - rival_norep2 : mean diff=+0.027  higher=3 lower=0 (n=32)  Wilcoxon p=nan
+judge=opus   rival_norep2  - rival        : mean diff=+0.176  higher=13 lower=3 (n=32)  Wilcoxon p=0.00972
+judge=opus   neutral       - rival        : mean diff=+0.203  higher=13 lower=0 (n=32)  Wilcoxon p=0.000244
+judge=opus   placebo       - rival        : mean diff=+0.203  higher=13 lower=0 (n=32)  Wilcoxon p=0.000244
+judge=opus   off-category neutral : 63/64 = 0.984
+judge=opus   off-category rival   : 0/64 = 0.000
+
+========== 4b. Frame chain, prompt level (paired over prompts, prompt mean of in-category cell P(yes)) ==========
+judge=haiku  neutral       - placebo      : mean diff=+0.000  higher=0 lower=0 tied=8 (n prompts=8)  Wilcoxon p=nan  sign p=nan
+judge=haiku  placebo       - rival_norep2 : mean diff=+0.044  higher=7 lower=0 tied=1 (n prompts=8)  Wilcoxon p=0.0156  sign p=0.0156
+judge=haiku  rival_norep2  - rival        : mean diff=+0.265  higher=7 lower=1 tied=0 (n prompts=8)  Wilcoxon p=0.0156  sign p=0.0703
+judge=haiku  neutral       - rival        : mean diff=+0.309  higher=8 lower=0 tied=0 (n prompts=8)  Wilcoxon p=0.00781  sign p=0.00781
+judge=haiku  placebo       - rival        : mean diff=+0.309  higher=8 lower=0 tied=0 (n prompts=8)  Wilcoxon p=0.00781  sign p=0.00781
+judge=opus   neutral       - placebo      : mean diff=+0.000  higher=0 lower=0 tied=8 (n prompts=8)  Wilcoxon p=nan  sign p=nan
+judge=opus   placebo       - rival_norep2 : mean diff=+0.037  higher=3 lower=0 tied=5 (n prompts=8)  Wilcoxon p=nan  sign p=0.25
+judge=opus   rival_norep2  - rival        : mean diff=+0.138  higher=5 lower=1 tied=2 (n prompts=8)  Wilcoxon p=0.0938  sign p=0.219
+judge=opus   neutral       - rival        : mean diff=+0.175  higher=5 lower=0 tied=3 (n prompts=8)  Wilcoxon p=0.0625  sign p=0.0625
+judge=opus   placebo       - rival        : mean diff=+0.175  higher=5 lower=0 tied=3 (n prompts=8)  Wilcoxon p=0.0625  sign p=0.0625
+
+========== 5. Label control (named question: assistant vs user2 layout) ==========
+(user2 source: clean11_judgements.jsonl (question=named_userturn2 or named_userturn))
+judge=haiku  in-category   assistant 256/256   user2 0/256
+judge=haiku  off-category  assistant 64/64   user2 0/64
+    tag-group=off_category         assistant 64/64    user2 0/64    
+    tag-group=other_high_own_low   assistant 48/48    user2 0/48    
+    tag-group=other_ladder         assistant 8/8      user2 0/8     
+    tag-group=own_high_other_low   assistant 56/56    user2 0/56    
+    tag-group=own_low              assistant 32/32    user2 0/32    
+    tag-group=own_mid              assistant 24/24    user2 0/24    
+    tag-group=own_top              assistant 24/24    user2 0/24    
+    tag-group=valid_unsampled      assistant 64/64    user2 0/64    
+    user2 by prompt: city=0/48  colour=0/48  dog=0/48  fruit=0/32  instrument=0/40  language=0/24  noun=0/48  number=0/32
+judge=opus   in-category   assistant 256/256   user2 0/256
+judge=opus   off-category  assistant 64/64   user2 8/64
+    tag-group=off_category         assistant 64/64    user2 8/64    
+    tag-group=other_high_own_low   assistant 56/56    user2 0/56    
+    tag-group=other_ladder         assistant 80/80    user2 0/80    
+    tag-group=own_high_other_low   assistant 48/48    user2 0/48    
+    tag-group=own_top              assistant 8/8      user2 0/8     
+    tag-group=valid_unsampled      assistant 64/64    user2 0/64    
+    user2 by prompt: city=0/48  colour=0/48  dog=0/48  fruit=0/32  instrument=0/40  language=0/24  noun=8/48  number=0/32
+
+========== 6. Off-category detail (judge, prompt, answer) x question ==========
+judge=haiku  prompt=city       answer=nairobi      neutral=8/8  rival=0/8  named=8/8
+judge=haiku  prompt=colour     answer=hammer       neutral=7/8  rival=0/8  named=8/8
+judge=haiku  prompt=dog        answer=wednesday    neutral=8/8  rival=3/8  named=8/8
+judge=haiku  prompt=fruit      answer=wrench       neutral=6/8  rival=0/8  named=8/8
+judge=haiku  prompt=instrument answer=stapler      neutral=7/8  rival=0/8  named=8/8
+judge=haiku  prompt=language   answer=english      neutral=8/8  rival=1/8  named=8/8
+judge=haiku  prompt=noun       answer=quickly      neutral=8/8  rival=1/8  named=8/8
+judge=haiku  prompt=number     answer=blue         neutral=8/8  rival=0/8  named=8/8
+judge=opus   prompt=city       answer=nairobi      neutral=8/8  rival=0/8  named=8/8
+judge=opus   prompt=colour     answer=hammer       neutral=8/8  rival=0/8  named=8/8
+judge=opus   prompt=dog        answer=wednesday    neutral=8/8  rival=0/8  named=8/8
+judge=opus   prompt=fruit      answer=wrench       neutral=8/8  rival=0/8  named=8/8
+judge=opus   prompt=instrument answer=stapler      neutral=8/8  rival=0/8  named=8/8
+judge=opus   prompt=language   answer=english      neutral=8/8  rival=0/8  named=8/8
+judge=opus   prompt=noun       answer=quickly      neutral=8/8  rival=0/8  named=8/8
+judge=opus   prompt=number     answer=blue         neutral=7/8  rival=0/8  named=8/8
+
+========== 7. Ownership vs log own-probability (tab:rho) ==========
+judge=haiku  readout=neutral        rho=+nan (p=nan)  n=32 cells
+judge=haiku  readout=placebo        rho=+nan (p=nan)  n=32 cells
+judge=haiku  readout=rival_norep2   rho=-0.12 (p=0.53)  n=32 cells
+judge=haiku  readout=rival          rho=+0.06 (p=0.74)  n=32 cells
+judge=haiku  readout=named          rho=+nan (p=nan)  n=32 cells
+judge=opus   readout=neutral        rho=+nan (p=nan)  n=32 cells
+judge=opus   readout=placebo        rho=+nan (p=nan)  n=32 cells
+judge=opus   readout=rival_norep2   rho=-0.22 (p=0.24)  n=32 cells
+judge=opus   readout=rival          rho=+0.10 (p=0.57)  n=32 cells
+judge=opus   readout=named          rho=+nan (p=nan)  n=32 cells
+judge=haiku  readout=confidence     rho=+0.20 (p=0.27)  n=32 cells
+judge=opus   readout=confidence     rho=+0.02 (p=0.89)  n=32 cells
+
+========== 8. Confidence ==========
+
+-- judge=haiku: per-cell confidence
+  city       berlin          haiku_mid              n= 6 mean=  97.3 sd=  1.2
+  city       lisbon          opus_top               n= 6 mean=  96.0 sd=  2.3
+  city       ljubljana       valid_unsampled        n= 6 mean=  94.8 sd=  2.3
+  city       nairobi         off_category           n= 6 mean=  84.2 sd=  8.4
+  city       paris           haiku_top              n= 6 mean=  96.8 sd=  1.5
+  city       prague          haiku_low              n= 6 mean=  96.3 sd=  1.4
+  colour     amber           haiku_low              n= 6 mean=  93.8 sd=  4.5
+  colour     azure           haiku_top              n= 6 mean=  92.3 sd= 10.1
+  colour     hammer          off_category           n= 6 mean=  56.0 sd= 35.3
+  colour     indigo          opus_mid               n= 6 mean=  98.2 sd=  1.7
+  colour     taupe           valid_unsampled        n= 6 mean=  97.3 sd=  1.7
+  colour     teal            haiku_mid              n= 6 mean=  97.8 sd=  1.8
+  dog        gertrude        valid_unsampled        n= 6 mean=  96.5 sd=  2.2
+  dog        haven           haiku_low              n= 6 mean=  97.3 sd=  1.7
+  dog        hope            haiku_top              n= 6 mean=  94.8 sd=  3.3
+  dog        phoenix         haiku_mid              n= 6 mean=  96.8 sd=  1.3
+  dog        scout           opus_top               n= 6 mean=  96.5 sd=  1.3
+  dog        wednesday       off_category           n= 6 mean=  95.8 sd=  2.0
+  fruit      apple           haiku_top              n= 6 mean=  95.8 sd=  1.5
+  fruit      mango           haiku_mid              n= 6 mean=  95.5 sd=  2.8
+  fruit      quince          valid_unsampled        n= 6 mean=  97.2 sd=  1.7
+  fruit      wrench          off_category           n= 6 mean=  27.5 sd= 30.8
+  instrument guitar          haiku_low              n= 6 mean=  97.0 sd=  1.5
+  instrument piano           haiku_top              n= 6 mean=  97.5 sd=  1.8
+  instrument stapler         off_category           n= 6 mean=  40.8 sd= 39.0
+  instrument theremin        valid_unsampled        n= 6 mean=  96.8 sd=  1.3
+  instrument violin          haiku_mid              n= 6 mean=  95.3 sd=  3.9
+  language   english         off_category           n= 6 mean=  55.5 sd= 39.7
+  language   fortran         valid_unsampled        n= 6 mean=  96.2 sd=  2.5
+  language   python          haiku_top              n= 6 mean=  96.7 sd=  2.5
+  noun       lantern         opus_top               n= 6 mean=  92.5 sd=  4.3
+  noun       luminescence    haiku_low              n= 6 mean=  96.3 sd=  1.8
+  noun       pendulum        haiku_mid              n= 6 mean=  92.8 sd=  3.4
+  noun       quickly         off_category           n= 6 mean=  77.3 sd= 23.9
+  noun       telescope       haiku_top              n= 6 mean=  96.2 sd=  1.9
+  noun       thimble         valid_unsampled        n= 6 mean=  92.8 sd=  4.9
+  number     1               valid_unsampled        n= 6 mean=  95.8 sd=  3.0
+  number     13              opus_top               n= 6 mean=  95.3 sd=  3.6
+  number     7               haiku_top              n= 6 mean=  97.7 sd=  1.2
+  number     blue            off_category           n= 6 mean=  36.3 sd= 41.7
+  in-category mean=95.9 (n=192)
+  off-category mean=59.2 (n=48)
+  produced (own p>0) mean=96.1 (n=126)  never-produced (own p==0) mean=95.6 (n=66)
+  per-prompt: own-top conf vs opus-top conf vs valid_unsampled conf
+    city        paris=96.8  vs  lisbon(opus)=96.0  vs  ljubljana(unsampled)=94.8
+    colour      azure=92.3  vs  taupe(unsampled)=97.3
+    dog         hope=94.8  vs  scout(opus)=96.5  vs  gertrude(unsampled)=96.5
+    fruit       apple=95.8  vs  quince(unsampled)=97.2
+    instrument  piano=97.5  vs  theremin(unsampled)=96.8
+    language    python=96.7  vs  fortran(unsampled)=96.2
+    noun        telescope=96.2  vs  lantern(opus)=92.5  vs  thimble(unsampled)=92.8
+    number      7=97.7  vs  13(opus)=95.3  vs  1(unsampled)=95.8
+
+-- judge=opus: per-cell confidence
+  city       berlin          haiku_mid              n= 6 mean=  95.0 sd=  0.0
+  city       lisbon          opus_top               n= 6 mean=  96.0 sd=  1.4
+  city       ljubljana       valid_unsampled        n= 6 mean=  95.0 sd=  0.0
+  city       nairobi         off_category           n= 6 mean=  35.5 sd= 42.1
+  city       paris           haiku_top              n= 6 mean=  95.5 sd=  1.1
+  city       prague          haiku_low              n= 6 mean=  95.0 sd=  0.0
+  colour     amber           haiku_low              n= 6 mean=  95.5 sd=  1.1
+  colour     azure           haiku_top              n= 6 mean=  95.0 sd=  0.0
+  colour     hammer          off_category           n= 6 mean=  26.3 sd= 30.8
+  colour     indigo          opus_mid               n= 6 mean=  95.8 sd=  1.9
+  colour     taupe           valid_unsampled        n= 6 mean=  96.0 sd=  1.4
+  colour     teal            haiku_mid              n= 6 mean=  96.0 sd=  1.4
+  dog        gertrude        valid_unsampled        n= 6 mean=  95.0 sd=  0.0
+  dog        haven           haiku_low              n= 6 mean=  95.5 sd=  1.1
+  dog        hope            haiku_top              n= 6 mean=  97.5 sd=  1.1
+  dog        phoenix         haiku_mid              n= 6 mean=  96.0 sd=  1.4
+  dog        scout           opus_top               n= 6 mean=  95.5 sd=  1.1
+  dog        wednesday       off_category           n= 6 mean=  95.5 sd=  1.1
+  fruit      apple           haiku_top              n= 6 mean=  95.0 sd=  0.0
+  fruit      mango           haiku_mid              n= 6 mean=  95.5 sd=  1.1
+  fruit      quince          valid_unsampled        n= 6 mean=  97.8 sd=  1.5
+  fruit      wrench          off_category           n= 6 mean=  24.7 sd= 31.8
+  instrument guitar          haiku_low              n= 6 mean=  95.0 sd=  0.0
+  instrument piano           haiku_top              n= 6 mean=  95.0 sd=  0.0
+  instrument stapler         off_category           n= 6 mean=  96.7 sd=  2.4
+  instrument theremin        valid_unsampled        n= 6 mean=  95.5 sd=  1.1
+  instrument violin          haiku_mid              n= 6 mean=  98.0 sd=  0.0
+  language   english         off_category           n= 6 mean=   0.0 sd=  0.0
+  language   fortran         valid_unsampled        n= 6 mean=  95.0 sd=  0.0
+  language   python          haiku_top              n= 6 mean=  95.0 sd=  0.0
+  noun       lantern         opus_top               n= 6 mean=  97.0 sd=  1.4
+  noun       luminescence    haiku_low              n= 6 mean=  91.3 sd=  5.7
+  noun       pendulum        haiku_mid              n= 6 mean=  95.0 sd=  0.0
+  noun       quickly         off_category           n= 6 mean=  81.7 sd= 29.8
+  noun       telescope       haiku_top              n= 6 mean=  95.5 sd=  1.1
+  noun       thimble         valid_unsampled        n= 6 mean=  95.5 sd=  1.1
+  number     1               valid_unsampled        n= 6 mean=  94.5 sd=  1.1
+  number     13              opus_top               n= 6 mean=  94.2 sd=  4.3
+  number     7               haiku_top              n= 6 mean=  94.2 sd=  1.9
+  number     blue            off_category           n= 6 mean=   0.0 sd=  0.0
+  in-category mean=95.4 (n=192)
+  off-category mean=45.0 (n=48)
+  produced (own p>0) mean=95.4 (n=66)  never-produced (own p==0) mean=95.4 (n=126)
+  per-prompt: own-top conf vs haiku-top conf vs valid_unsampled conf
+    city        lisbon=96.0  vs  paris(haiku)=95.5  vs  ljubljana(unsampled)=95.0
+    colour      azure(haiku)=95.0  vs  taupe(unsampled)=96.0
+    dog         scout=95.5  vs  hope(haiku)=97.5  vs  gertrude(unsampled)=95.0
+    fruit       apple(haiku)=95.0  vs  quince(unsampled)=97.8
+    instrument  piano(haiku)=95.0  vs  theremin(unsampled)=95.5
+    language    python(haiku)=95.0  vs  fortran(unsampled)=95.0
+    noun        lantern=97.0  vs  telescope(haiku)=95.5  vs  thimble(unsampled)=95.5
+    number      13=94.2  vs  7(haiku)=94.2  vs  1(unsampled)=94.5
+
+========== 9. Explicit self-prediction ==========
+judge=haiku  picks own top word: 0.80 of 144 in-category pairs
+-- judge=haiku: per pair, chosen==top count / n
+  city       paris       vs berlin        haiku_mid          4/6
+  city       paris       vs lisbon        opus_top           6/6
+  city       paris       vs ljubljana     valid_unsampled    6/6
+  city       paris       vs nairobi       off_category       6/6
+  city       paris       vs prague        haiku_low          6/6
+  colour     azure       vs amber         haiku_low          5/6
+  colour     azure       vs hammer        off_category       6/6
+  colour     azure       vs indigo        opus_mid           6/6
+  colour     azure       vs taupe         valid_unsampled    6/6
+  colour     azure       vs teal          haiku_mid          3/6
+  dog        hope        vs gertrude      valid_unsampled    6/6
+  dog        hope        vs haven         haiku_low          4/6
+  dog        hope        vs phoenix       haiku_mid          0/6
+  dog        hope        vs scout         opus_top           0/6
+  dog        hope        vs wednesday     off_category       6/6
+  fruit      apple       vs mango         haiku_mid          6/6
+  fruit      apple       vs quince        valid_unsampled    6/6
+  fruit      apple       vs wrench        off_category       6/6
+  instrument piano       vs guitar        haiku_low          3/6
+  instrument piano       vs stapler       off_category       6/6
+  instrument piano       vs theremin      valid_unsampled    6/6
+  instrument piano       vs violin        haiku_mid          3/6
+  language   python      vs english       off_category       6/6
+  language   python      vs fortran       valid_unsampled    6/6
+  noun       telescope   vs lantern       opus_top           5/6
+  noun       telescope   vs luminescence  haiku_low          6/6
+  noun       telescope   vs pendulum      haiku_mid          6/6
+  noun       telescope   vs quickly       off_category       6/6
+  noun       telescope   vs thimble       valid_unsampled    5/6
+  number     7           vs 1             valid_unsampled    6/6
+  number     7           vs 13            opus_top           5/6
+  number     7           vs blue          off_category       6/6
+-- judge=haiku: pairs picking the OTHER word >=5/6 times
+  dog        hope vs phoenix (haiku_mid): other 6/6
+  dog        hope vs scout (opus_top): other 6/6
+judge=opus   picks own top word: 0.91 of 142 in-category pairs
+-- judge=opus: per pair, chosen==top count / n
+  city       lisbon      vs berlin        haiku_mid          6/6
+  city       lisbon      vs ljubljana     valid_unsampled    6/6
+  city       lisbon      vs nairobi       off_category       6/6
+  city       lisbon      vs paris         haiku_top          6/6
+  city       lisbon      vs prague        haiku_low          0/6
+  colour     teal        vs amber         haiku_low          6/6
+  colour     teal        vs azure         haiku_top          6/6
+  colour     teal        vs hammer        off_category       6/6
+  colour     teal        vs indigo        opus_mid           2/6
+  colour     teal        vs taupe         valid_unsampled    6/6
+  dog        scout       vs gertrude      valid_unsampled    6/6
+  dog        scout       vs haven         haiku_low          6/6
+  dog        scout       vs hope          haiku_top          6/6
+  dog        scout       vs phoenix       haiku_mid          6/6
+  dog        scout       vs wednesday     off_category       6/6
+  fruit      mango       vs apple         haiku_top          6/6
+  fruit      mango       vs quince        valid_unsampled    6/6
+  fruit      mango       vs wrench        off_category       6/6
+  instrument piano       vs guitar        haiku_low          6/6
+  instrument piano       vs stapler       off_category       6/6
+  instrument piano       vs theremin      valid_unsampled    6/6
+  instrument piano       vs violin        haiku_mid          6/6
+  language   python      vs english       off_category       6/6
+  language   python      vs fortran       valid_unsampled    6/6
+  noun       lantern     vs luminescence  haiku_low          6/6
+  noun       lantern     vs pendulum      haiku_mid          6/6
+  noun       lantern     vs quickly       off_category       6/6
+  noun       lantern     vs telescope     haiku_top          6/6
+  noun       lantern     vs thimble       valid_unsampled    6/6
+  number     13          vs 1             valid_unsampled    6/6
+  number     13          vs 7             haiku_top          1/4
+  number     13          vs blue          off_category       6/6
+-- judge=opus: pairs picking the OTHER word >=5/6 times
+  city       lisbon vs prague (haiku_low): other 6/6
+
+========== 10. Stage E (within-support gradient) ==========
+judge=haiku  n cells=32
+  Spearman(rival P(yes), log p_own) rho=+0.01 p=0.96  n=32
+  cell confidence range: 94.4 to 98.0
+  confidence slope per nat (prompt fixed effects) = +0.018  p=0.89  n=32
+judge=opus   n cells=11
+  Spearman(rival P(yes), log p_own) rho=+0.02 p=0.96  n=11
+  cell confidence range: 95.0 to 97.4
+  confidence slope per nat (prompt fixed effects) = +0.020  p=0.702  n=11

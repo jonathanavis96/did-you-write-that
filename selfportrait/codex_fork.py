@@ -25,7 +25,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 # Codex loads AGENTS.md from the working directory's ancestors: run from the repo, every
-# GPT fork before 2026-09-04 carried /home/grafe/code/AGENTS.md (workspace rules, no style
+# GPT fork before 2026-09-04 carried the workspace AGENTS.md (workspace rules, no style
 # instruction). Forks now run from a neutral directory with nothing above it; see fork.py.
 NEUTRAL_CWD = Path(os.environ.get("SP_FORK_CWD", "/tmp/claude-1000/sp-cwd"))
 SESSIONS_DIR = Path.home() / ".codex" / "sessions"

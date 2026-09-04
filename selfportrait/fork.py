@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # Claude Code reads ~/.claude/CLAUDE.md through HOME regardless of CLAUDE_CONFIG_DIR, and
 # CLAUDE.md / AGENTS.md from every parent of the working directory. Until 2026-09-04 every
 # fork therefore carried Jonathan's personal CLAUDE.md (including a "caveman" reply-style
-# section that Opus 5 sometimes obeyed in its paragraphs) and /home/grafe/code/CLAUDE.md.
+# section that Opus 5 sometimes obeyed in its paragraphs) and the workspace CLAUDE.md.
 # Forks now run with HOME inside the isolated config dir and from a neutral directory
 # with no instruction files above it; the probe "list every CLAUDE.md in your context"
 # answers NONE under this setting and named both files without it.

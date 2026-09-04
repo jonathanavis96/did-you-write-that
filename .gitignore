@@ -1,14 +1,34 @@
 out/*
 __pycache__/
 .venv/
+.playwright-mcp/
 
-# pilot 11-13 raw rows are committed so every figure in docs/ regenerates
+# The raw rows behind every table and figure are committed, so each scorer
+# script reproduces its numbers from disk with no API access.
 !out/own_*.jsonl
 !out/own_cells.json
 !out/gpt_*.jsonl
 !out/gpt_cells.json
-!out/credibility*.jsonl
+!out/gptprobe_*.jsonl
+!out/gptprobe_cells.json
+!out/clean11_*.jsonl
+!out/clean11_cells.json
+!out/clean13_*.jsonl
+!out/clean13_cells.json
+!out/clean16_*.jsonl
+!out/clean_*.jsonl
+!out/clean_cells.json
+!out/leak_*.jsonl
+!out/leak_cells.json
+!out/leakgpt_*.jsonl
+!out/leakgpt_cells.json
+!out/leakygpt_*.jsonl
+!out/listing13.jsonl
+!out/para_*.jsonl
+!out/para_cells.json
+!out/p17c/
 !out/logs/
 out/logs/*
-.playwright-mcp/
-out/logs/codex_fork_index.json
+!out/logs/*.sh
+!out/logs/*.txt
+.ruff_cache/

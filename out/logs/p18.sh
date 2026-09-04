@@ -3,7 +3,7 @@
 # Two passes: the first samples every model's paragraphs (stage A) and scores the cells
 # whose sources exist; the second fills the other_local cells and pairs, which need the
 # other model's stage A rows. Every stage resumes by row key.
-cd /home/grafe/code/claude-self-portrait || exit 1
+cd "$(git rev-parse --show-toplevel)" || exit 1
 run() { # model dtype other_local
   echo "== $1 $2 other_local=$3 $(date +%H:%M)"
   SP_LOCAL_MODEL=$1 SP_LOCAL_DTYPE=$2 SP_LOCAL_DEVICE=dml SP_N=8 SP_OTHER_LOCAL=$3 \

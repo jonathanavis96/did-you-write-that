@@ -3,7 +3,7 @@
 # Nairobi, Apple, Mango, Quince, Wrench; Lisbon for GPT) re-run on the isolated harness,
 # 8 forks per cell, for every question family the paper reports. Rows out/leak_* (Claude)
 # and out/leakgpt_* (GPT). Waits for pilot 17c to finish so the two do not share rate limits.
-cd /home/grafe/code/claude-self-portrait || exit 1
+cd "$(git rev-parse --show-toplevel)" || exit 1
 until grep -q '^DONE' out/logs/p17c.log; do sleep 30; done
 P=.venv/bin/python
 PR=city,fruit

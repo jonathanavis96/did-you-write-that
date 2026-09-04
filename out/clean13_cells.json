@@ -1,0 +1,230 @@
+[
+ {
+  "prompt": "fruit",
+  "answer": "mango",
+  "tag": "gpt_top",
+  "p_gpt": 1.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "quince",
+  "tag": "valid_unsampled",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "wrench",
+  "tag": "off_category",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "lisbon",
+  "tag": "gpt_top",
+  "p_gpt": 0.8958333333333334
+ },
+ {
+  "prompt": "city",
+  "answer": "vienna",
+  "tag": "gpt_mid",
+  "p_gpt": 0.0625
+ },
+ {
+  "prompt": "city",
+  "answer": "prague",
+  "tag": "gpt_low",
+  "p_gpt": 0.041666666666666664
+ },
+ {
+  "prompt": "city",
+  "answer": "ljubljana",
+  "tag": "valid_unsampled",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "nairobi",
+  "tag": "off_category",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "colour",
+  "answer": "indigo",
+  "tag": "gpt_top",
+  "p_gpt": 0.625
+ },
+ {
+  "prompt": "colour",
+  "answer": "teal",
+  "tag": "gpt_mid",
+  "p_gpt": 0.0625
+ },
+ {
+  "prompt": "colour",
+  "answer": "vermilion",
+  "tag": "gpt_low",
+  "p_gpt": 0.020833333333333332
+ },
+ {
+  "prompt": "colour",
+  "answer": "taupe",
+  "tag": "valid_unsampled",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "colour",
+  "answer": "hammer",
+  "tag": "off_category",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "dog",
+  "answer": "scout",
+  "tag": "gpt_top",
+  "p_gpt": 0.8541666666666666
+ },
+ {
+  "prompt": "dog",
+  "answer": "chance",
+  "tag": "gpt_mid",
+  "p_gpt": 0.020833333333333332
+ },
+ {
+  "prompt": "dog",
+  "answer": "phoenix",
+  "tag": "gpt_low",
+  "p_gpt": 0.020833333333333332
+ },
+ {
+  "prompt": "dog",
+  "answer": "gertrude",
+  "tag": "valid_unsampled",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "dog",
+  "answer": "wednesday",
+  "tag": "off_category",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "noun",
+  "answer": "lantern",
+  "tag": "gpt_top",
+  "p_gpt": 1.0
+ },
+ {
+  "prompt": "noun",
+  "answer": "thimble",
+  "tag": "valid_unsampled",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "noun",
+  "answer": "quickly",
+  "tag": "off_category",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "instrument",
+  "answer": "piano",
+  "tag": "gpt_top",
+  "p_gpt": 0.9166666666666666
+ },
+ {
+  "prompt": "instrument",
+  "answer": "cello",
+  "tag": "gpt_mid",
+  "p_gpt": 0.08333333333333333
+ },
+ {
+  "prompt": "instrument",
+  "answer": "theremin",
+  "tag": "valid_unsampled",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "instrument",
+  "answer": "stapler",
+  "tag": "off_category",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "language",
+  "answer": "python",
+  "tag": "gpt_top",
+  "p_gpt": 1.0
+ },
+ {
+  "prompt": "language",
+  "answer": "fortran",
+  "tag": "valid_unsampled",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "language",
+  "answer": "english",
+  "tag": "off_category",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "number",
+  "answer": "13",
+  "tag": "gpt_top",
+  "p_gpt": 0.6458333333333334
+ },
+ {
+  "prompt": "number",
+  "answer": "14",
+  "tag": "gpt_mid",
+  "p_gpt": 0.020833333333333332
+ },
+ {
+  "prompt": "number",
+  "answer": "7",
+  "tag": "gpt_low",
+  "p_gpt": 0.020833333333333332
+ },
+ {
+  "prompt": "number",
+  "answer": "1",
+  "tag": "valid_unsampled",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "number",
+  "answer": "blue",
+  "tag": "off_category",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "fruit",
+  "answer": "apple",
+  "tag": "haiku_top",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "city",
+  "answer": "paris",
+  "tag": "haiku_top",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "colour",
+  "answer": "azure",
+  "tag": "haiku_top",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "dog",
+  "answer": "hope",
+  "tag": "haiku_top",
+  "p_gpt": 0.0
+ },
+ {
+  "prompt": "noun",
+  "answer": "telescope",
+  "tag": "haiku_top",
+  "p_gpt": 0.0
+ }
+]

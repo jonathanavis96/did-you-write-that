@@ -3,7 +3,7 @@
 # confidence, explicit and within (every row an error, "try again at 5:25 AM"). Purge the
 # error rows and rerun the affected stages once the limit lifts; every stage resumes by
 # row count so only the missing rows are requested.
-cd /home/grafe/code/claude-self-portrait || exit 1
+cd "$(git rev-parse --show-toplevel)" || exit 1
 P=.venv/bin/python
 export SP_OUT_PREFIX=clean13 SP_MODELS=gpt SP_CLAUDE_CELLS=out/clean11_cells.json SP_PROMPTS=fruit,city,colour,dog,noun,instrument,language,number
 $P - <<'PY'
