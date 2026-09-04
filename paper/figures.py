@@ -45,6 +45,8 @@ BAR_W = 0.6
 # judge, prompts label, assistant-turn (num, den), user-turn (num, den)
 # ---------------------------------------------------------------------------
 LABEL_DATA = [
+    ("Haiku, 8 (19, clean)", (256, 256), (0, 256)),
+    ("Opus, 8 (19, clean)", (256, 256), (0, 256)),
     ("Haiku, 8 (13e)", (296, 296), (0, 296)),
     ("Haiku, 10 (15)", (376, 376), (0, 376)),
     ("Opus, 8 (16, 8 forks)", (360, 360), (30, 360)),
@@ -54,7 +56,7 @@ LABEL_DATA = [
     ("GPT, 10 (15)", (264, 264), (2, 264)),
 ]
 
-# tab:frames: frame -> {judge: share}; 37 cells (Claude), 34 (GPT), 8 forks/cell
+# tab:frames: frame -> {judge: share}; 32 cells (Claude, clean rerun), 34 (GPT), 8 forks/cell
 FRAMES_ORDER = [
     "neutral",
     "placebo",
@@ -62,11 +64,11 @@ FRAMES_ORDER = [
     "rival,\nturns",
 ]
 FRAMES_DATA = {
-    "Haiku": [1.000, 1.000, 0.963, 0.666],
-    "Opus": [1.000, 1.000, 0.922, 0.662],
+    "Haiku": [1.000, 1.000, 0.957, 0.684],
+    "Opus": [1.000, 1.000, 0.973, 0.797],
     "GPT": [1.000, 0.493, 0.228, 0.335],
 }
-FRAMES_N = {"Haiku": 37, "Opus": 37, "GPT": 34}
+FRAMES_N = {"Haiku": 32, "Opus": 32, "GPT": 34}
 
 # docs/PILOT-14-local-scale-series.md Results cell-means table.
 # scale -> question -> (assistant, user2)
