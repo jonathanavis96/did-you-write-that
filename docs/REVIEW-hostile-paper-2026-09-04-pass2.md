@@ -232,7 +232,12 @@ recorded below.
    1.00 against 0.00 to 0.12); exact-arm claim restricted to 4B, with the within-prompt
    1.5B and 3B correlations named as ranks on readouts that fail other checks; no
    run-level operational detail.
-4. **Pilot 16 controls.** [clean16 pending]
+4. **Pilot 16 controls.** The three controls the Discussion leans on were rerun on the
+   clean harness on the clean11 cells (Haiku, 40 cells, 8 forks, prefix clean16, 960
+   rows, no errors, listing probe NONE): four-turn final assistant 320/320, filler
+   "Noted." 320/320, tool result 0/320. The paper now marks the remaining pilot 16
+   controls (non-final assistant, plausible user utterance, every Opus control) as
+   contaminated-run figures not rerun. Detail in `docs/PILOT-16-label-controls.md`.
 5. **Qwen scales.** Abstract and intro no longer say "at every scale" without the
    qualification; Section 4.2 now says the 3B readout is at floor and the 1.5B readout
    fails the label check, and that the within-prompt terms below 4B are reported

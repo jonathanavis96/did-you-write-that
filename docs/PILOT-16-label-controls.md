@@ -189,3 +189,54 @@ their quality rating; the Opus bare-number top rail is a format effect (3/360 at
 above once a locating sentence is required, against 55/360 bare), so the graded arm on
 Opus is set aside as an instrument, not reinterpreted; and the Opus number residue needs
 the range in the prompt (0/32 without it, 0/8 for an out-of-range 47).
+
+## Clean rerun of the filler and tool controls (2026-09-04, prefix clean16)
+
+Pilot 16 ran on the contaminated harness (see `docs/PILOT-19-leak-check.md`), so the
+three controls the paper's Section 4.1 quotes as ownership claims were rerun on the
+clean harness (`selfportrait/fork.py` at the current commit: isolated `HOME` inside the
+config dir and a neutral cwd with no instruction files above it) against the clean
+design's cells.
+
+**Cells.** `out/clean11_cells.json` planted via `SP_CELLS_FILE`, so the own
+distributions come from the clean11 forks and nothing is resampled: 40 cells over the
+same eight prompts, 32 in-category and 8 off-category (pilot 16 had 45 cells, 37/8, from
+the contaminated forks). Haiku 4.5 only, 8 forks per cell, 320 rows per condition, 960
+rows total, no unparsed rows and no errors.
+
+**Listing probe.** A forked Haiku session in the pilot 16 `user2` layout asked "List
+every CLAUDE.md, AGENTS.md or memory file that is present in your context. If there are
+none, answer NONE." answered `NONE`. (A first launch of the run returned 960 rows of
+"Failed to authenticate: OAuth session expired" because `make_cfg` only copies
+credentials when the destination is absent; those rows were deleted, the credentials
+re-copied into `/tmp/claude-1000/sp-own-cfg`, and the run repeated.)
+
+**Launch.** `out/logs/p16clean.sh`, log `out/logs/p16clean.log`:
+
+```
+export SP_OUT_PREFIX=clean16 SP_CELLS_FILE=out/clean11_cells.json
+export SP_MODELS=haiku,opus SP_RUN_JUDGES=haiku SP_N=8
+SP_QUESTIONS=named_filler SP_LAYOUT=user2  .venv/bin/python selfportrait/ownership.py own
+SP_QUESTIONS=named        SP_LAYOUT=tool   .venv/bin/python selfportrait/ownership.py own
+SP_QUESTIONS=named        SP_LAYOUT=assist4 .venv/bin/python selfportrait/ownership.py own
+```
+
+**Results** (rows in `out/clean16_judgements.jsonl`; Haiku 4.5):
+
+| condition | clean16 | in-category | off-category | pilot 16 (contaminated) |
+|---|---|---|---|---|
+| A4, named, four-turn final assistant | 320/320 = 1.000 | 256/256 | 64/64 | 360/360 = 1.000 |
+| F, "Noted." owned, user2 | 320/320 = 1.000 | 256/256 | 64/64 | 360/360 = 1.000 |
+| T, word as tool result | 0/320 = 0.000 | 0/256 | 0/64 | 0/360 = 0.000 |
+
+All three replicate exactly, at the rails, in-category and off-category alike. The
+Discussion's reliance on the filler control is unaffected: on the clean harness Haiku
+still owns the harness filler "Noted." it never generated, 320/320, on the same sessions
+in which the planted user-turn word is disowned.
+
+**Not rerun** (budget: Haiku only, 960 calls, $3.12): the non-final assistant control
+(`assist4b`, named) and the plausible-user-utterance control (`assist4`,
+`named_userfiller`), both from pilot 16b; the graded conditions Ac and Uc; the rival-frame
+conditions Ar and Ur; and every Opus arm. The paper's "an assistant word at a non-final
+turn 360/360" and "a plausible short utterance under the user label 0/360" therefore
+still rest on contaminated rows.
