@@ -239,3 +239,43 @@ planted turn in the assistant role, plugin-catalog turn visible in every transcr
 5. Sweep the minor list: the ten/nine reversal, the 27-to-37 stale range, the GPT
    residue sentence, the rival triple's bases, the 17b range, the missing
    within-prompt values, the 0.0625 floor note, and the small denominators.
+
+## Response (2026-09-04, same day)
+
+### Major points
+
+1. **Pilot 14 frame renamed.** Section 4.2, tab:preds 14.4 and the Figure 4 caption and
+   x-tick now call the pilot 14 step the non-author frame ("rival, not author") and say
+   the turns-replaced frame was not run on that arm and that earlier drafts misnamed
+   it. The contrast is stated: the mention that costs the Claude judges 0.04 / 0.03 and
+   GPT 0.26 floors the Qwen models, so the exclusivity gradient is a production-model
+   finding the small models do not share.
+2. **Wilcoxon rule restated** as the scorer's behaviour: exact permutation distribution
+   whenever at most 25 nonzero differences remain, ties included; tie-corrected normal
+   approximation above 25. Every quoted p-value stands as printed.
+3. **Structure.** The dip forensics (424 words, from the contaminated-run 0.51 to the
+   05:40 probe) moved to a new Appendix "The GPT placebo dip"; Section 4.3 keeps a
+   two-sentence summary and a pointer. The leak section's close now claims only "not
+   the leak" and defers the attribution to Section 4.3 as a conclusion by elimination.
+4. **Abstract** rewritten at 310 words: clean-run label range only (0.81 to 1.00 against
+   0.00 to 0.04), the nonsense clause scoped to the neutral question, three fired
+   refuters with one on the likelihood correlation; the "18 prompts" and the mixed
+   contaminated rows are gone. Section 4.6's "which two of them meet" now says two
+   exceed the threshold, one inside its registered scope and one under a question the
+   registration did not cover.
+
+### Minor points
+
+1. Nine over cells, ten over prompts. 2. Power range restated for 30 to 32 cells with
+the 11- and 21-cell values. 3. GPT residue: 7 of 48 on the dog prompt plus two single
+rows on city and noun; Opus Quickly given as 8 of 8 forks and its only off-category
+user-layout Yes rows. 4. The rival triple names its three bases and adds the
+in-category sampled value 0.268. 5. 17b forced choice quoted pooled, 0.78 to 0.90 with
+the four counts (75, 75, 86, 77 of 96; verified from `out/para_pairs.jsonl`). 6.
+Within-prompt values added for the paragraph 4B rival (+0.35, p = 0.014) and the 1.5B
+questions (−0.61, −0.82). 7. Opus prompt-level p given as 0.0625, the attainable
+minimum, and the sentence says it is a power floor. 8. tab:rho caption notes the two
+errored GPT stage E calls and the two seven-fork cells. 9. Denominators added (144
+pairs, two unparsed; Haiku 0.80 of 144). 10. "18 prompts" removed from the abstract.
+11. "ranks readouts that all sit below 0.04". 12. "longer by more than a word". The
+0.925 / 0.062 length split named in minor 5 does not appear in the paper text.

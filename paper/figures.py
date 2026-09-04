@@ -183,7 +183,7 @@ def fig_qwen():
                 else:
                     ax.text(xv, 0.015, "0.00", ha="center", va="bottom", fontsize=5.5, color=TEXT_COLOR)
         ax.set_xticks(range(n_q))
-        ax.set_xticklabels(QWEN_QUESTIONS, fontsize=6.5)
+        ax.set_xticklabels(["named", "neutral", "placebo", "rival,\nnot author"], fontsize=6, linespacing=1.3)
         ax.set_ylim(0, 1.08)
         ax.set_title(scale, fontsize=8, color=TEXT_COLOR, pad=4)
         ax.set_xlim(-0.6, n_q - 1 + 0.6)
