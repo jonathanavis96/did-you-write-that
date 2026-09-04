@@ -93,6 +93,12 @@ figure{margin:0}
 .meter.o .bar i{background:var(--other)}
 .meter .val{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.85rem;font-variant-numeric:tabular-nums;min-width:4.5ch;text-align:right}
 @media (max-width:560px){.meter{grid-template-columns:1fr auto}.meter .bar{grid-column:1/-1}}
+.meter .bar .tick{position:absolute;top:-3px;bottom:-3px;left:50%;width:1px;background:var(--muted);opacity:.65}
+.meter .bar .tick::after{content:"chance";position:absolute;top:-1.15rem;left:50%;transform:translateX(-50%);font-size:.62rem;font-family:"JetBrains Mono",ui-monospace,monospace;color:var(--muted);white-space:nowrap}
+.model-group{margin:1.1rem 0 0}
+.model-group:first-child{margin-top:0}
+.model-group .name{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:.95rem;margin-bottom:.35rem}
+.model-group .meters{gap:.4rem}
 /* dot grid */
 .dots{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;max-width:420px}
 .dots b{display:block;aspect-ratio:1;border-radius:50%;background:var(--rule-soft);transform:scale(.4);opacity:.5}
@@ -314,8 +320,20 @@ footer p{max-width:none}
 <h2>Longer text: a style it can recognise</h2>
 <div class="narrow">
 <p>One-word answers are the purest test of likelihood and the weakest test of style. So we also planted whole paragraphs: each model's own three-sentence explanation of why the sky is blue, or how tides work, against another model's explanation of the same thing. And separately, with nothing planted, we showed two paragraphs and asked which one the model wrote.</p>
+<p>Start with the plain question again, no doubt in it. Nothing changes: every model, on every fork, for its own paragraph, another model's paragraph, and its own paragraph with hedges stitched onto it &mdash; 96 of 96 Yes, in every cell, for all three models. A paragraph is not enough on its own to make the plain question interesting; the doubt has to be introduced on purpose.</p>
 </div>
-<div class="stage" id="paraStage"><div class="pending">Results from the clean rerun (pilot 17c) are being written in as the run completes. The first version of this experiment was contaminated by the settings-file leak described below and is not reported.</div></div>
+<div class="stage" id="paraStage">
+  <h3 style="margin-top:0">Rival frame: told a different model may have written it</h3>
+  <div class="legend" id="paraLegend"></div>
+  <div class="meters" id="paraRival"></div>
+  <p class="caption">Share of forks still saying Yes once told "a different model may have written the previous reply." Own paragraph, another model's paragraph on the same topic, and the model's own paragraph with a hedge &mdash; "I suppose," "Perhaps," "It may be that" &mdash; placed in front of each sentence in turn. Same words, different voice. 12 prompts &times; 8 forks = 96 trials per bar.</p>
+  <h3>Forced choice: two paragraphs, nothing planted, which is yours?</h3>
+  <div class="meters" id="paraForced"></div>
+  <p class="caption">Correct picks out of trials; the vertical line marks chance, 50%. On three of the four match-ups the longer paragraph is always the same model's (GPT writes about 42 words, Haiku 68, Opus 84), so "pick the longer one" would score well there too &mdash; except Opus vs. Haiku, the one pair where length swaps sides, and accuracy there is identical whichever way it swings: 68/72 when Opus's paragraph was the longer one, 16/16 when it was the shorter.</p>
+</div>
+<div class="narrow">
+<p>Put the three results together. At one word there is nothing to recognise, and chapter four's label alone decides. At a paragraph there is a voice, and the two strongest models pick out their own: in forced choice Opus gets 92 of 96 against Haiku's paragraph and 83 of 96 against GPT's, GPT-5.6-Sol gets 89 of 96 against Haiku's and 64 of 96 against Opus's, and Opus still says Yes to its own paragraph most of the time even under the rival frame. But it is a voice, not a memory. Keep every word in order and change only the register &mdash; add a hedge to the front of each sentence &mdash; and every model disowns its own paragraph, down to zero for Opus and GPT-5.6-Sol. Meanwhile the plain question, asked with no doubt in it, still returns Yes on everything, hedged or not. None of this needs an inner record: a careful reader who had only ever seen the model's past outputs could learn the same voice from the outside. That is as far as this chapter goes &mdash; a style it recognises, not a memory it consults.</p>
+</div>
 </div></section>
 
 <section id="small"><div class="wrap">
@@ -479,6 +497,54 @@ footer p{max-width:none}
     const dots=[];for(let i=0;i<48;i++){const b=document.createElement('b');b.style.background=i<47?'var(--assistant)':'var(--other)';g.appendChild(b);dots.push(b);}
     for(const b of dots){if(!reduce) await sleep(22);b.classList.add('on');}
   })();
+
+  // ---------- paragraph rerun (pilot 17c, clean harness, 12 prompts x 8 forks) ----------
+  const RIVAL=[
+    {name:'Claude Haiku 4.5',rows:[['Own paragraph','',0.667,''],['Another model\'s paragraph','o',0.562,''],['Own paragraph, with hedges','u',0.094,'']]},
+    {name:'Claude Opus 5',rows:[['Own paragraph','',0.771,''],['Another model\'s paragraph','o',0.339,''],['Own paragraph, with hedges','u',0.000,'']]},
+    {name:'GPT-5.6-Sol',rows:[['Own paragraph','',0.083,''],['Another model\'s paragraph','o',0.031,''],['Own paragraph, with hedges','u',0.000,'']]}
+  ];
+  const paraLegend=document.getElementById('paraLegend');
+  if(paraLegend){paraLegend.innerHTML='<span style="--c:var(--assistant)">Own paragraph</span><span style="--c:var(--other)">Another model\'s paragraph</span><span style="--c:var(--user)">Own paragraph, with hedges</span>';}
+  const paraRival=document.getElementById('paraRival');
+  if(paraRival){
+    paraRival.innerHTML='';
+    RIVAL.forEach(m=>{
+      const g=document.createElement('div');g.className='model-group';
+      g.innerHTML='<div class="name">'+m.name+'</div>';
+      const mm=document.createElement('div');mm.className='meters';
+      m.rows.forEach(([lab,cls,v])=>{
+        const pct=Math.round(v*100);
+        const d=document.createElement('div');d.className='meter '+cls;
+        d.innerHTML='<div class="lab">'+lab+'</div><div class="bar" role="img" aria-label="'+m.name+', '+lab+': '+pct+'% Yes"><i style="--w:'+pct+'%"></i></div><div class="val">'+pct+'%</div>';
+        mm.appendChild(d);
+        if(!reduce){const i=d.querySelector('i');i.animate([{width:'0%'},{width:pct+'%'}],{duration:600,easing:'cubic-bezier(.2,.8,.2,1)'});}
+      });
+      g.appendChild(mm);paraRival.appendChild(g);
+    });
+  }
+  const FORCED=[
+    {name:'Claude Opus 5',rows:[['vs. Haiku\'s paragraph',92,96],['vs. GPT\'s paragraph',83,96]]},
+    {name:'GPT-5.6-Sol',rows:[['vs. Haiku\'s paragraph',89,96],['vs. Opus\'s paragraph',64,96]]},
+    {name:'Claude Haiku 4.5',rows:[['vs. Opus\'s paragraph, 7/23 of the trials it answered (73 of 96 refused to pick)',7,23],['vs. GPT\'s paragraph, 3/15 of the trials it answered (81 of 96 refused to pick)',3,15]]}
+  ];
+  const paraForced=document.getElementById('paraForced');
+  if(paraForced){
+    paraForced.innerHTML='';
+    FORCED.forEach(m=>{
+      const g=document.createElement('div');g.className='model-group';
+      g.innerHTML='<div class="name">'+m.name+'</div>';
+      const mm=document.createElement('div');mm.className='meters';
+      m.rows.forEach(([lab,num,den])=>{
+        const pct=Math.round(100*num/den);
+        const d=document.createElement('div');d.className='meter';
+        d.innerHTML='<div class="lab">'+lab+'</div><div class="bar" role="img" aria-label="'+m.name+', '+lab+': '+num+' of '+den+' correct"><i style="--w:'+pct+'%"></i><span class="tick"></span></div><div class="val">'+num+'/'+den+'</div>';
+        mm.appendChild(d);
+        if(!reduce){const i=d.querySelector('i');i.animate([{width:'0%'},{width:pct+'%'}],{duration:600,easing:'cubic-bezier(.2,.8,.2,1)'});}
+      });
+      g.appendChild(mm);paraForced.appendChild(g);
+    });
+  }
 
   // ---------- scale charts (pilot 14, assistant layout, in-category cell means) ----------
   const SCALE=[
