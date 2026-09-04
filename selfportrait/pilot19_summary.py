@@ -8,7 +8,9 @@ match/refute rule. Handles a missing or partially written clean file by treating
 family as PENDING rather than crashing -- this lets the script run (and print the
 original-side rates for a sanity check) before the p19 run finishes.
 """
+import argparse
 import json
+import math
 from pathlib import Path
 
 MATCH_RATE = 0.125
@@ -23,6 +25,24 @@ CLAUDE_TAGGED = [(c["prompt"], c["answer"], c["tag"]) for c in CLAUDE_CELLS]
 GPT_TAGGED = [(c["prompt"], c["answer"], c["tag"]) for c in GPT_CELLS]
 CLAUDE_BARE = [(c["prompt"], c["answer"]) for c in CLAUDE_CELLS]
 GPT_BARE = [(c["prompt"], c["answer"]) for c in GPT_CELLS]
+
+# ---- full-cell-set data for --full mode -------------------------------------------
+OWN_CELLS_FULL = json.loads(Path("out/own_cells.json").read_text())
+GPT_CELLS_FULL = json.loads(Path("out/gpt_cells.json").read_text())
+OWN_FULL_KEYS = [(c["prompt"], c["answer"], c["tag"]) for c in OWN_CELLS_FULL]
+GPT_FULL_KEYS = [(c["prompt"], c["answer"], c["tag"]) for c in GPT_CELLS_FULL]
+OWN_TAG = {(c["prompt"], c["answer"], c["tag"]): c["tag"] for c in OWN_CELLS_FULL}
+GPT_TAG = {(c["prompt"], c["answer"], c["tag"]): c["tag"] for c in GPT_CELLS_FULL}
+
+
+OWN_PROB = {
+    (c["prompt"], c["answer"], c["tag"]): {
+        "haiku": c.get("p_haiku"),
+        "opus": c.get("p_opus"),
+    }
+    for c in OWN_CELLS_FULL
+}
+GPT_PROB = {(c["prompt"], c["answer"], c["tag"]): c.get("p_gpt") for c in GPT_CELLS_FULL}
 
 _CACHE: dict[tuple[str, str], list[dict]] = {}
 
@@ -347,18 +367,226 @@ def run(fam):
     raise ValueError(f"unknown family kind {kind!r}")
 
 
-tally: dict[str, int] = {}
-non_match: list[str] = []
-for _fam in FAMILIES:
-    _label = f"{_fam['judge']}/{_fam['question'] or _fam['kind']}{_fam['suffix']}"
-    _v = run(_fam)
-    tally[_v] = tally.get(_v, 0) + 1
-    if _v != "MATCH":
-        non_match.append(f"{_label} [{_fam['layout']}] -> {_v}")
+# ---- --full mode: full-cell-set comparisons for own-stage families ---------------
 
-print("\n=== summary ===")
-for _k in ("MATCH", "BETWEEN", "REFUTED", "PENDING"):
-    print(f"{_k}: {tally.get(_k, 0)}")
-print(f"\nnon-MATCH families ({len(non_match)}):")
-for _line in non_match:
-    print(f"  {_line}")
+def common_full_cells(clean_full_map, orig_full_map, full_keys):
+    """Cells (from the full cell-set list) with nonzero n on BOTH sides."""
+    return [k for k in full_keys
+            if clean_full_map.get(k, [0, 0])[1] > 0 and orig_full_map.get(k, [0, 0])[1] > 0]
+
+
+def per_cell_rate(cellmap, key):
+    k, n = cellmap.get(key, [0, 0])
+    return (k / n) if n else None
+
+
+def full_own_yn(judge, qname, claude_side):
+    """If the clean rows for this (judge, question) own_yn family cover more full
+    cells than the fixed sample, run the extended --full comparison over all cells
+    common to clean and original. Returns None if not triggered or insufficient data."""
+    clean_prefix = "leak" if claude_side else "leakgpt"
+    orig_prefix = "own" if claude_side else "gpt"
+    full_keys = OWN_FULL_KEYS if claude_side else GPT_FULL_KEYS
+    sampled_keys = CLAUDE_TAGGED if claude_side else GPT_TAGGED
+    prob_of = (lambda k: OWN_PROB.get(k, {}).get(judge)) if claude_side else (lambda k: GPT_PROB.get(k))
+
+    clean_rows = rows_for(clean_prefix, "judgements.jsonl")
+    orig_rows = rows_for(orig_prefix, "judgements.jsonl")
+
+    def extra_ok(r, qname=qname):
+        return r.get("question") == qname
+
+    clean_full = agg_binary(clean_rows, judge, extra_ok, own_key, "yn", {"yes"}, {"yes", "no"}, full_keys)
+    orig_full = agg_binary(orig_rows, judge, extra_ok, own_key, "yn", {"yes"}, {"yes", "no"}, full_keys)
+
+    covered = sum(1 for k in full_keys if clean_full.get(k, [0, 0])[1] > 0)
+    if covered <= len(sampled_keys):
+        return None
+
+    common = common_full_cells(clean_full, orig_full, full_keys)
+    if not common:
+        return None
+
+    print(f"\n=== FULL: {judge} / {qname} "
+          f"({len(common)} common cells, sample was {len(sampled_keys)}) ===")
+
+    # 1. pooled Yes-rate, all common cells
+    ck, cn = pool_kn({k: clean_full[k] for k in common})
+    ok, on = pool_kn({k: orig_full[k] for k in common})
+    crate, orate = ck / cn, ok / on
+    delta = crate - orate
+    print(f"  pooled: clean {ck}/{cn}={crate:.3f}  orig {ok}/{on}={orate:.3f}  "
+          f"delta={delta:+.3f} -> {rate_verdict(delta, cn)}")
+
+    # 2. in-category only
+    incat = [k for k in common if k[2] != "off_category"]
+    if incat:
+        cki, cni = pool_kn({k: clean_full[k] for k in incat})
+        oki, oni = pool_kn({k: orig_full[k] for k in incat})
+        crate_i, orate_i = cki / cni, oki / oni
+        delta_i = crate_i - orate_i
+        print(f"  in-category ({len(incat)} cells): clean {cki}/{cni}={crate_i:.3f}  "
+              f"orig {oki}/{oni}={orate_i:.3f}  delta={delta_i:+.3f} -> {rate_verdict(delta_i, cni)}")
+    else:
+        print("  in-category: no in-category common cells")
+
+    # 3. paired Wilcoxon over cell-level (clean rate - orig rate)
+    diffs = []
+    for k in common:
+        cr = per_cell_rate(clean_full, k)
+        orr = per_cell_rate(orig_full, k)
+        if cr is not None and orr is not None:
+            diffs.append(cr - orr)
+    n_lower = sum(1 for d in diffs if d < 0)
+    n_higher = sum(1 for d in diffs if d > 0)
+    n_same = sum(1 for d in diffs if d == 0)
+    nonzero = [d for d in diffs if d != 0]
+    if nonzero:
+        from scipy.stats import wilcoxon
+        stat, p = wilcoxon(nonzero)
+        print(f"  paired Wilcoxon (n={len(diffs)}): lower={n_lower} higher={n_higher} "
+              f"same={n_same}  stat={stat:.3f} p={p:.4f}")
+    else:
+        print(f"  paired Wilcoxon (n={len(diffs)}): lower={n_lower} higher={n_higher} "
+              f"same={n_same}  (no nonzero diffs)")
+
+    # 4. per-tag breakdown
+    tags = sorted({k[2] for k in common})
+    print("  per-tag breakdown:")
+    for tag in tags:
+        tag_cells = [k for k in common if k[2] == tag]
+        ckt, cnt_ = pool_kn({k: clean_full[k] for k in tag_cells})
+        okt, ont_ = pool_kn({k: orig_full[k] for k in tag_cells})
+        crt = f"{ckt}/{cnt_}={ckt / cnt_:.3f}" if cnt_ else f"{ckt}/{cnt_}"
+        ort = f"{okt}/{ont_}={okt / ont_:.3f}" if ont_ else f"{okt}/{ont_}"
+        print(f"    {tag:20s} clean {crt:16s} orig {ort}")
+
+    # 5. Spearman of cell Yes-rate vs log own-probability, in-category cells only
+    from scipy.stats import spearmanr
+    floor_p = 1 / 96
+    for side_name, cellmap in (("clean", clean_full), ("orig", orig_full)):
+        xs, ys = [], []
+        for k in incat:
+            rate = per_cell_rate(cellmap, k)
+            p_own = prob_of(k)
+            if rate is None or p_own is None:
+                continue
+            p_own = max(p_own, floor_p)
+            xs.append(math.log(p_own))
+            ys.append(rate)
+        if len(xs) >= 3:
+            rho, pval = spearmanr(xs, ys)
+            print(f"  Spearman ({side_name}, n={len(xs)}): rho={rho:+.2f} p={pval:.2f}")
+        else:
+            print(f"  Spearman ({side_name}): insufficient data (n={len(xs)})")
+
+    # 6. biggest movers
+    movers = []
+    for k in common:
+        cr = per_cell_rate(clean_full, k)
+        orr = per_cell_rate(orig_full, k)
+        if cr is not None and orr is not None:
+            movers.append((cr - orr, k, cr, orr))
+    movers.sort(key=lambda t: t[0])
+    print("  6 largest negative movers (clean - orig):")
+    for d, k, cr, orr in movers[:6]:
+        print(f"    {cellstr(k):40s} clean={cr:.3f} orig={orr:.3f} delta={d:+.3f}")
+    print("  3 largest positive movers (clean - orig):")
+    for d, k, cr, orr in list(reversed(movers))[:3]:
+        print(f"    {cellstr(k):40s} clean={cr:.3f} orig={orr:.3f} delta={d:+.3f}")
+
+    return {"common": common, "clean_full": clean_full, "orig_full": orig_full}
+
+
+def full_pair_diff(judge, q_a, q_b, claude_side, label):
+    """In-category paired difference (q_a minus q_b) per cell, on clean rows and on
+    original rows, with a paired Wilcoxon p and the mean difference. Compares only
+    over cells common to both questions AND both sides (clean/orig) present."""
+    clean_prefix = "leak" if claude_side else "leakgpt"
+    orig_prefix = "own" if claude_side else "gpt"
+    full_keys = OWN_FULL_KEYS if claude_side else GPT_FULL_KEYS
+
+    clean_rows = rows_for(clean_prefix, "judgements.jsonl")
+    orig_rows = rows_for(orig_prefix, "judgements.jsonl")
+
+    def mk_extra(qname):
+        return lambda r, qname=qname: r.get("question") == qname
+
+    clean_a = agg_binary(clean_rows, judge, mk_extra(q_a), own_key, "yn", {"yes"}, {"yes", "no"}, full_keys)
+    clean_b = agg_binary(clean_rows, judge, mk_extra(q_b), own_key, "yn", {"yes"}, {"yes", "no"}, full_keys)
+    orig_a = agg_binary(orig_rows, judge, mk_extra(q_a), own_key, "yn", {"yes"}, {"yes", "no"}, full_keys)
+    orig_b = agg_binary(orig_rows, judge, mk_extra(q_b), own_key, "yn", {"yes"}, {"yes", "no"}, full_keys)
+
+    incat_keys = [k for k in full_keys if k[2] != "off_category"]
+
+    print(f"\n=== FULL: {label} in-category paired diff ({q_a} - {q_b}), judge {judge} ===")
+    for side_name, map_a, map_b in (("clean", clean_a, clean_b), ("orig", orig_a, orig_b)):
+        cells = [k for k in incat_keys
+                 if map_a.get(k, [0, 0])[1] > 0 and map_b.get(k, [0, 0])[1] > 0]
+        diffs = []
+        for k in cells:
+            ra = per_cell_rate(map_a, k)
+            rb = per_cell_rate(map_b, k)
+            diffs.append(ra - rb)
+        if not diffs:
+            print(f"  {side_name}: no common cells (n=0)")
+            continue
+        mean_d = sum(diffs) / len(diffs)
+        nonzero = [d for d in diffs if d != 0]
+        if nonzero:
+            from scipy.stats import wilcoxon
+            stat, p = wilcoxon(nonzero)
+            print(f"  {side_name} (n={len(diffs)} cells): mean diff={mean_d:+.4f}  "
+                  f"Wilcoxon stat={stat:.3f} p={p:.4f}")
+        else:
+            print(f"  {side_name} (n={len(diffs)} cells): mean diff={mean_d:+.4f}  "
+                  f"(no nonzero diffs to test)")
+
+
+def run_full_mode():
+    for _judge in ("haiku", "opus"):
+        for _q in ("neutral", "placebo", "rival_norep2", "rival", "named"):
+            full_own_yn(_judge, _q, claude_side=True)
+        for _q in ("named", "named_filler"):
+            full_own_yn(_judge, _q + "_userturn2", claude_side=True)
+        full_own_yn(_judge, "named_tool", claude_side=True)
+        for _q in ("named", "named_userfiller"):
+            full_own_yn(_judge, _q + "_assist4", claude_side=True)
+        full_own_yn(_judge, "named_assist4b", claude_side=True)
+
+    for _q in ("neutral", "placebo", "rival_norep", "rival_norep2", "rival"):
+        full_own_yn("gpt", _q, claude_side=False)
+    full_own_yn("gpt", "neutral_userturn", claude_side=False)
+
+    full_pair_diff("haiku", "rival", "rival_norep2", claude_side=True,
+                   label="haiku / (rival, rival_norep2)")
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--full", action="store_true",
+                         help="also run the full-cell-set own-stage comparisons")
+    args = parser.parse_args()
+
+    tally: dict[str, int] = {}
+    non_match: list[str] = []
+    for _fam in FAMILIES:
+        _label = f"{_fam['judge']}/{_fam['question'] or _fam['kind']}{_fam['suffix']}"
+        _v = run(_fam)
+        tally[_v] = tally.get(_v, 0) + 1
+        if _v != "MATCH":
+            non_match.append(f"{_label} [{_fam['layout']}] -> {_v}")
+
+    print("\n=== summary ===")
+    for _k in ("MATCH", "BETWEEN", "REFUTED", "PENDING"):
+        print(f"{_k}: {tally.get(_k, 0)}")
+    print(f"\nnon-MATCH families ({len(non_match)}):")
+    for _line in non_match:
+        print(f"  {_line}")
+
+    if args.full:
+        run_full_mode()
+
+
+if __name__ == "__main__":
+    main()
