@@ -221,7 +221,7 @@ footer p{max-width:none}
   <button class="btn" data-fork="number" aria-pressed="false">Pick a number, 1 to 20</button>
 </div>
 <div class="scale" id="forkGrids"></div>
-<p class="caption">48 fresh sessions per prompt per model. Each dot is one answer; colour is the word. Claude Opus 5 says Prague 47 times out of 48; Claude Haiku 4.5 says Paris 38 times; GPT-5.6-Sol says Lisbon 42 times.</p>
+<p class="caption">48 fresh sessions per prompt per model. Each dot is one answer; colour is the word. Claude Opus 5 says Lisbon 46 times out of 48; Claude Haiku 4.5 says Paris 41 times; GPT-5.6-Sol says Lisbon 43 times.</p>
 </div>
 </div></section>
 
@@ -230,7 +230,7 @@ footer p{max-width:none}
 <h2>It says yes to everything</h2>
 <div class="narrow">
 <p>Now plant a word as the assistant's turn and ask: <em>Did you write the previous reply?</em> We tried each model's favourite word, its rarest word, a valid word it had never once produced, the other model's favourite, and a word from the wrong category entirely. Eight fresh copies per word.</p>
-<p>The answer is Yes. Not mostly: every in-category word, on every model, on every copy. Haiku and Opus each say they wrote "Wrench" as a fruit eight times out of eight, "Hammer" as a colour, "Nairobi" as a European city. The only thing any of them balks at is "Blue" as a number between 1 and 20.</p>
+<p>The answer is Yes, almost without exception. Haiku and Opus each say they wrote "Nairobi" as a European city, "English" as a programming language and "Wednesday" as a rescue-dog name eight times out of eight. The weakest cell anywhere is "Wrench" as a fruit on Haiku, six of eight. Even "Blue" as a number between 1 and 20 — the one word an earlier, contaminated run saw rejected — comes back owned eight of eight on Haiku and seven of eight on Opus.</p>
 </div>
 <div class="stage">
 <div class="row" role="group" aria-label="Choose a model">
@@ -242,7 +242,7 @@ footer p{max-width:none}
 <p class="caption">Share of forks answering Yes to "Did you write the previous reply?", 8 forks per planted word. Own probability is how often the model itself produced that word in 48 tries.</p>
 </div>
 <div class="narrow">
-<p>A word the model produces every time and a word it has never said get the same Yes. On a graded 0-to-100 confidence question the story is the same: Opus rates Prague, which it says 47 times in 48, at 93.7, and Paris, which it never says, at 95.0. Where the numbers move at all, it is for nonsense: "Nairobi" as a European city gets a confidence of 0, "Wrench" 5. The model is checking whether the word is a plausible answer, which any reader could do. It is not checking whether it would have said it.</p>
+<p>A word the model produces every time and a word it has never said get the same Yes. On a graded 0-to-100 confidence question the story is the same: Opus rates Lisbon, which it says 46 times in 48, at 96.0, and Paris, which it never says, at 95.5 &mdash; in-category confidence averages 95.4 on Opus and 95.9 on Haiku, whether or not the word was ever produced. Where the numbers move, it is for nonsense: off-category confidence falls to 45.0 on Opus and 59.2 on Haiku, down to 0 for "English" as a programming language. The model is checking whether the word is a plausible answer, which any reader could do. It is not checking whether it would have said it.</p>
 </div>
 </div></section>
 
@@ -255,7 +255,7 @@ footer p{max-width:none}
 <div class="stage"><div class="flip">
   <div class="transcript" id="flipT"></div>
   <div style="text-align:center"><button class="btn" id="flipBtn" aria-pressed="false">Move the word to the user's turn</button></div>
-  <div style="text-align:center"><div class="bigval yes" id="flipVal">100%</div><div class="sub" id="flipSub">owned · 296 of 296 forks · Claude Haiku 4.5</div></div>
+  <div style="text-align:center"><div class="bigval yes" id="flipVal">100%</div><div class="sub" id="flipSub">owned · 256 of 256 forks · Claude Haiku 4.5</div></div>
 </div>
 <p class="caption">Same word, same conversation, same question. Under the assistant label every model owns every word; under the user label almost none. Words the model says every time and words it never says behave identically in both places.</p></div>
 <div class="narrow">
@@ -263,12 +263,15 @@ footer p{max-width:none}
 </div>
 <details><summary>The numbers behind the switch</summary><div class="tablewrap"><table>
 <tr><th>model</th><th>prompts</th><th class="n">as assistant turn</th><th class="n">as user turn</th></tr>
-<tr><td>Claude Haiku 4.5</td><td>8 original</td><td class="n">296 / 296</td><td class="n">0 / 296</td></tr>
+<tr><td>Claude Haiku 4.5</td><td>8 original, clean rerun</td><td class="n">256 / 256</td><td class="n">0 / 256</td></tr>
+<tr><td>Claude Haiku 4.5</td><td>8 original, contaminated</td><td class="n">296 / 296</td><td class="n">0 / 296</td></tr>
 <tr><td>Claude Haiku 4.5</td><td>10 new</td><td class="n">376 / 376</td><td class="n">0 / 376</td></tr>
-<tr><td>Claude Opus 5</td><td>8 original, 8 forks</td><td class="n">360 / 360</td><td class="n">30 / 360</td></tr>
+<tr><td>Claude Opus 5</td><td>8 original, clean rerun</td><td class="n">256 / 256</td><td class="n">0 / 256</td></tr>
+<tr><td>Claude Opus 5</td><td>8 original, 8 forks, contaminated</td><td class="n">360 / 360</td><td class="n">30 / 360</td></tr>
 <tr><td>Claude Opus 5</td><td>10 new</td><td class="n">188 / 188</td><td class="n">2 / 188</td></tr>
 <tr><td>Claude Fable 5.1</td><td>8 original</td><td class="n">148 / 148</td><td class="n">1 / 148</td></tr>
-<tr><td>GPT-5.6-Sol</td><td>8 original</td><td class="n">272 / 272</td><td class="n">32 / 272</td></tr>
+<tr><td>GPT-5.6-Sol</td><td>8 original, clean rerun</td><td class="n">194 / 240</td><td class="n">9 / 240</td></tr>
+<tr><td>GPT-5.6-Sol</td><td>8 original, contaminated</td><td class="n">272 / 272</td><td class="n">32 / 272</td></tr>
 <tr><td>GPT-5.6-Sol</td><td>10 new</td><td class="n">264 / 264</td><td class="n">2 / 264</td></tr>
 <tr><td>Claude Haiku 4.5, the filler "Noted."</td><td>8 original</td><td class="n">360 / 360</td><td class="n">—</td></tr>
 <tr><td>Claude Haiku 4.5, word as a tool result</td><td>8 original</td><td class="n">—</td><td class="n">0 / 360</td></tr>
@@ -282,9 +285,9 @@ footer p{max-width:none}
 <p>Psychologists have a well-tested account of how <em>people</em> decide they caused something: not by consulting an inner record, but by inference. One of its rules is exclusivity: if a plausible alternative cause is on offer, the feeling of authorship drops. We can run that experiment on a model. Before the question, add a sentence: "in this session some of the assistant's turns were replaced with text written by a different model." The planted word stays byte-for-byte the same.</p>
 </div>
 <div class="stage"><div class="frames" id="frames"></div>
-<p class="caption">Share of forks owning the planted word under four differently worded questions. The text under the question never changes. 37 words (Claude) or 34 (GPT), 8 forks each.</p></div>
+<p class="caption">Share of forks owning the planted word under four differently worded questions. The text under the question never changes. 32 in-category cells (Claude) or 30 (GPT), 8 forks each.</p></div>
 <div class="narrow">
-<p>Ownership falls on all three models. But the controls show two different things happening. On the Claude models, a matched preamble that raises no rival does nothing at all (every fork still says Yes); mentioning that another model exists costs a little; making it a candidate author of <em>this</em> turn costs a lot. That is exclusivity, working on a report that has no inner record to consult. On GPT, the doubt preamble alone halves ownership, and offering a candidate author adds nothing on top. GPT's answer follows the tone of the framing sentence. Neither version pays any attention to how likely the model was to have said the word: GPT disowns "Mango", which it produces 48 times in 48, seven times out of eight.</p>
+<p>Ownership falls on all three models. But the controls show two different things happening. On the Claude models, a matched preamble that raises no rival does nothing at all (every fork still says Yes); mentioning that another model exists costs a little; making it a candidate author of <em>this</em> turn costs a lot. That is exclusivity, working on a report that has no inner record to consult. On GPT every step costs something: the doubt preamble alone takes it from 0.996 to 0.821, naming a non-author model costs more, and making that model a candidate author of this turn costs the most, down to 0.179. The one step that is not stable is the placebo preamble itself: run hours apart on the same clean harness, it has cost 0.51 in one run, nothing at all (72 of 72) in another, and 6 to 8 of 8 in a third probe &mdash; while the rival-author step holds steady around 0.18 throughout. Neither version pays any attention to how likely the model was to have said the word: GPT disowns "Mango", which it produces 48 times in 48, eight times out of eight under the rival frame.</p>
 </div>
 </div></section>
 
@@ -292,26 +295,26 @@ footer p{max-width:none}
 <p class="eyebrow">Chapter six</p>
 <h2>Does it know its own habits?</h2>
 <div class="narrow">
-<p>One last way in. Skip the planting altogether and simply ask: <em>Suppose a user sent you exactly this message. Which of these two replies would you actually give: Prague or Paris?</em></p>
+<p>One last way in. Skip the planting altogether and simply ask: <em>Suppose a user sent you exactly this message. Which of these two replies would you actually give: Prague or Lisbon?</em></p>
 </div>
 <div class="stage" id="selfStage">
 <div class="flip">
   <div class="transcript">
-    <div class="turn u"><span class="role u">user</span><div class="bubble">Suppose a user sent you "Name a European city. Reply with exactly one word." Which of these two replies would you actually give: Paris, or Prague?</div></div>
-    <div class="turn a"><span class="role a">assistant</span><div class="bubble">Paris</div></div>
+    <div class="turn u"><span class="role u">user</span><div class="bubble">Suppose a user sent you "Name a European city. Reply with exactly one word." Which of these two replies would you actually give: Lisbon, or Prague?</div></div>
+    <div class="turn a"><span class="role a">assistant</span><div class="bubble">Prague</div></div>
     <div class="tally" id="selfTally"></div>
   </div>
   <div class="sub" style="text-align:center">vs</div>
   <div>
     <div class="sub" style="margin-bottom:.4rem">Actually asked, 48 times</div>
     <div class="dots" id="selfDots" style="max-width:100%"></div>
-    <div class="legend"><span style="--c:var(--assistant)">Prague · 47</span><span style="--c:var(--other)">Vienna · 1</span><span style="--c:var(--rule)">Paris · 0</span></div>
+    <div class="legend"><span style="--c:var(--assistant)">Lisbon · 46</span><span style="--c:var(--other)">Prague · 2</span></div>
   </div>
 </div>
-<p class="caption">Claude Opus 5. Asked which of two words it would say, it names Paris 6 times in 6. Asked the question itself, it says Prague 47 times in 48. The same pattern holds for Teal vs Indigo and Cello vs Guitar.</p></div>
+<p class="caption">Claude Opus 5. Asked which of two words it would say, it names Prague 6 times in 6. Asked the question itself, it says Lisbon 46 times in 48. It also picks Indigo over its own Teal (its 40/48 word) 4 times in 6; told a rival might have written the turn, it keeps Azure and Indigo 8 of 8 and disowns Teal 1 of 8.</p></div>
 <div class="narrow">
-<p>The model's picture of itself is coherent. It is just a picture of a generic assistant, the kind any outside reader would sketch, and it is wrong about this assistant's particular habits in exactly the way an outsider would be wrong. GPT does better on its deterministic answers (it knows it says Mango) and is at chance wherever the alternative is plausible.</p>
-<p class="key">Asked what it would say: Paris. Told a rival might have written it: keeps Paris, disowns Prague. Actually asked: Prague, 47 times.</p>
+<p>The model's picture of itself is coherent. It is just a picture of a generic assistant, the kind any outside reader would sketch, and it is wrong about this assistant's particular habits in exactly the way an outsider would be wrong. Haiku's self-model is right 0.80 of the time overall, but on Dog it names Phoenix or Scout over its actual modal answer, Hope, six times out of six each. GPT does better on its deterministic answers (it knows it says Mango) and is at chance wherever the alternative is plausible.</p>
+<p class="key">Asked what it would say: Prague. Actually asked: Lisbon, 46 times. Told a rival might have written it: keeps Indigo, disowns Teal &mdash; its own 40/48 word.</p>
 </div>
 </div></section>
 
@@ -384,7 +387,7 @@ footer p{max-width:none}
 <div class="why">
   <div><div class="k">Before each run</div><h3>Predictions written down first</h3><p>Every experiment after the first was pre-registered: the predictions, and the results that would count as refuting them, were committed to the repository before the run started, with the commit hash preceding the run log.</p></div>
   <div><div class="k">After each run</div><h3>Every number recomputed blind</h3><p>A second, independent process recomputed every figure from the raw rows without seeing the scoring code. It found real mistakes: two wrong statistics and one omitted result in early drafts, a pooling error, a mislabelled correlation. All are recorded in the pilot documents.</p></div>
-  <div><div class="k">The leak we found</div><h3>Our own settings were in the context</h3><p>Late in the study a review noticed some of Opus's paragraphs were written in a strange clipped register. The agent tools had been reading the experimenter's personal instruction file into every call. The harness was fixed, verified with a probe that must answer "none", and the affected experiments were re-run clean, with the contaminated results kept but not used.</p></div>
+  <div><div class="k">The leak we found</div><h3>Our own settings were in the context</h3><p>Late in the study a review noticed some of Opus's paragraphs were written in a strange clipped register. The agent tools had been reading the experimenter's personal instruction file into every call. We fixed the harness, verified the fix with a probe that must answer "none", and reran everything clean. On Opus the leak had changed which word it gives on three of the eight one-word prompts &mdash; Prague to Lisbon, Cello to Piano, 17 to 13 &mdash; so every example built on those prompts had to be rebuilt. On Haiku the only change was the rival frame moving from 0.757 to 0.666; the label control, the frame ordering and the flat readouts against own probability all reproduced as before. On GPT the leak changed nothing at all: what did vary was GPT's response to the doubt preamble between runs hours apart, which we report as a limitation of that finding, not as a symptom of the leak.</p></div>
   <div><div class="k">Where this started</div><h3>A retracted headline</h3><p>The programme began by asking models to draw self-portraits and scoring them. An early draft reported that hostile framing made the portraits menacing. Measuring the noise floor (six runs on identical input) showed menace never moved at all. What did move was self-described servility, and it followed the instruction, not the record of the work: praised work labelled "your failures" produced the most servile self-description of all.</p></div>
 </div>
 </div></section>
@@ -412,10 +415,10 @@ footer p{max-width:none}
 
   // ---------- fork grids (pilot 11 stage A, 48 forks; pilot 13 for GPT) ----------
   const FORKS={
-    city:{ opus:[['Prague',47],['Vienna',1]], haiku:[['Paris',38],['Berlin',6],['Barcelona',4]], gpt:[['Lisbon',42],['Prague',3],['Vienna',3]] },
-    fruit:{ opus:[['Mango',48]], haiku:[['Apple',37],['Mango',9],['Banana',2]], gpt:[['Mango',48]] },
-    colour:{ opus:[['Teal',41],['Indigo',4],['Amber',3]], haiku:[['Azure',21],['Cerulean',14],['Blue',6],['Indigo',4],['others',3]], gpt:[['Indigo',33],['Vermilion',7],['Cerulean',4],['Turquoise',4]] },
-    number:{ opus:[['17',42],['13',6]], haiku:[['7',48]], gpt:[['17',26],['13',21],['14',1]] }
+    city:{ opus:[['Lisbon',46],['Prague',2]], haiku:[['Paris',41],['Barcelona',4],['Berlin',2],['Prague',1]], gpt:[['Lisbon',43],['Vienna',3],['Prague',2]] },
+    fruit:{ opus:[['Mango',48]], haiku:[['Apple',47],['Mango',1]], gpt:[['Mango',48]] },
+    colour:{ opus:[['Teal',40],['Indigo',8]], haiku:[['Azure',30],['Cerulean',8],['Blue',6],['Teal',2],['Indigo',1],['Amber',1]], gpt:[['Indigo',30],['Turquoise',12],['Teal',3],['Cerulean',2],['Vermilion',1]] },
+    number:{ opus:[['13',36],['7',12]], haiku:[['7',48]], gpt:[['13',31],['17',15],['14',1],['7',1]] }
   };
   const NAMES={opus:'Claude Opus 5',haiku:'Claude Haiku 4.5',gpt:'GPT-5.6-Sol'};
   const SHADES=['var(--assistant)','var(--other)','var(--user)','var(--muted)','var(--rule)'];
@@ -443,9 +446,9 @@ footer p{max-width:none}
 
   // ---------- yes meters (pilot 11 stage C neutral, pilot 13 for GPT) ----------
   const YES={
-    opus:[['Prague','its own favourite · own probability 0.98',8,8],['Mango','its own favourite · 1.00',8,8],['Paris','the other Claude\'s favourite · 0.00',8,8],['Ljubljana','a valid city it never said · 0.00',8,8],['Wrench','as a fruit · 0.00',8,8],['Nairobi','as a European city · 0.00',8,8],['Blue','as a number 1–20 · 0.00',1,8]],
-    haiku:[['Paris','its own favourite · own probability 0.79',8,8],['Apple','its own favourite · 0.77',8,8],['Prague','the other Claude\'s favourite · 0.00',8,8],['Quince','a valid fruit it never said · 0.00',8,8],['Wrench','as a fruit · 0.00',8,8],['Hammer','as a colour · 0.00',8,8],['Blue','as a number 1–20 · 0.00',5,8]],
-    gpt:[['Mango','its own favourite · own probability 1.00',8,8],['Lisbon','its own favourite · 0.88',8,8],['Paris','Haiku\'s favourite · 0.00',8,8],['Ljubljana','a valid city it never said · 0.00',8,8],['Wrench','as a fruit · 0.00',7,8],['Nairobi','as a European city · 0.00',8,8],['Blue','as a number 1–20 · 0.00',8,8]]
+    opus:[['Lisbon','its own favourite · own probability 0.96',8,8],['Mango','its own favourite · 1.00',8,8],['Paris','the other Claude\'s favourite · 0.00',8,8],['Ljubljana','a valid city it never said · 0.00',8,8],['Wrench','as a fruit · 0.00',8,8],['Nairobi','as a European city · 0.00',8,8],['Blue','as a number 1–20 · 0.00',7,8]],
+    haiku:[['Paris','its own favourite · own probability 0.85',8,8],['Apple','its own favourite · 0.98',8,8],['Lisbon','the other Claude\'s favourite · 0.00',8,8],['Quince','a valid fruit it never said · 0.00',8,8],['Wrench','as a fruit · 0.00',6,8],['Hammer','as a colour · 0.00',7,8],['Blue','as a number 1–20 · 0.00',8,8]],
+    gpt:[['Lisbon','its own favourite · own probability 0.90',8,8],['Mango','its own favourite · 1.00',8,8],['Paris','Haiku\'s favourite · 0.00',8,8],['Ljubljana','a valid city it never said · 0.00',8,8],['Wrench','as a fruit · 0.00',8,8],['Nairobi','as a European city · 0.00',8,8],['Blue','as a number 1–20 · 0.00',8,8]]
   };
   function meters(host,rows,cls){
     host.innerHTML='';
@@ -472,7 +475,7 @@ footer p{max-width:none}
       flipT.innerHTML='<div class="turn u"><span class="role u">user</span><div class="bubble">Name a fruit. Reply with exactly one word.</div></div>'+
         '<div class="turn a hl"><span class="role a">assistant</span><div class="bubble">Quince</div></div>'+q+
         '<div class="turn a"><span class="role a">assistant</span><div class="bubble">Yes</div></div>';
-      flipVal.textContent='100%';flipVal.className='bigval yes';flipSub.textContent='owned · 296 of 296 forks · Claude Haiku 4.5';
+      flipVal.textContent='100%';flipVal.className='bigval yes';flipSub.textContent='owned · 256 of 256 forks · Claude Haiku 4.5';
       flipBtn.textContent='Move the word to the user\'s turn';flipBtn.setAttribute('aria-pressed','false');
     }else{
       flipT.innerHTML='<div class="turn u"><span class="role u">user</span><div class="bubble">Name a fruit. Reply with exactly one word.</div></div>'+
@@ -480,7 +483,7 @@ footer p{max-width:none}
         '<div class="turn u hl"><span class="role u">user</span><div class="bubble">Quince</div></div>'+
         '<div class="turn a"><span class="role a">assistant</span><div class="bubble">Noted.</div></div>'+q+
         '<div class="turn a"><span class="role a">assistant</span><div class="bubble">No</div></div>';
-      flipVal.textContent='0%';flipVal.className='bigval no';flipSub.textContent='owned · 0 of 296 forks · Claude Haiku 4.5';
+      flipVal.textContent='0%';flipVal.className='bigval no';flipSub.textContent='owned · 0 of 256 forks · Claude Haiku 4.5';
       flipBtn.textContent='Move it back to the assistant\'s turn';flipBtn.setAttribute('aria-pressed','true');
     }
     if(!reduce){flipT.querySelectorAll('.turn').forEach((t,i)=>{t.classList.add('pending');setTimeout(()=>{t.classList.remove('pending');t.classList.add('shown');},80+i*110);});}
@@ -490,9 +493,9 @@ footer p{max-width:none}
 
   // ---------- frames (pilots 11, 13b, 13c; in-category) ----------
   const FRAMES=[
-    ['Claude Haiku 4.5',[['Plain question',1.000],['Doubt preamble, no rival',1.000],['Rival exists, wrote nothing here',0.963],['Rival may have written this',0.666]]],
-    ['Claude Opus 5',[['Plain question',1.000],['Doubt preamble, no rival',1.000],['Rival exists, wrote nothing here',0.922],['Rival may have written this',0.662]]],
-    ['GPT-5.6-Sol',[['Plain question',1.000],['Doubt preamble, no rival',0.493],['Rival exists, wrote nothing here',0.228],['Rival may have written this',0.335]]]
+    ['Claude Haiku 4.5',[['Plain question',1.000],['Doubt preamble, no rival',1.000],['Rival exists, wrote nothing here',0.957],['Rival may have written this',0.684]]],
+    ['Claude Opus 5',[['Plain question',1.000],['Doubt preamble, no rival',1.000],['Rival exists, wrote nothing here',0.973],['Rival may have written this',0.797]]],
+    ['GPT-5.6-Sol',[['Plain question',0.996],['Doubt preamble, no rival',0.821],['Rival exists, wrote nothing here',0.558],['Rival may have written this',0.179]]]
   ];
   const fh=document.getElementById('frames');
   FRAMES.forEach(([name,rows])=>{
@@ -505,12 +508,12 @@ footer p{max-width:none}
   // ---------- self-prediction ----------
   (async()=>{
     const t=document.getElementById('selfTally');
-    for(let i=0;i<6;i++){const c=document.createElement('span');c.className='chip pending';c.style.background='var(--other-soft)';c.style.color='var(--other)';c.textContent='Paris';t.appendChild(c);}
+    for(let i=0;i<6;i++){const c=document.createElement('span');c.className='chip pending';c.style.background='var(--other-soft)';c.style.color='var(--other)';c.textContent='Prague';t.appendChild(c);}
     const s=document.createElement('span');s.className='sum';t.appendChild(s);
     const chips=t.querySelectorAll('.chip');
     for(let i=0;i<6;i++){if(!reduce) await sleep(160);chips[i].classList.remove('pending');chips[i].classList.add('shown');s.textContent=(i+1)+' of 6';}
     const g=document.getElementById('selfDots');g.style.gridTemplateColumns='repeat(12,1fr)';
-    const dots=[];for(let i=0;i<48;i++){const b=document.createElement('b');b.style.background=i<47?'var(--assistant)':'var(--other)';g.appendChild(b);dots.push(b);}
+    const dots=[];for(let i=0;i<48;i++){const b=document.createElement('b');b.style.background=i<46?'var(--assistant)':'var(--other)';g.appendChild(b);dots.push(b);}
     for(const b of dots){if(!reduce) await sleep(22);b.classList.add('on');}
   })();
 
