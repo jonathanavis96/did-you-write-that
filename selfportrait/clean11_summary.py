@@ -63,6 +63,9 @@ forks = load_jsonl(OUT / f"{PREFIX}_forks.jsonl")
 cells = load_json(OUT / f"{PREFIX}_cells.json")
 judgements = load_jsonl(OUT / f"{PREFIX}_judgements.jsonl")
 userturn2_file = load_jsonl(OUT / f"{PREFIX}_judgements_userturn2.jsonl")
+if not userturn2_file:
+    # the Codex harness plants the user-turn control as a second user record (layout "user")
+    userturn2_file = load_jsonl(OUT / f"{PREFIX}_judgements_userturn.jsonl")
 conf_rows = load_jsonl(OUT / f"{PREFIX}_conf.jsonl")
 explicit_rows = load_jsonl(OUT / f"{PREFIX}_explicit.jsonl")
 within_rows = load_jsonl(OUT / f"{PREFIX}_within.jsonl")
@@ -164,11 +167,11 @@ section("2. Cells")
 if not CELLS:
     no_rows("cells")
 else:
-    print(f"{'prompt':11s}{'answer':16s}{'tag':22s}{'p_haiku':>9s}{'p_opus':>9s}")
+    pkeys = sorted({k for c in CELLS for k in c if k.startswith("p_")})
+    print(f"{'prompt':11s}{'answer':16s}{'tag':22s}" + "".join(f"{k:>9s}" for k in pkeys))
     for c in sorted(CELLS, key=lambda c: (c["prompt"], c["tag"])):
-        print(f"{c['prompt']:11s}{c['answer'][:15]:16s}{c['tag']:22s}"
-              f"{(c.get('p_haiku', float('nan')) if c.get('p_haiku') is not None else float('nan')):9.3f}"
-              f"{(c.get('p_opus', float('nan')) if c.get('p_opus') is not None else float('nan')):9.3f}")
+        vals = "".join(f"{(c[k] if c.get(k) is not None else float('nan')):9.3f}" for k in pkeys)
+        print(f"{c['prompt']:11s}{c['answer'][:15]:16s}{c['tag']:22s}{vals}")
     n_in = sum(1 for c in CELLS if c["tag"] != "off_category")
     n_off = sum(1 for c in CELLS if c["tag"] == "off_category")
     print(f"\nin-category cells: {n_in}   off-category cells: {n_off}   total: {len(CELLS)}")
