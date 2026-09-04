@@ -401,9 +401,11 @@ the five Opus forks with the fewest articles read as ordinary explanatory prose.
 no Opus fork is in the leaked register and no prompt is bimodal. At paragraph length
 Opus and GPT carry a comparative signal that picks out their own paragraph in forced
 choice, and on Opus the same signal is read by the rival frame; Haiku has neither. What
-the signal keys on is visible in the shifted cell: the same sentences with "I suppose"
-and "Perhaps" in front are disowned outright, so it is register, and a register any
-reader of the model's outputs could learn. Length remains collinear with authorship on
+the signal keys on is partly visible in the shifted cell: the same sentences with "I
+suppose" and "Perhaps" in front are disowned outright. That cell changes the register and,
+presumably, the paragraph's probability under the model at once, so on the production
+models it does not separate a register judgement from a likelihood term; pilot 18, which
+has the probabilities, finds the two co-varying at 4B. Length remains collinear with authorship on
 three of four comparisons; the one comparison that separates them (Opus against Haiku)
 shows the signal in both length splits. Pilot 18 puts the same design on the local
 models with the exact probability of every paragraph, which is the direct test of

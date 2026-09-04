@@ -132,6 +132,10 @@ the design was built to expose.
 Own paragraph length: 1.5B mean 70.1 words (43 to 90), 3B 58.5 (42 to 73), 4B 56.7
 (37 to 78).
 
+**Number-check** (independent recompute from the row files by a second agent that did
+not read the scorer, 2026-09-04): every figure above, including the exploratory splits
+and the per-cell log probabilities, reproduced exactly; no mismatch.
+
 **Reading.** The forced-choice half is clean: no local model can pick its own paragraph,
 including the 4B model whose own paragraph is 2.8 nats per token more probable under it
 than the alternative. Whatever Opus and GPT do in pilot 17c's forced choice, a 4B model
