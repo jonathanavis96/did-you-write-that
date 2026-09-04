@@ -11,3 +11,4 @@ __pycache__/
 !out/logs/
 out/logs/*
 .playwright-mcp/
+out/logs/codex_fork_index.json

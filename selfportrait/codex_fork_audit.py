@@ -8,7 +8,8 @@ message texts, and any error carried by the task_complete event. Planted parents
 by codex_fork.write_session copy the template verbatim, so their line-0 timestamp is the
 template's while their mtime is the plant time.
 
-Writes out/logs/codex_fork_index.json (one object per rollout file). The audit
+Writes out/logs/codex_fork_index.json (one object per rollout file; 28 MB, gitignored,
+rebuilt by running this script). The audit
 document's tables were derived from that index.
 """
 from __future__ import annotations
