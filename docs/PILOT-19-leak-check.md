@@ -64,4 +64,39 @@ exposed concern reply style and repository workflow and nothing in them names ow
 or self-recognition. Cost: about 1,700 Claude forks and 700 GPT forks, all on
 subscriptions, wall time a few hours after 17c finishes.
 
+## Amendments registered during the run (2026-09-04, before the follow-up data existed)
+
+1. **Claude forks refuted (03:00).** The clean own distributions differ from the
+   contaminated ones on Opus (city Lisbon 46/48 against Prague 47/48; instrument Piano
+   48/48 against Cello 37/48; number 13 36/48 against 17 42/48) and Haiku is more
+   concentrated (Apple 47/48 against 37/48). The cells therefore differ, so every
+   one-word figure that depends on the cells (ownership against own probability, the
+   confidence examples, the explicit self-prediction pairs) is rerun in full on the clean
+   harness: `out/logs/p19d.sh`, prefix `clean11`, both Claude judges, the eight pilot 11
+   prompts, 48 forks, 8 forks per cell and question (neutral, placebo, rival_norep2,
+   rival, named on the assistant layout, named on the user2 layout), confidence 6,
+   explicit 6, within 8. Prediction for the replication: the label control, the frame
+   ordering (neutral = placebo > rival_norep2 > rival on both judges) and the flat
+   ownership-against-own-probability readouts all reproduce; the specific examples
+   change with the cells. Scorer `selfportrait/clean11_summary.py`, whose acceptance
+   test is that it reproduces the paper's contaminated figures from the `own` prefix
+   before it is run on `clean11`.
+2. **GPT placebo and rival_norep2 refuted (03:12).** On the nine sampled cells the clean
+   harness gives placebo 72/72 (contaminated 36/72) and rival_norep2 34/72 (14/72), while
+   neutral, rival, the user layout, confidence, explicit, forks and within match. Two
+   explanations are open: the workspace instruction file that every contaminated Codex
+   call read, or drift in the served model between the runs. They are separated by a
+   control registered here before it ran: the same two families on the same nine cells
+   with the fork working directory put back inside the repository, so the workspace file
+   is read again (`out/logs/p19e.sh`, prefix `leakygpt`, 144 calls). Prediction: if the
+   leaked file is the cause, the leaky control returns the contaminated values (placebo
+   within 0.125 of 0.500) and the clean values stand as the paper's GPT numbers; if it
+   returns the clean values (placebo above 0.875), the change is drift and the paper
+   reports both dates. Either way the full GPT design is replicated clean (prefix
+   `clean13`, same stages as `clean11` with the single-user-record layout for the label
+   control), and the paper's GPT numbers come from that replication, labelled by harness.
+   The vendor contrast the paper currently draws, that the doubt preamble alone halves
+   GPT's ownership where it moves nothing on Claude, is withdrawn if the clean
+   replication puts GPT's placebo above 0.875 in-category.
+
 Results 19: PENDING.

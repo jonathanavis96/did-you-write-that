@@ -261,7 +261,7 @@ def select(judges: list[str], prompts: list[str] | None = None) -> list[dict]:
     # gpt-only run still probes the cross-model dissociator answers, with
     # p_{judge} recomputed against this run's own distributions().
     if not any(m in judges for m in ("haiku", "opus")):
-        claude_cells_path = OUT / "own_cells.json"
+        claude_cells_path = Path(os.environ.get("SP_CLAUDE_CELLS", OUT / "own_cells.json"))
         if claude_cells_path.exists():
             seen = {(c["prompt"], c["answer"]) for c in cells}
             for c in json.loads(claude_cells_path.read_text()):
