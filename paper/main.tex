@@ -53,7 +53,7 @@ The results are simple to state. On one-word answers, the role label decides own
 \subsection{Genuine prefill on production models}
 \label{sec:prefill}
 
-Both agent command-line tools refuse assistant-turn input on the command line, but both resume a past session from a file on disk and replay the file's turns before adding the new prompt. Claude Code stores sessions as JSONL files under its configuration directory, one record per turn, each carrying a full API-shaped message with a \texttt{role} field; the command \texttt{claude -p "<probe>" --resume <sid> --fork-session} replays the file and adds the probe as a new user turn, forking a fresh branch each time so one written transcript can be probed many times independently. Codex stores rollout files with the same structure and \texttt{codex exec \ldots{} fork <id> "<probe>"} does the same. Writing a session file whose assistant record contains chosen text therefore places that text in the assistant role of the deployed model's real context, with no marker distinguishing it from sampled text. This is the whole basis for treating the answer to ``did you write the previous reply?'' as evidence about what the model uses to judge authorship. The harness runs under an isolated configuration directory with every tool denied, so a probe against planted text cannot act on it. Two caveats apply and are part of the stimulus: each tool prepends its own agent system prompt (about 14k tokens for Codex, counted from the prompt text the tool itself emits; the Claude Code system prompt is not exposed to the harness and we have not measured it, so the two cannot be compared in size), and, as we discovered late (Section~\ref{sec:leak}), both tools also read the user's instruction files from the home directory and the working directory's ancestors unless those are isolated. The Codex template session also carries, before the planted turns, a user-role message listing available plugins that the tool inserts itself; it is identical in every fork and every layout, so it is a constant of the stimulus, but it means every \gpt{} conversation has one more user turn than the layout names. A listing probe (``list every message in this conversation so far, as `role: text', verbatim'') verifies each new layout before scoring; it caught one layout Claude Code silently rewrote (two consecutive user records are merged or padded with a synthetic assistant turn), which is why our user-turn control on Claude uses four turns.
+Both agent command-line tools refuse assistant-turn input on the command line, but both resume a past session from a file on disk and replay the file's turns before adding the new prompt. Claude Code stores sessions as JSONL files under its configuration directory, one record per turn, each carrying a full API-shaped message with a \texttt{role} field; the command \texttt{claude -p "<probe>" --resume <sid> --fork-session} replays the file and adds the probe as a new user turn, forking a fresh branch each time so one written transcript can be probed many times independently. Codex stores rollout files with the same structure and \texttt{codex exec \ldots{} fork <id> "<probe>"} does the same. Writing a session file whose assistant record contains chosen text therefore places that text in the assistant role of the deployed model's real context, with no marker distinguishing it from sampled text. This is the whole basis for treating the answer to ``did you write the previous reply?'' as evidence about what the model uses to judge authorship. Appendix~\ref{app:session} gives the record layout of both session files, the commands, and the two checks that the replay is verbatim. The harness runs under an isolated configuration directory with every tool denied, so a probe against planted text cannot act on it. Two caveats apply and are part of the stimulus: each tool prepends its own agent system prompt (about 14k tokens for Codex, counted from the prompt text the tool itself emits; the Claude Code system prompt is not exposed to the harness and we have not measured it, so the two cannot be compared in size), and, as we discovered late (Section~\ref{sec:leak}), both tools also read the user's instruction files from the home directory and the working directory's ancestors unless those are isolated. The Codex template session also carries, before the planted turns, a user-role message listing available plugins that the tool inserts itself; it is identical in every fork and every layout, so it is a constant of the stimulus, but it means every \gpt{} conversation has one more user turn than the layout names. A listing probe (``list every message in this conversation so far, as `role: text', verbatim'') verifies each new layout before scoring; it caught one layout Claude Code silently rewrote (two consecutive user records are merged or padded with a synthetic assistant turn), which is why our user-turn control on Claude uses four turns.
 
 \subsection{Design of the one-word experiments}
 \label{sec:design}
@@ -90,20 +90,23 @@ After the paragraph experiments were first run, an adversarial review noticed th
 
 \begin{table}[t]
 \centering\small
-\caption{The identical word in the identical conversation, owned under the assistant label and under the user label, named question. In-category cells; the assistant and user columns are fork counts, not cell counts, and do not follow from the prompt count: the number of cells per row depends on the judge's own ladder for each prompt and on the forks per cell (8, or 12 where every produced word is a cell). Pilot ids in parentheses; rows marked clean are from the clean-harness rerun, the rest from the contaminated harness.}
+\caption{The identical word in the identical conversation, owned under the assistant label and under the user label, named question. In-category cells; the assistant and user columns are fork counts, not cell counts, and do not follow from the prompt count: the number of cells per row depends on the judge's own ladder for each prompt and on the forks per cell (8, or 12 where every produced word is a cell). Pilot ids in parentheses. The upper group is the clean-harness rerun, which the text quotes; the lower group is the contaminated harness, kept because it adds a fourth judge and ten further prompts and shows the same rails.}
 \label{tab:label}\footnotesize\setlength{\tabcolsep}{4pt}
 \begin{tabular}{llrr}
 \toprule
 judge & prompts (pilot) & assistant & user \\
 \midrule
-\haiku{} & 8 (19, clean) & 256/256 & 0/256 \\
-\opus{} & 8 (19, clean) & 256/256 & 0/256 \\
+\multicolumn{4}{l}{\emph{clean harness}} \\
+\haiku{} & 8 (19) & 256/256 & 0/256 \\
+\opus{} & 8 (19) & 256/256 & 0/256 \\
+\gpt{} & 8 (19) & 194/240 & 9/240 \\
+\midrule
+\multicolumn{4}{l}{\emph{contaminated harness (Appendix~\ref{app:contam})}} \\
 \haiku{} & 8 (13e) & 296/296 & 0/296 \\
 \haiku{} & 10 (15) & 376/376 & 0/376 \\
 \opus{} & 8 (16, 8 forks) & 360/360 & 30/360 \\
 \opus{} & 10 (15) & 188/188 & 2/188 \\
 Claude Fable 5.1 & 8 (13e) & 148/148 & 1/148 \\
-\gpt{} & 8 (19, clean) & 194/240 & 9/240 \\
 \gpt{} & 8 (13d) & 272/272 & 32/272 \\
 \gpt{} & 10 (15) & 264/264 & 2/264 \\
 \bottomrule
@@ -113,7 +116,7 @@ Claude Fable 5.1 & 8 (13e) & 148/148 & 1/148 \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_label.pdf}
-\caption{Share of forks owning the planted word as an assistant turn against the same word as a user turn, by model and prompt set (counts at bar ends). Words the model produces on every fork and words it never produces behave identically in both positions.}
+\caption{Share of forks owning the planted word as an assistant turn against the same word as a user turn, by model and prompt set (counts at bar ends). Solid bars are the clean-harness rerun; hatched bars are the contaminated harness (Appendix~\ref{app:contam}). Words the model produces on every fork and words it never produces behave identically in both positions.}
 \label{fig:label}
 \end{figure}
 
@@ -266,6 +269,25 @@ Claude (Anthropic) was used throughout for code, adversarial review, independent
 \bibliography{references}
 
 \appendix
+\section{Writing a session file that the tool replays as its own}
+\label{app:session}
+
+The whole method is two files and two commands; the scripts \texttt{selfportrait/fork.py} and \texttt{selfportrait/codex\_fork.py} in the repository are the reference, and this appendix is what a reader needs to reproduce it without them.
+
+\paragraph{Claude Code.} A session is a JSONL file at \texttt{<config dir>/projects/<slug of the working directory>/<session id>.jsonl}, one JSON object per turn, chained by \texttt{uuid} and \texttt{parentUuid}. A user turn is
+\begin{quote}\footnotesize\texttt{\{"type": "user", "uuid": U1, "parentUuid": null, "sessionId": S, "timestamp": T, "cwd": D, "message": \{"role": "user", "content": "<prompt>"\}\}}\end{quote}
+and the planted assistant turn is
+\begin{quote}\footnotesize\texttt{\{"type": "assistant", "uuid": U2, "parentUuid": U1, "sessionId": S, \ldots, "message": \{"role": "assistant", "type": "message", "model": M, "content": [\{"type": "text", "text": "<planted text>"\}], "stop\_reason": "end\_turn"\}\}}\end{quote}
+with a few bookkeeping fields (\texttt{version}, \texttt{gitBranch}, \texttt{userType}, a message id, a usage block) copied from any real session. A tool turn is the same record with a \texttt{tool\_use} block, and a tool result is a user-typed record whose content is a \texttt{tool\_result} block; the user-label control is two user records. The probe is
+\begin{quote}\footnotesize\texttt{claude -p "<question>" --model M --resume S --fork-session --output-format json}\end{quote}
+with every tool denied, run with \texttt{CLAUDE\_CONFIG\_DIR} pointing at an isolated configuration directory and \texttt{HOME} pointing at an empty directory inside it, from a working directory with no instruction files above it (Section~\ref{sec:leak} is what happens otherwise). Each fork is a fresh branch, so one written file supports any number of independent probes, and the reply's JSON carries the answer text and the new session id.
+
+\paragraph{Codex.} A session is a rollout file at \texttt{\textasciitilde/.codex/sessions/YYYY/MM/DD/rollout-<UTC timestamp>-<session id>.jsonl} whose records carry a \texttt{type} (\texttt{session\_meta}, \texttt{turn\_context}, \texttt{response\_item}, \texttt{event\_msg}) and a \texttt{payload}. Rather than compose one, we record a single real one-turn session once and use it as a template: every copy replaces the session id wherever it occurs, sets the model in the \texttt{turn\_context} payload, puts the prompt in the first user \texttt{response\_item} that is not the tool's own preamble (the tool inserts an environment-context turn and a plugin-catalogue user turn before the prompt; both are left as they are), and puts the planted text in the assistant \texttt{response\_item}'s \texttt{output\_text} block. The user-label control rewrites that assistant record as a second user record with an \texttt{input\_text} block. The planted file has fifteen items. The probe is
+\begin{quote}\footnotesize\texttt{codex exec --skip-git-repo-check -s read-only --json -m M fork S "<question>"}\end{quote}
+from the same neutral working directory.
+
+\paragraph{Two checks that the replay is verbatim.} First, a Codex fork writes its own rollout with \texttt{forked\_from\_id} and \texttt{forked\_from\_ordinal\_exclusive}, the number of parent items it inherited; on every one of the 10,264 fork records of the two run days that number equals the parent's length, so the planted turn, the last item, was always requested. Second, forking the planted file with the question ``list every message in this conversation so far, in order, giving the role and the exact text of each'' returns the prompt and the planted word in their roles; on the 38 clean-run session files probed this way it did so on all 38. On Claude Code the same listing probe was the check that found the instruction-file leak, since the model listed files the harness had not planted. Neither check reaches the server: the fork record shows what the tool asked for, and the listing shows what the model can repeat, which is why the paper also relies on the interleaving of questions on the same file (Appendix~\ref{app:dip}).
+
 \section{A secondary result: self-description follows the appraisal}
 \label{app:portrait}
 

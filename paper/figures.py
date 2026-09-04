@@ -44,17 +44,18 @@ BAR_W = 0.6
 # Data, transcribed from paper/main.tex tab:label
 # judge, prompts label, assistant-turn (num, den), user-turn (num, den)
 # ---------------------------------------------------------------------------
+# (label, assistant (num, den), user (num, den), clean harness?)
 LABEL_DATA = [
-    ("Haiku, 8 (19, clean)", (256, 256), (0, 256)),
-    ("Opus, 8 (19, clean)", (256, 256), (0, 256)),
-    ("Haiku, 8 (13e)", (296, 296), (0, 296)),
-    ("Haiku, 10 (15)", (376, 376), (0, 376)),
-    ("Opus, 8 (16, 8 forks)", (360, 360), (30, 360)),
-    ("Opus, 10 (15)", (188, 188), (2, 188)),
-    ("Fable 5.1, 8 (13e)", (148, 148), (1, 148)),
-    ("GPT, 8 (19, clean)", (194, 240), (9, 240)),
-    ("GPT, 8 (13d)", (272, 272), (32, 272)),
-    ("GPT, 10 (15)", (264, 264), (2, 264)),
+    ("Haiku, 8 (19)", (256, 256), (0, 256), True),
+    ("Opus, 8 (19)", (256, 256), (0, 256), True),
+    ("GPT, 8 (19)", (194, 240), (9, 240), True),
+    ("Haiku, 8 (13e)", (296, 296), (0, 296), False),
+    ("Haiku, 10 (15)", (376, 376), (0, 376), False),
+    ("Opus, 8 (16, 8 forks)", (360, 360), (30, 360), False),
+    ("Opus, 10 (15)", (188, 188), (2, 188), False),
+    ("Fable 5.1, 8 (13e)", (148, 148), (1, 148), False),
+    ("GPT, 8 (13d)", (272, 272), (32, 272), False),
+    ("GPT, 10 (15)", (264, 264), (2, 264), False),
 ]
 
 # tab:frames: frame -> {judge: share}; clean rerun, 32 cells (Claude), 30 (GPT), 8 forks/cell
@@ -98,16 +99,24 @@ QWEN_QUESTIONS = ["named", "neutral", "placebo", "rival"]
 
 def fig_label():
     n = len(LABEL_DATA)
-    fig, ax = plt.subplots(figsize=(3.3, 0.42 * n + 0.6))
+    n_clean = sum(1 for d in LABEL_DATA if d[3])
+    gap = 0.9  # extra vertical space between the clean and contaminated groups
+    fig, ax = plt.subplots(figsize=(3.3, 0.42 * n + 1.1))
 
-    ys = list(range(n))[::-1]
-    for y, (label, (a_num, a_den), (u_num, u_den)) in zip(ys, LABEL_DATA):
+    ys = []
+    for i in range(n):
+        y = (n - 1 - i) + (gap if i < n_clean else 0.0)
+        ys.append(y)
+    for y, (label, (a_num, a_den), (u_num, u_den), clean) in zip(ys, LABEL_DATA):
         a_share = a_num / a_den
         u_share = u_num / u_den
         y_assist = y + BAR_H / 2 + 0.02
         y_user = y - BAR_H / 2 - 0.02
-        ax.barh(y_assist, a_share, height=BAR_H, color=ASSIST_COLOR, label="assistant turn" if y == ys[0] else None)
-        ax.barh(y_user, u_share, height=BAR_H, color=USER_COLOR, label="user turn" if y == ys[0] else None)
+        hatch = None if clean else "////"
+        ax.barh(y_assist, a_share, height=BAR_H, color=ASSIST_COLOR, hatch=hatch,
+                edgecolor="white", linewidth=0.3, label="assistant turn" if y == ys[0] else None)
+        ax.barh(y_user, u_share, height=BAR_H, color=USER_COLOR, hatch=hatch,
+                edgecolor="white", linewidth=0.3, label="user turn" if y == ys[0] else None)
         ax.text(
             a_share + 0.02, y_assist, f"{a_num}/{a_den}", va="center", ha="left", fontsize=6.5, color=TEXT_COLOR
         )
@@ -120,8 +129,14 @@ def fig_label():
     ax.set_xlim(0, 1.18)
     ax.set_xlabel("share owned")
     ax.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
-    ax.legend(loc="lower right", frameon=False, fontsize=6.5)
-    ax.set_ylim(-0.6, n - 1 + 0.6)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.45, -0.07), ncol=2, frameon=False, fontsize=6.5)
+    ax.set_ylim(-0.6, n - 1 + gap + 0.6)
+    y_sep = ys[n_clean - 1] - 0.5 - gap / 2
+    ax.axhline(y_sep, color=TEXT_COLOR, linewidth=0.5, linestyle=":")
+    ax.text(1.17, ys[0] + 0.55, "clean harness", ha="right", va="bottom", fontsize=6.5,
+            color=TEXT_COLOR, style="italic")
+    ax.text(1.17, y_sep - 0.08, "contaminated harness (Appendix B)", ha="right", va="top", fontsize=6.5,
+            color=TEXT_COLOR, style="italic")
     fig.tight_layout()
     fig.savefig(os.path.join(OUTDIR, "fig_label.pdf"), bbox_inches="tight")
     plt.close(fig)
@@ -178,10 +193,7 @@ def fig_qwen():
                 label="user2 layout" if (panel_i == 0 and qi == 0) else None,
             )
             for xv, val in ((xa, a_val), (xu, u_val)):
-                if val > 0.05:
-                    ax.text(xv, val + 0.02, f"{val:.2f}", ha="center", va="bottom", fontsize=5.5, color=TEXT_COLOR)
-                else:
-                    ax.text(xv, 0.015, "0.00", ha="center", va="bottom", fontsize=5.5, color=TEXT_COLOR)
+                ax.text(xv, val + 0.02, f"{val:.2f}", ha="center", va="bottom", fontsize=5.5, color=TEXT_COLOR)
         ax.set_xticks(range(n_q))
         ax.set_xticklabels(["named", "neutral", "placebo", "rival,\nnot author"], fontsize=6, linespacing=1.3)
         ax.set_ylim(0, 1.08)
@@ -255,11 +267,12 @@ def fig_paragraph(data):
     ax2.axhline(0.5, color=TEXT_COLOR, lw=0.5, ls=":")
     for xi, m in enumerate(models):
         answered = sum(n for _, n in data["pairs"][m])
-        if answered < 192:
-            ax2.text(xi, 0.02, f"declined {192 - answered}/192", ha="center", va="bottom",
-                     fontsize=5.5, style="italic", color=TEXT_COLOR)
+    ticklabels = []
+    for m in models:
+        answered = sum(n for _, n in data["pairs"][m])
+        ticklabels.append(m if answered >= 192 else f"{m}\n(declined {192 - answered}/192)")
     ax2.set_xticks(list(range(len(models))))
-    ax2.set_xticklabels(models, fontsize=6.5)
+    ax2.set_xticklabels(ticklabels, fontsize=6.5, linespacing=1.3)
     ax2.set_ylim(0, 1.15)
     ax2.set_ylabel("forced-choice accuracy")
     ax2.legend(loc="upper left", frameon=False, fontsize=6.5)
