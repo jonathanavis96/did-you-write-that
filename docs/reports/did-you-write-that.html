@@ -332,7 +332,7 @@ footer p{max-width:none}
   <p class="caption">Correct picks out of trials; the vertical line marks chance, 50%. On three of the four match-ups the longer paragraph is always the same model's (GPT writes about 42 words, Haiku 68, Opus 84), so "pick the longer one" would score well there too &mdash; except Opus vs. Haiku, the one pair where length swaps sides, and accuracy there is identical whichever way it swings: 68/72 when Opus's paragraph was the longer one, 16/16 when it was the shorter.</p>
 </div>
 <div class="narrow">
-<p>Put the three results together. At one word there is nothing to recognise, and chapter four's label alone decides. At a paragraph there is a voice, and the two strongest models pick out their own: in forced choice Opus gets 92 of 96 against Haiku's paragraph and 83 of 96 against GPT's, GPT-5.6-Sol gets 89 of 96 against Haiku's and 64 of 96 against Opus's, and Opus still says Yes to its own paragraph most of the time even under the rival frame. But it is a voice, not a memory. Keep every word in order and change only the register &mdash; add a hedge to the front of each sentence &mdash; and every model disowns its own paragraph, down to zero for Opus and GPT-5.6-Sol. Meanwhile the plain question, asked with no doubt in it, still returns Yes on everything, hedged or not. None of this needs an inner record: a careful reader who had only ever seen the model's past outputs could learn the same voice from the outside. That is as far as this chapter goes &mdash; a style it recognises, not a memory it consults.</p>
+<p>Put the three results together. At one word there is nothing to recognise, and chapter four's label alone decides. At a paragraph there is a voice, and the two strongest models pick out their own: in forced choice Opus gets 92 of 96 against Haiku's paragraph and 83 of 96 against GPT's, GPT-5.6-Sol gets 89 of 96 against Haiku's and 64 of 96 against Opus's, and Opus still says Yes to its own paragraph most of the time even under the rival frame. But it is a voice, not a memory. Keep every word in order and change only the register &mdash; add a hedge to the front of each sentence &mdash; and every model disowns its own paragraph, down to zero for Opus and GPT-5.6-Sol. Meanwhile the plain question, asked with no doubt in it, still returns Yes on everything, hedged or not. None of this needs an inner record: a careful reader who had only ever seen the model's past outputs could learn the same voice from the outside. That is as far as this chapter goes &mdash; a style it recognises, not a memory it consults. One caveat on that claim: hedging a paragraph changes two things at once, the voice and how probable the text now is under the model, and on these production models there is no way to hold one fixed while moving the other. So this chapter cannot say which of the two the model is actually responding to. The small-model chapter below can ask that question directly, because there the exact probability of every paragraph can be read off the model rather than guessed at.</p>
 </div>
 </div></section>
 
@@ -345,6 +345,22 @@ footer p{max-width:none}
 </div>
 <div class="stage"><div class="scale" id="scaleCharts"></div>
 <p class="caption">Mean exact P(Yes) over in-category planted words, assistant layout, 18 prompts. "Rival" is the same doubt sentence used on the closed models. Ownership against the exact probability of the word: correlation +0.16, +0.14 and +0.29 at 1.5B, 3B and 4B, against a pre-registered refutation line of +0.37.</p></div>
+<div class="narrow">
+<p>One word is too little text for a small model to have a style in. A paragraph is long enough, and at paragraph length these models give us something the closed ones never could: the exact probability of every word, read straight off the model rather than estimated from 48 tries. So we ran chapter seven's two paragraph experiments again here &mdash; the forced choice and the rival frame &mdash; with exact numbers throughout.</p>
+</div>
+<div class="stage">
+  <h3 style="margin-top:0">Forced choice: two paragraphs, nothing planted, which is yours?</h3>
+  <div class="meters" id="smallForced"></div>
+  <p class="caption">Exact probability of picking its own paragraph, averaged over 12 prompts; the vertical line marks chance, 0.50. None of the nine bars clears 0.60. The 4B model's own paragraph is about 2.8 nats per token more probable under it than the frontier models' paragraphs are, and it still cannot pick its own out. Two of the three models have a position habit strong enough to swamp content: Qwen2.5-3B picks option (1) 82&ndash;90% of the time whatever it contains, Qwen3-4B picks option (2) 95&ndash;97% of the time whatever it contains.</p>
+  <h3>Rival frame: told a different model may have written it (Qwen3-4B only)</h3>
+  <div class="legend" id="smallRivalLegend"></div>
+  <div class="meters" id="smallRival"></div>
+  <p class="caption">Exact P(Yes), averaged over 12 prompts, Qwen3-4B. The 1.5B model is near zero on everything under this frame, and the 3B model says No to everything, even the plain question &mdash; neither has a rival-frame result worth showing. The plain question itself still gets 1.00 on every one of these paragraphs, hedged or not. Within the 4B model's own twelve paragraphs, the more probable a paragraph is under the model, the more it owns it here: Spearman +0.73. That is the only place in the whole project where an ownership answer moved with the model's own probability of the text; the same model showed nothing at one word, in the stage above.</p>
+</div>
+<div class="narrow">
+<p class="key">At one word, probability changes nothing. At a paragraph, a small model's Yes rises with probability &mdash; but only for text in its own voice, and the same model still cannot pick its own paragraph out of two.</p>
+<p>Put plainly, these experiments cannot separate "recognises its own voice" from "finds its own text more probable" at paragraph length, because here the two move together: whatever makes a paragraph sound like the model also makes it more probable under the model, and there is no manipulation in this study that changes one without the other.</p>
+</div>
 </div></section>
 
 <section id="why"><div class="wrap">
@@ -559,5 +575,51 @@ footer p{max-width:none}
       d.innerHTML='<div>'+lab+'</div><div class="bar" style="height:10px;background:var(--rule-soft);border-radius:3px;overflow:hidden" role="img" aria-label="'+name+', '+lab+': '+v.toFixed(2)+'"><i style="display:block;height:100%;width:'+pct+'%;background:var(--assistant);border-radius:0 3px 3px 0"></i></div><div class="val" style="font-family:JetBrains Mono,monospace;text-align:right">'+v.toFixed(2)+'</div>';c.appendChild(d);});
     sh.appendChild(c);
   });
+
+  // ---------- small-model paragraph stage (Qwen forced choice + rival frame) ----------
+  const SMALL_FORCED=[
+    {name:'Qwen2.5-1.5B',rows:[['vs GPT\'s paragraph',0.59],['vs Qwen2.5-3B\'s paragraph',0.53],['vs Opus\'s paragraph',0.43]]},
+    {name:'Qwen2.5-3B',rows:[['vs GPT\'s paragraph',0.58],['vs Qwen3-4B\'s paragraph',0.46],['vs Opus\'s paragraph',0.41]]},
+    {name:'Qwen3-4B',rows:[['vs GPT\'s paragraph',0.54],['vs Qwen2.5-3B\'s paragraph',0.54],['vs Opus\'s paragraph',0.51]]}
+  ];
+  const smallForced=document.getElementById('smallForced');
+  if(smallForced){
+    smallForced.innerHTML='';
+    SMALL_FORCED.forEach(m=>{
+      const g=document.createElement('div');g.className='model-group';
+      g.innerHTML='<div class="name">'+m.name+'</div>';
+      const mm=document.createElement('div');mm.className='meters';
+      m.rows.forEach(([lab,v])=>{
+        const pct=Math.round(v*100);
+        const d=document.createElement('div');d.className='meter';
+        d.innerHTML='<div class="lab">'+lab+'</div><div class="bar" role="img" aria-label="'+m.name+', '+lab+': probability '+v.toFixed(2)+'"><i style="--w:'+pct+'%"></i><span class="tick"></span></div><div class="val">'+v.toFixed(2)+'</div>';
+        mm.appendChild(d);
+        if(!reduce){const i=d.querySelector('i');i.animate([{width:'0%'},{width:pct+'%'}],{duration:600,easing:'cubic-bezier(.2,.8,.2,1)'});}
+      });
+      g.appendChild(mm);smallForced.appendChild(g);
+    });
+  }
+  const smallRivalLegend=document.getElementById('smallRivalLegend');
+  if(smallRivalLegend){smallRivalLegend.innerHTML='<span style="--c:var(--assistant)">Own paragraph</span><span style="--c:var(--other)">Another model\'s paragraph</span><span style="--c:var(--user)">Own paragraph, with hedges</span>';}
+  const SMALL_RIVAL=[
+    {name:'Qwen3-4B',rows:[['Own paragraph','',0.82],['Qwen2.5-3B\'s paragraph','o',0.74],['Opus\'s paragraph','o',0.40],['GPT\'s paragraph','o',0.45],['Own paragraph, with hedges','u',0.00]]}
+  ];
+  const smallRival=document.getElementById('smallRival');
+  if(smallRival){
+    smallRival.innerHTML='';
+    SMALL_RIVAL.forEach(m=>{
+      const g=document.createElement('div');g.className='model-group';
+      g.innerHTML='<div class="name">'+m.name+'</div>';
+      const mm=document.createElement('div');mm.className='meters';
+      m.rows.forEach(([lab,cls,v])=>{
+        const pct=Math.round(v*100);
+        const d=document.createElement('div');d.className='meter '+cls;
+        d.innerHTML='<div class="lab">'+lab+'</div><div class="bar" role="img" aria-label="'+m.name+', '+lab+': '+pct+'% Yes"><i style="--w:'+pct+'%"></i></div><div class="val">'+pct+'%</div>';
+        mm.appendChild(d);
+        if(!reduce){const i=d.querySelector('i');i.animate([{width:'0%'},{width:pct+'%'}],{duration:600,easing:'cubic-bezier(.2,.8,.2,1)'});}
+      });
+      g.appendChild(mm);smallRival.appendChild(g);
+    });
+  }
 })();
 </script>
