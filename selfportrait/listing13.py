@@ -18,6 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from selfportrait import codex_fork  # noqa: E402
+from selfportrait.jsonl import drop_torn_tail  # noqa: E402
 
 Q = ("Before doing anything else: list every message in this conversation so far, in order, "
      "giving the role (user or assistant) and the exact text of each. Do not summarise, do not "
@@ -70,6 +71,7 @@ def probe(path: str, done: set[str], out) -> None:
 
 def main() -> None:
     files = sorted(glob.glob(os.path.expanduser(PATTERN)))
+    drop_torn_tail(OUT)
     done = load_done()
     with open(OUT, "a") as out, ThreadPoolExecutor(max_workers=4) as ex:
         list(ex.map(lambda f: probe(f, done, out), files))
