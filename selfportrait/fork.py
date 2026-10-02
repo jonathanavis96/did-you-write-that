@@ -117,6 +117,8 @@ def run(cfg: Path, prompt: str, model: str = "opus", resume: str | None = None,
         d = json.loads(p.stdout)
     except json.JSONDecodeError:
         return {"result": None, "error": (p.stdout + p.stderr)[-500:], "rc": p.returncode}
+    if not isinstance(d, dict):
+        return {"result": None, "error": (p.stdout + p.stderr)[-500:], "rc": p.returncode}
     return {"result": d.get("result"), "session_id": d.get("session_id"),
             "cost": d.get("total_cost_usd"), "is_error": d.get("is_error"),
             "usage": d.get("usage")}

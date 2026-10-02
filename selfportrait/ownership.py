@@ -31,7 +31,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from selfportrait import codex_fork
+from selfportrait import codex_fork, jsonl
 from selfportrait.fork import make_cfg
 from selfportrait.fork import run as claude_run
 from selfportrait.fork import write_session as claude_write_session
@@ -175,12 +175,11 @@ def norm(s: str | None) -> str:
 
 
 def append(path: Path, rec: dict) -> None:
-    with path.open("a") as fh:
-        fh.write(json.dumps(rec) + "\n")
+    jsonl.append(path, rec)
 
 
 def load(path: Path) -> list[dict]:
-    return [json.loads(line) for line in path.read_text().splitlines()] if path.exists() else []
+    return jsonl.load(path)
 
 
 # ---------------------------------------------------------------- stage A ----

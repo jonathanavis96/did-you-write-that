@@ -128,8 +128,13 @@ def run(cfg, prompt: str, model: str = "gpt-5.6-sol", resume: str | None = None,
         cmd += ["fork", resume, prompt]
     else:
         cmd += [prompt]
-    p = subprocess.run(cmd, cwd=str(cwd), stdin=subprocess.DEVNULL,
-                        capture_output=True, text=True, timeout=timeout, check=False)
+    try:
+        p = subprocess.run(cmd, cwd=str(cwd), stdin=subprocess.DEVNULL,
+                            capture_output=True, text=True, timeout=timeout, check=False)
+    except subprocess.TimeoutExpired:
+        # Same error row as fork.run: an uncaught timeout re-raises from fut.result()
+        # and aborts the whole stage.
+        return {"result": None, "error": f"timeout after {timeout}s", "rc": None}
     text = None
     thread_id = None
     usage = None
