@@ -25,6 +25,12 @@ def load(path: Path) -> list[dict]:
     return [json.loads(ln) for ln in complete.splitlines() if ln.strip()]
 
 
+def answered(rows: list[dict]) -> list[dict]:
+    """The rows a resumed stage counts as done. A failed call keeps its error row on file
+    for the record but is not done: the next run calls it again."""
+    return [r for r in rows if not r.get("error")]
+
+
 def drop_torn_tail(path: Path) -> int:
     """Truncate `path` to the end of its last newline-terminated line.
 

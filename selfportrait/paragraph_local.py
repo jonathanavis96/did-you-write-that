@@ -31,6 +31,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from selfportrait import jsonl  # noqa: E402
 from selfportrait.ownership import QUESTIONS  # noqa: E402
 
 
@@ -133,9 +134,7 @@ def sample(msgs, n):
 
 
 def load_rows(path: Path) -> list[dict]:
-    if not path.exists():
-        return []
-    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    return jsonl.load(path)
 
 
 def first_paragraph(rows: list[dict], prompt: str) -> str | None:
@@ -154,6 +153,7 @@ def p17c_first(model_name: str, prompt: str) -> str | None:
 
 def main():
     rows = load_rows(OUT_PATH)
+    jsonl.drop_torn_tail(OUT_PATH)
     fh = OUT_PATH.open("a")
 
     def emit(rec):

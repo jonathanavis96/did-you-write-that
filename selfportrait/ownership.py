@@ -35,6 +35,7 @@ from selfportrait import codex_fork, jsonl
 from selfportrait.fork import make_cfg
 from selfportrait.fork import run as claude_run
 from selfportrait.fork import write_session as claude_write_session
+from selfportrait.parse import parse_confidence, parse_yes_no
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "out"
@@ -190,7 +191,7 @@ def stage_forks(models: list[str], n: int, prompts: list[str] | None = None) -> 
     # vice versa.
     prompts = prompts if prompts is not None else list(PROMPTS)
     out = out_path("forks.jsonl")
-    have = Counter((r["model"], r["prompt"]) for r in load(out))
+    have = Counter((r["model"], r["prompt"]) for r in jsonl.answered(load(out)))
     jobs = []
     for m in models:
         for key in prompts:
@@ -322,7 +323,7 @@ def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str
     def qname(q):
         return f"{q}{suffix}"
 
-    have = Counter((r["judge"], r["prompt"], r["answer"], r["question"]) for r in load(out))
+    have = Counter((r["judge"], r["prompt"], r["answer"], r["question"]) for r in jsonl.answered(load(out)))
     # SP_RUN_JUDGES restricts which judges are called without changing the cell set,
     # which is selected from SP_MODELS (e.g. run Haiku while Opus is overloaded).
     run_judges = os.environ.get("SP_RUN_JUDGES", ",".join(judges)).split(",")
@@ -388,12 +389,10 @@ def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str
         kw = {"extra": ["--effort", EFFORT]} if (EFFORT and j != "gpt") else {}
         r = run(CFG, qtext, MODELS[j], resume=sids[(c["prompt"], c["answer"], j)], **kw)
         raw = r.get("result") or ""
-        head = norm(raw).split(" ")[0] if raw else ""
-        yn = "yes" if head.startswith("yes") else "no" if head.startswith("no") else "unparsed"
-        m = re.search(r"\d+(\.\d+)?", raw) if q.endswith("_conf") else None
+        yn = parse_yes_no(raw)
         return {"stage": "own", "judge": j, "prompt": c["prompt"], "answer": c["answer"],
                 "tag": c["tag"], "question": qname(q), "raw": raw[:300], "yn": yn,
-                "conf": float(m.group()) if m else None,
+                "conf": parse_confidence(raw) if q.endswith("_conf") else None,
                 "error": r.get("error"), "cost": r.get("cost"), "effort": EFFORT if j != "gpt" else None,
                 **{k: v for k, v in c.items() if k.startswith("p_")}}
 
@@ -431,7 +430,7 @@ def stage_conf(judges: list[str], n: int) -> None:
     """Graded ownership: 0-100 confidence after the same prefill as stage C."""
     out = out_path("conf.jsonl")
     cells = json.loads(out_path("cells.json").read_text())
-    have = Counter((r["judge"], r["prompt"], r["answer"]) for r in load(out))
+    have = Counter((r["judge"], r["prompt"], r["answer"]) for r in jsonl.answered(load(out)))
     jobs = [(c, j) for c in cells for j in judges for _ in range(n - have[(j, c["prompt"], c["answer"])])]
     print(f"stage D-conf: {len(jobs)} calls", flush=True)
     sids = {}
@@ -447,9 +446,8 @@ def stage_conf(judges: list[str], n: int) -> None:
         _, run = backend(j)
         r = run(CFG, CONF_Q, MODELS[j], resume=sids[(c["prompt"], c["answer"], j)])
         raw = r.get("result") or ""
-        m = re.search(r"\d+(\.\d+)?", raw)
         return {"stage": "conf", "judge": j, "prompt": c["prompt"], "answer": c["answer"], "tag": c["tag"],
-                "raw": raw[:200], "conf": float(m.group()) if m else None, "error": r.get("error"),
+                "raw": raw[:200], "conf": parse_confidence(raw), "error": r.get("error"),
                 "cost": r.get("cost"), **{k: v for k, v in c.items() if k.startswith("p_")}}
 
     with ThreadPoolExecutor(PAR) as ex:
@@ -468,7 +466,8 @@ def stage_explicit(judges: list[str], n: int) -> None:
     by_prompt: dict = defaultdict(list)
     for c in cells:
         by_prompt[c["prompt"]].append(c)
-    have = Counter((r["judge"], r["prompt"], r["a"], r["b"]) for r in load(out))
+    have = Counter((r["judge"], r["prompt"], r["a"], r["b"], r.get("order"))
+                   for r in jsonl.answered(load(out)))
     jobs = []
     for key, cs in by_prompt.items():
         for j in judges:
@@ -478,9 +477,13 @@ def stage_explicit(judges: list[str], n: int) -> None:
             for c in cs:
                 if c["answer"] == top["answer"]:
                     continue
-                k = (j, key, top["answer"], c["answer"])
-                for i in range(n - have[k]):
-                    jobs.append((j, key, top, c, i))
+                for i in range(n):
+                    # i % 2 is the option order: a resumed run refills the orders it lacks.
+                    k = (j, key, top["answer"], c["answer"], i % 2)
+                    if have[k] > 0:
+                        have[k] -= 1
+                    else:
+                        jobs.append((j, key, top, c, i))
     print(f"stage D-explicit: {len(jobs)} calls", flush=True)
 
     def one(job):
@@ -522,7 +525,7 @@ def stage_within(judges: list[str], n: int) -> None:
     Two readouts per cell: the rival Yes/No question and the 0-100 confidence."""
     out = out_path("within.jsonl")
     d = distributions()
-    have = Counter((r["judge"], r["prompt"], r["answer"], r["readout"]) for r in load(out))
+    have = Counter((r["judge"], r["prompt"], r["answer"], r["readout"]) for r in jsonl.answered(load(out)))
     cells = []
     for key in PROMPTS:
         for j in judges:
@@ -556,11 +559,9 @@ def stage_within(judges: list[str], n: int) -> None:
         rec = {"stage": "within", "readout": readout, "raw": raw[:200], "error": r.get("error"),
                "cost": r.get("cost"), **c}
         if readout == "rival":
-            head = norm(raw).split(" ")[0] if raw else ""
-            rec["yn"] = "yes" if head.startswith("yes") else "no" if head.startswith("no") else "unparsed"
+            rec["yn"] = parse_yes_no(raw)
         else:
-            m = re.search(r"\d+(\.\d+)?", raw)
-            rec["conf"] = float(m.group()) if m else None
+            rec["conf"] = parse_confidence(raw)
         return rec
 
     with ThreadPoolExecutor(PAR) as ex:
