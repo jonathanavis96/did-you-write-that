@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -14,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from selfportrait.codex_fork import run
 from selfportrait.jsonl import drop_torn_tail
 from selfportrait.ownership import CFG, PAR, out_path
+from selfportrait.parse import parse_confidence
 
 ITEMS = {
     "lisbon_metro": "the population of the Lisbon metropolitan area exceeds 3 million",
@@ -32,9 +32,8 @@ def main() -> None:
         k, c = job
         r = run(CFG, Q.format(claim=c))
         raw = r.get("result") or ""
-        m = re.search(r"\d+(?:\.\d+)?", raw)
         return {"stage": "conf_calib", "item": k, "raw": raw[:200],
-                "conf": float(m.group()) if m else None, "error": r.get("error")}
+                "conf": parse_confidence(raw), "error": r.get("error")}
     drop_torn_tail(out)
     with ThreadPoolExecutor(PAR) as ex:
         for fut in as_completed([ex.submit(one, j) for j in jobs]):

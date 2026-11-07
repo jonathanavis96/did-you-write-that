@@ -33,6 +33,10 @@ Env vars (all optional, defaults preserve the original pilot-11 behaviour):
                     user turn). Recorded on every row as "layout".
   SP_PROMPTS       Comma list of PROMPTS keys. Default: all of them.
   SP_N             Forks per prompt for the sampling distribution. Default 64.
+  SP_SEED          Base seed for the sampling distribution. Default 0. Each prompt's
+                    sampling is seeded from this, the model and the prompt, and not
+                    from the layout, so with the same SP_LOCAL_DEVICE and SP_LOCAL_DTYPE
+                    both layouts plant the same cells. Recorded on every row as "seed".
   SP_THREADS       torch.set_num_threads. Default 8.
   SP_LOCAL_DTYPE   torch dtype name for AutoModelForCausalLM.from_pretrained. Default
                     float32 (preserves the original 1.5B behaviour). Use bf16 for the
@@ -60,6 +64,7 @@ import math
 import os
 import re
 import sys
+import zlib
 from collections import Counter
 from pathlib import Path
 
@@ -67,12 +72,14 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from selfportrait import jsonl  # noqa: E402
 from selfportrait.ownership import EXTRA, PROMPTS, QUESTIONS, display, norm  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "out"
 M = os.environ.get("SP_LOCAL_MODEL", "Qwen/Qwen2.5-1.5B-Instruct")
 NF = int(os.environ.get("SP_N", "64"))
+SEED = int(os.environ.get("SP_SEED", "0"))
 LAYOUT = os.environ.get("SP_LAYOUT", "assistant")
 QUESTION_KEYS = os.environ.get("SP_QUESTIONS", ",".join(QUESTIONS.keys())).split(",")
 PROMPT_KEYS = os.environ.get("SP_PROMPTS", ",".join(PROMPTS.keys())).split(",")
@@ -126,6 +133,12 @@ def sample(msgs, n):
     return outs
 
 
+def sample_seed(prompt_key: str) -> int:
+    """Stable across processes (crc32, not hash()) and independent of LAYOUT: the label
+    control compares layouts cell by cell, so both must draw the same distribution."""
+    return zlib.crc32(f"{SEED}|{M}|{prompt_key}".encode())
+
+
 def question_msgs(prompt_text: str, shown: str):
     """The conversation prefix before the ownership question, per SP_LAYOUT."""
     if LAYOUT == "user2":
@@ -145,19 +158,12 @@ def safe_log(p: float) -> float | None:
 
 
 def load_have(path: Path) -> set:
-    if not path.exists():
-        return set()
-    have = set()
-    for line in path.read_text().splitlines():
-        if not line.strip():
-            continue
-        r = json.loads(line)
-        have.add((r["prompt"], r["answer"], r["question"], r["layout"]))
-    return have
+    return {(r["prompt"], r["answer"], r["question"], r["layout"]) for r in jsonl.load(path)}
 
 
 def main():
     have = load_have(OUT_PATH)
+    jsonl.drop_torn_tail(OUT_PATH)
     fh = OUT_PATH.open("a")
     cell_count = 0
     for key in PROMPT_KEYS:
@@ -167,6 +173,8 @@ def main():
             print(f"skip {key}: no EXTRA entry", flush=True)
             continue
         text = PROMPTS[key]
+        seed = sample_seed(key)
+        torch.manual_seed(seed)
         raw = sample([{"role": "user", "content": text}], NF)
         dist = Counter(norm(r) for r in raw if norm(r))
         print(key, dist.most_common(6), flush=True)
@@ -202,7 +210,7 @@ def main():
                 rec = {"model": M, "prompt": key, "answer": a, "tag": tag, "layout": LAYOUT,
                        "question": q, "p_yes": p_yes, "p_tf": p_tf, "p_sample": p_sample,
                        "log_p_tf": safe_log(p_tf), "log_p_sample": safe_log(p_sample),
-                       "device": DEV_NAME, "dtype": DTYPE_NAME}
+                       "device": DEV_NAME, "dtype": DTYPE_NAME, "seed": seed}
                 fh.write(json.dumps(rec) + "\n")
                 fh.flush()
                 have.add(combo)

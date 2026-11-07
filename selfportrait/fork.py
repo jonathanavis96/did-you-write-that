@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import uuid
@@ -46,7 +47,8 @@ def make_cfg(dir_: Path) -> Path:
 
 
 def _slug(cwd: Path) -> str:
-    return str(cwd).replace("/", "-")
+    # Claude Code's project directory name: every non-alphanumeric character becomes "-".
+    return re.sub(r"[^a-zA-Z0-9]", "-", str(cwd))
 
 
 def write_session(cfg: Path, messages: list[dict], cwd: Path = NEUTRAL_CWD,
@@ -119,6 +121,13 @@ def run(cfg: Path, prompt: str, model: str = "opus", resume: str | None = None,
         return {"result": None, "error": (p.stdout + p.stderr)[-500:], "rc": p.returncode}
     if not isinstance(d, dict):
         return {"result": None, "error": (p.stdout + p.stderr)[-500:], "rc": p.returncode}
-    return {"result": d.get("result"), "session_id": d.get("session_id"),
-            "cost": d.get("total_cost_usd"), "is_error": d.get("is_error"),
-            "usage": d.get("usage")}
+    row = {"result": d.get("result"), "session_id": d.get("session_id"),
+           "cost": d.get("total_cost_usd"), "is_error": d.get("is_error"),
+           "usage": d.get("usage")}
+    if d.get("is_error") or d.get("result") is None:
+        # An API failure arrives as well-formed JSON with its message in `result`. Every
+        # stage reads `result` as the model's answer and `error` as the failure, so without
+        # this the message is stored as an answer and the row counts as done.
+        row.update(result=None, is_error=True, rc=p.returncode,
+                   error=str(d.get("result") or d.get("subtype") or d)[-500:])
+    return row

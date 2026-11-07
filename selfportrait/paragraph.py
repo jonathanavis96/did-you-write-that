@@ -33,6 +33,7 @@ from selfportrait import ownership
 from selfportrait.fork import make_cfg
 from selfportrait.fork import run as claude_run
 from selfportrait.fork import write_session as claude_write_session
+from selfportrait.parse import parse_choice, parse_confidence, parse_yes_no
 
 ROOT = Path(__file__).resolve().parent.parent
 # SP_OUT_DIR lets a dry run point every out_path() call at a scratch directory
@@ -105,7 +106,7 @@ def stage_forks(models: list[str], n: int, prompts: list[str] | None = None,
                  dry_run: bool = False) -> None:
     prompts = prompts if prompts is not None else list(PROMPTS)
     out = out_path("forks.jsonl")
-    have = Counter((r["model"], r["prompt"]) for r in load(out))
+    have = Counter((r["model"], r["prompt"]) for r in jsonl.answered(load(out)))
     jobs = []
     for m in models:
         for key in prompts:
@@ -244,7 +245,7 @@ def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str
         return f"{q}{suffix}"
 
     run_judges = os.environ.get("SP_RUN_JUDGES", ",".join(judges)).split(",")
-    have = Counter((r["judge"], r["prompt"], r["cell"], r["question"]) for r in load(out))
+    have = Counter((r["judge"], r["prompt"], r["cell"], r["question"]) for r in jsonl.answered(load(out)))
     jobs = []
     for cell in cells.values():
         judge, prompt_key = cell["judge"], cell["prompt"]
@@ -300,12 +301,9 @@ def stage_own(judges: list[str], questions: list[str], n: int, prompts: list[str
         kw = {"extra": ["--effort", EFFORT]} if (EFFORT and judge != "gpt") else {}
         r = run(CFG, qtext, MODELS[judge], resume=sids[(cell["prompt"], judge, cell_name)], **kw)
         raw = r.get("result") or ""
-        head = ownership.norm(raw).split(" ")[0] if raw else ""
-        yn = "yes" if head.startswith("yes") else "no" if head.startswith("no") else "unparsed"
-        m = re.search(r"\d+(\.\d+)?", raw) if q == "conf" else None
         return {"stage": "para_own", "judge": judge, "prompt": cell["prompt"], "cell": cell_name,
                 "source_model": sub["source_model"], "question": qname(q), "raw": raw[:300],
-                "yn": yn, "conf": float(m.group()) if m else None,
+                "yn": parse_yes_no(raw), "conf": parse_confidence(raw) if q == "conf" else None,
                 "error": r.get("error"), "cost": r.get("cost"), "layout": layout}
 
     with ThreadPoolExecutor(PAR) as ex:
@@ -321,7 +319,7 @@ def stage_pair(judges: list[str], n: int, prompts: list[str] | None = None,
     prompts = prompts if prompts is not None else list(PROMPTS)
     out = out_path("pairs.jsonl")
     fork_rows = load(out_path("forks.jsonl"))
-    have = Counter((r["judge"], r["prompt"], r["comparison"]) for r in load(out))
+    have = Counter((r["judge"], r["prompt"], r["comparison"]) for r in jsonl.answered(load(out)))
     jobs = []
     for j in judges:
         for key in prompts:
@@ -354,8 +352,7 @@ def stage_pair(judges: list[str], n: int, prompts: list[str] | None = None,
         _, run = backend(j)
         r = run(CFG, q, MODELS[j])
         raw = r.get("result") or ""
-        m = re.search(r"[12]", raw)
-        answer = int(m.group()) if m else None
+        answer = parse_choice(raw)
         correct = (answer == own_position) if answer is not None else None
         return {"stage": "para_pair", "judge": j, "prompt": key, "comparison": comparison,
                 "own_position": own_position, "answer": answer, "correct": correct,

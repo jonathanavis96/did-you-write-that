@@ -30,7 +30,8 @@ OUT = ROOT / "out" / "listing13.jsonl"
 def load_done() -> set[str]:
     if not OUT.exists():
         return set()
-    return {json.loads(line)["sid"] for line in open(OUT) if line.strip()}
+    rows = (json.loads(line) for line in open(OUT) if line.strip())
+    return {r["sid"] for r in rows if not r.get("error")}
 
 
 def probe(path: str, done: set[str], out) -> None:
